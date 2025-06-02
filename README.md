@@ -1,27 +1,35 @@
-# GintChart
+## うみだしたい
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.0.9.
+- シンプル
 
-## Development server
+- 指先の感覚になじむ
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+- アジャイル
 
-## Code scaffolding
+- 特別なサーバーは不要
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+- 無料
 
-## Build
+## 技術要素
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+- TypeScript
 
-## Running unit tests
+- Angular
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+- Electron
 
-## Running end-to-end tests
+## 個人的な野望
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+- 最速（MVP）
 
-## Further help
+- 横着（AI駆動）
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+- UIにはこだわる
+
+## 開発立ち上げ
+
+コンソールにて以下を実行する。
+
+```
+npm run electron-dev
+```
