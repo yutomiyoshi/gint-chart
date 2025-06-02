@@ -25,11 +25,9 @@ function createWindow() {
         win.webContents.openDevTools(); // 開発ツールを開く
     } else {
         // プロダクションビルド後
-        win.loadURL(url.format({
-            pathname: path.join(__dirname, 'dist', 'my-electron-angular-app', 'index.html'), // Angularのビルドパス
-            protocol: 'file:',
-            slashes: true
-        }));
+        win.loadFile(
+            path.join(__dirname, 'dist', 'gint-chart', 'browser', 'index.html')
+        );
     }
 
     win.on('closed', () => {
