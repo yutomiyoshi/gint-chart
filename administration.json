@@ -1,0 +1,51 @@
+[
+    {
+        "id": 1,
+        "name": "John Doe",
+        "email": "john.doe@example.com",
+        "password": "password",
+        "role": "admin"
+    },
+    {
+        "id": 2,
+        "name": "Jane Doe",
+        "email": "jane.doe@example.com",
+        "password": "password",
+        "role": "user"
+    },
+    {
+        "id": 3,
+        "name": "John Smith",
+        "email": "john.smith@example.com",
+        "password": "password",
+        "role": "user"
+    },
+    {
+        "id": 4,
+        "name": "Jane Smith",
+        "email": "jane.smith@example.com",
+        "password": "password",
+        "role": "user"
+    },
+    {
+        "id": 5,
+        "name": "John Doe",
+        "email": "john.doe@example.com",
+        "password": "password",
+        "role": "admin"
+    },
+    {
+        "id": 6,
+        "name": "Jane Doe",
+        "email": "jane.doe@example.com",
+        "password": "password",
+        "role": "user"
+    },
+    {
+        "id": 7,
+        "name": "John Smith",
+        "email": "john.smith@example.com",
+        "password": "password",
+        "role": "user"
+    }
+]
