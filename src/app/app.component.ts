@@ -19,16 +19,14 @@ declare global {
   styleUrl: './app.component.scss',
 })
 export class AppComponent {
-  filePath: string = './mydata.txt'; // アプリケーションのルートからの相対パスなどを指定
-  fileContent: string = '';
-
-  constructor() {}
+  filePath = './mydata.txt'; // アプリケーションのルートからの相対パスなどを指定
+  fileContent = '';
 
   async readFile() {
     try {
       this.fileContent = await window.electronAPI.readTextFile(this.filePath);
       alert('ファイルが読み込まれました！');
-    } catch (error: any) {
+    } catch (error: unknown) {
       if (error instanceof Error) {
         alert('ファイルの読み込みに失敗しました: ' + error.message);
       } else {
@@ -41,7 +39,7 @@ export class AppComponent {
     try {
       await window.electronAPI.writeTextFile(this.filePath, this.fileContent);
       alert('ファイルが書き込まれました！');
-    } catch (error: any) {
+    } catch (error: unknown) {
       if (error instanceof Error) {
         alert('ファイルの書き込みに失敗しました: ' + error.message);
       } else {
