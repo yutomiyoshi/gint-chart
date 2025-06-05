@@ -1,6 +1,6 @@
 [
     {
-        "project_id": 1,
+        "id": 1,
         "title": "project1",
         "description": "description",
         "assignee": 1,
@@ -18,13 +18,6 @@
                 "start_date": "2021-01-01",
                 "end_date": "2021-01-05",
                 "comments": [
-                    {
-                        "id": 1,
-                        "content": "comment1",
-                        "author": 1,
-                        "created_at": "2021-01-01",
-                        "updated_at": "2021-01-01"
-                    },
                     {
                         "id": 2,
                         "content": "comment2",
