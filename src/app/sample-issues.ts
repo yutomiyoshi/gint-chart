@@ -1,0 +1,38 @@
+import { Issue } from './issue';
+
+export const SAMPLE_ISSUES: Issue[] = [
+  {
+    id: 1,
+    iid: 101,
+    project_id: 144,
+    title: 'サンプルIssue 1',
+    description: 'これはデバッグ用のサンプルIssueです。',
+    state: 'opened',
+    created_at: '2024-06-01T10:00:00Z',
+    updated_at: '2024-06-01T12:00:00Z',
+    closed_at: null,
+    labels: ['bug', 'urgent'],
+    milestone: null,
+    assignees: [1],
+    author: 1,
+    web_url: 'https://gitlab.com/project/144/issues/101',
+    due_date: null,
+  },
+  {
+    id: 2,
+    iid: 102,
+    project_id: 145,
+    title: 'サンプルIssue 2',
+    description: '2件目のサンプルIssueです。',
+    state: 'closed',
+    created_at: '2024-06-02T09:00:00Z',
+    updated_at: '2024-06-02T11:00:00Z',
+    closed_at: '2024-06-03T08:00:00Z',
+    labels: ['feature'],
+    milestone: null,
+    assignees: [2],
+    author: 2,
+    web_url: 'https://gitlab.com/project/145/issues/102',
+    due_date: null,
+  },
+];
