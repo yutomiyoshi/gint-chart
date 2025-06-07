@@ -59,7 +59,7 @@ export class GitlabApiService {
   public fetch<T, S>(
     projectId: string | number,
     endpoint: string,
-    mapFn: (data: T) => S
+    mapFn: (data: T) => S | null
   ): Observable<S[]> {
     return defer(() => {
       if (
@@ -89,9 +89,13 @@ export class GitlabApiService {
             }
             return response.json();
           })
-          .then((jsonData) =>
-            Array.isArray(jsonData) ? jsonData.map(mapFn) : [mapFn(jsonData)]
-          )
+          .then((jsonData) => {
+            const arr = Array.isArray(jsonData)
+              ? jsonData.map(mapFn)
+              : [mapFn(jsonData)];
+            // isNullOrUndefinedでnull/undefinedを除外
+            return arr.filter((item): item is S => !isNullOrUndefined(item));
+          })
       );
     });
   }
