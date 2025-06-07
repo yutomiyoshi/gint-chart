@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, from } from 'rxjs';
 import { mergeMap, map, toArray, tap } from 'rxjs/operators';
-import { GitlabApiService } from '@src/app/gitlab-api/gitlab-api.service';
+import { GitLabApiService } from '@src/app/git-lab-api/git-lab-api.service';
 import { Issue, convertJsonToIssue } from '@src/app/issue';
-import { GitLabProject } from '@src/app/gitlab-config';
+import { GitLabProject } from '@src/app/git-lab-config';
 import { GitLabConfigStoreService } from './git-lab-config-store.service';
 import { SAMPLE_ISSUES } from '@src/app/sample-issues';
 import { environment } from '@src/environments/environment';
@@ -16,7 +16,7 @@ export class IssuesStoreService {
   public issues$: Observable<Issue[]> = this.issuesSubject.asObservable();
 
   constructor(
-    private gitlabApi: GitlabApiService,
+    private gitlabApi: GitLabApiService,
     private gitlabConfigStore: GitLabConfigStoreService
   ) {}
 

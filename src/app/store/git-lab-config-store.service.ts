@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, from } from 'rxjs';
 import { Assertion, isNull } from '@src/app/utils';
-import { GitLabConfig } from '@src/app/gitlab-config';
+import { GitLabConfig } from '@src/app/git-lab-config';
 
 @Injectable({
   providedIn: 'root',

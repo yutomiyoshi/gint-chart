@@ -2,12 +2,12 @@ import { Injectable } from '@angular/core';
 import { GitLabConfigStoreService } from '@src/app/store/git-lab-config-store.service';
 import { isNull, Assertion } from '@src/app/utils';
 import { Observable, defer, from } from 'rxjs';
-import { GitLabConfig, GitLabProject } from '@src/app/gitlab-config';
+import { GitLabConfig, GitLabProject } from '@src/app/git-lab-config';
 
 @Injectable({
   providedIn: 'root',
 })
-export class GitlabApiService {
+export class GitLabApiService {
   /**
    * 任意のGitLab APIエンドポイントからデータを取得し、アプリ用の型に変換して返すObservableを返します。
    *
