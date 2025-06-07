@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { isNullOrUndefined, Assertion } from '@app/utils';
+import { GitLabConfigStoreService } from '@app/store/git-lab-config-store.service';
+import { isNull, Assertion } from '@app/utils';
 import { Observable, defer, from } from 'rxjs';
 
 export interface GitLabConfig {
@@ -11,40 +12,15 @@ export interface GitLabConfig {
   providedIn: 'root',
 })
 export class GitlabApiService {
-  private config: GitLabConfig | null = null;
-  private apiBaseUrl: string = '';
-
-  constructor() {
-    this.loadConfig();
+  private get apiBaseUrl(): string {
+    return this.gitLabConfigStore.getConfig().gitlabUrl;
   }
 
-  private async loadConfig() {
-    // Electronのpreload.jsでexposeされたAPIを利用
-    const electronAPI = (window as any).electronAPI;
-    const electron = (window as any).electron;
-    if (
-      !isNullOrUndefined(electronAPI) &&
-      !isNullOrUndefined(electronAPI.readTextFile)
-    ) {
-      const configText = await electronAPI.readTextFile('config.json');
-      this.config = JSON.parse(configText);
-      if (!isNullOrUndefined(this.config)) {
-        this.apiBaseUrl = `${this.config.gitlabUrl}/api/v4`;
-      }
-    } else if (
-      !isNullOrUndefined(electron) &&
-      !isNullOrUndefined(electron.ipcRenderer)
-    ) {
-      // もしread-configハンドラがある場合
-      this.config = await electron.ipcRenderer.invoke('read-config');
-      if (!isNullOrUndefined(this.config)) {
-        this.apiBaseUrl = `${this.config.gitlabUrl}/api/v4`;
-      }
-    } else {
-      Assertion.assert('Electron APIが利用できません', Assertion.no(1));
-      return;
-    }
+  private get accessToken(): string {
+    return this.gitLabConfigStore.getConfig().accessToken;
   }
+
+  constructor(private gitLabConfigStore: GitLabConfigStoreService) {}
 
   /**
    * 任意のGitLab APIエンドポイントからデータを取得し、アプリ用の型に変換して返すObservableを返します。
@@ -62,10 +38,7 @@ export class GitlabApiService {
     mapFn: (data: T) => S | null
   ): Observable<S[]> {
     return defer(() => {
-      if (
-        isNullOrUndefined(this.apiBaseUrl) ||
-        isNullOrUndefined(this.config)
-      ) {
+      if (this.apiBaseUrl === '') {
         Assertion.assert('GitLab APIの設定が未初期化です', Assertion.no(2));
         return from([[] as S[]]);
       }
@@ -75,7 +48,7 @@ export class GitlabApiService {
       return from(
         fetch(url, {
           headers: {
-            'Private-Token': this.config.accessToken,
+            'Private-Token': this.accessToken,
             'Content-Type': 'application/json',
           },
         })
@@ -94,7 +67,7 @@ export class GitlabApiService {
               ? jsonData.map(mapFn)
               : [mapFn(jsonData)];
             // isNullOrUndefinedでnull/undefinedを除外
-            return arr.filter((item): item is S => !isNullOrUndefined(item));
+            return arr.filter((item): item is S => !isNull(item));
           })
       );
     });
@@ -120,10 +93,7 @@ export class GitlabApiService {
     mapFn: (data: T) => S
   ): Observable<S> {
     return defer(() => {
-      if (
-        isNullOrUndefined(this.apiBaseUrl) ||
-        isNullOrUndefined(this.config)
-      ) {
+      if (this.apiBaseUrl === '') {
         Assertion.assert('GitLab APIの設定が未初期化です', Assertion.no(2));
         return from([null as unknown as S]);
       }
@@ -134,7 +104,7 @@ export class GitlabApiService {
         fetch(url, {
           method,
           headers: {
-            'Private-Token': this.config.accessToken,
+            'Private-Token': this.accessToken,
             'Content-Type': 'application/json',
           },
           body: JSON.stringify(body),

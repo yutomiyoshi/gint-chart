@@ -1,8 +1,6 @@
-// nullやundefinedを判定するユーティリティ関数
-export function isNullOrUndefined<T>(
-  value: T | null | undefined
-): value is null | undefined {
-  return value === null || value === undefined;
+// nullを判定するユーティリティ関数
+export function isNull<T>(value: T | null): value is null {
+  return value === null;
 }
 
 // Assertionクラス

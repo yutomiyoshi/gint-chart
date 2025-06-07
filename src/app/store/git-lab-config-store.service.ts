@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, from } from 'rxjs';
-import { Assertion } from 'app/utils';
+import { Assertion, isNull } from 'app/utils';
 import { GitLabConfig } from '@app/gitlab-config';
 
 @Injectable({
   providedIn: 'root',
 })
-export class ConfigStoreService {
+export class GitLabConfigStoreService {
   private configSubject = new BehaviorSubject<GitLabConfig | null>(null);
   public config$: Observable<GitLabConfig | null> =
     this.configSubject.asObservable();
@@ -38,7 +38,8 @@ export class ConfigStoreService {
   /**
    * 現在の設定を取得
    */
-  getConfig(): GitLabConfig | null {
-    return this.configSubject.getValue();
+  getConfig(): GitLabConfig {
+    const config = this.configSubject.getValue();
+    return isNull(config) ? { gitlabUrl: '', accessToken: '' } : config;
   }
 }
