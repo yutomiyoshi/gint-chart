@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IssuesStoreService } from './store/issues-store.service';
-import { ConfigStoreService } from './store/config-store.service';
-import { Assertion } from './utils';
+import { IssuesStoreService } from 'app/store/issues-store.service';
+import { ConfigStoreService } from 'app/store/config-store.service';
+import { Assertion } from 'app/utils';
 
 declare global {
   interface Window {

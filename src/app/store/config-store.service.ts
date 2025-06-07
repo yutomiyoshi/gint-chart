@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, from } from 'rxjs';
-import { Assertion } from '../utils';
+import { Assertion } from 'app/utils';
 
 export interface AppConfig {
   gitlabUrl: string;

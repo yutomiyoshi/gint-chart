@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, map } from 'rxjs';
-import { GitlabApiService } from '../gitlab-api/gitlab-api.service';
-import { Issue, convertJsonToIssue } from '../issue';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { GitlabApiService } from 'app/gitlab-api/gitlab-api.service';
+import { Issue, convertJsonToIssue } from 'app/issue';
 import { tap } from 'rxjs';
-import { GitLabApiIssue } from '../gitlab-api/gitlab-issue.model';
+import { GitLabApiIssue } from 'app/gitlab-api/gitlab-issue.model';
 
 @Injectable({
   providedIn: 'root',
