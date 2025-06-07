@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { GitLabConfigStoreService } from '@app/store/git-lab-config-store.service';
-import { isNull, Assertion } from '@app/utils';
+import { GitLabConfigStoreService } from '@src/app/store/git-lab-config-store.service';
+import { isNull, Assertion } from '@src/app/utils';
 import { Observable, defer, from } from 'rxjs';
 
 export interface GitLabConfig {

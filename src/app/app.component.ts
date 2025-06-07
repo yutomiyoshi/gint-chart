@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IssuesStoreService } from 'app/store/issues-store.service';
-import { GitLabConfigStoreService } from '@app/store/git-lab-config-store.service';
-import { Assertion } from 'app/utils';
+import { IssuesStoreService } from '@src/app/store/issues-store.service';
+import { GitLabConfigStoreService } from '@src/app/store/git-lab-config-store.service';
+import { Assertion } from '@src/app/utils';
 
 const gitlabConfigPath = './gitlab.config.json';
 
@@ -22,9 +22,10 @@ export class AppComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.gitLabConfigStore.loadConfig(gitlabConfigPath).subscribe({
+    this.gitLabConfigStore.loadConfig().subscribe({
       error: () => {}, //サービス側からエラーハンドリングするため不要
       next: (config) => {
+        console.log(config);
         if (!config || !(config as any).projectId) {
           Assertion.assert(
             'config.jsonにprojectIdが設定されていません',
