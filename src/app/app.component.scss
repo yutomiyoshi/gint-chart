@@ -1,0 +1,54 @@
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.spinner {
+  position: relative;
+  width: 80px;
+  height: 80px;
+}
+.ring {
+  box-sizing: border-box;
+  position: absolute;
+  width: 80px;
+  height: 80px;
+  border: 8px solid #fff;
+  border-top: 8px solid #1976d2;
+  border-radius: 50%;
+  animation: spin 1.2s linear infinite;
+  opacity: 0.8;
+}
+.ring2 {
+  border: 8px solid #fff;
+  border-bottom: 8px solid #90caf9;
+  width: 60px;
+  height: 60px;
+  top: 10px;
+  left: 10px;
+  animation: spin-reverse 1.2s linear infinite;
+  opacity: 0.6;
+}
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+@keyframes spin-reverse {
+  0% {
+    transform: rotate(360deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}

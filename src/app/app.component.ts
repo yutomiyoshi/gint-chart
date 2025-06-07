@@ -27,21 +27,30 @@ declare global {
   styleUrl: './app.component.scss',
 })
 export class AppComponent implements OnInit {
+  loadingOverlay = true;
   constructor(
     private issueStore: IssuesStoreService,
     private configStore: ConfigStoreService
   ) {}
 
   ngOnInit() {
-    this.configStore.loadConfig().subscribe((config) => {
-      if (!config || !(config as any).projectId) {
-        Assertion.assert(
-          'config.jsonにprojectIdが設定されていません',
-          Assertion.no(10)
-        );
-        return;
-      }
-      this.issueStore.syncAllIssues((config as any).projectId).subscribe();
+    this.configStore.loadConfig().subscribe({
+      error: () => {}, //サービス側からエラーハンドリングするため不要
+      next: (config) => {
+        if (!config || !(config as any).projectId) {
+          Assertion.assert(
+            'config.jsonにprojectIdが設定されていません',
+            Assertion.no(10)
+          );
+          return;
+        }
+        this.issueStore.syncAllIssues((config as any).projectId).subscribe({
+          error: () => {}, //サービス側からエラーハンドリングするため不要
+          next: () => {
+            this.loadingOverlay = false;
+          },
+        });
+      },
     });
   }
 }
