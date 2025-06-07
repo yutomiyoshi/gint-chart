@@ -1,29 +1,30 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, map } from 'rxjs';
 import { GitlabApiService } from './gitlab-api.service';
-import { GitlabIssue } from './issue';
+import { Issue, convertJsonToIssue } from './issue';
 import { tap } from 'rxjs';
+import { GitLabApiIssue } from './api/gitlab-issue.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class IssuesStoreService {
-  private issuesSubject = new BehaviorSubject<GitlabIssue[]>([]);
-  public issues$: Observable<GitlabIssue[]> = this.issuesSubject.asObservable();
+  private issuesSubject = new BehaviorSubject<Issue[]>([]);
+  public issues$: Observable<Issue[]> = this.issuesSubject.asObservable();
 
   constructor(private gitlabApi: GitlabApiService) {}
 
   /**
    * 指定プロジェクトの全issuesをAPIから取得し、ストアに反映する
    * @param projectId GitLabのプロジェクトID
-   * @returns Observable<GitlabIssue[]> 取得・反映後のissues配列を流すObservable
+   * @returns Observable<Issue[]> 取得・反映後のissues配列を流すObservable
    */
-  syncAllIssues(projectId: string | number): Observable<GitlabIssue[]> {
+  syncAllIssues(projectId: string | number): Observable<Issue[]> {
     return this.gitlabApi
-      .fetch<GitlabIssue, GitlabIssue>(
+      .fetch<GitLabApiIssue, Issue>(
         projectId,
         'issues?per_page=100',
-        (data) => data
+        convertJsonToIssue
       )
       .pipe(tap((issues) => this.issuesSubject.next(issues)));
   }
@@ -31,7 +32,7 @@ export class IssuesStoreService {
   /**
    * 現在保持しているissuesを取得
    */
-  getIssues(): GitlabIssue[] {
+  getIssues(): Issue[] {
     return this.issuesSubject.getValue();
   }
 }
