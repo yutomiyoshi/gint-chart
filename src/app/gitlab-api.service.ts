@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { isNullOrUndefined } from '@app/utils';
+import { isNullOrUndefined, Assertion } from '@app/utils';
 
 export interface GitLabConfig {
   gitlabUrl: string;
@@ -40,7 +40,8 @@ export class GitlabApiService {
         this.apiBaseUrl = `${this.config.gitlabUrl}/api/v4`;
       }
     } else {
-      throw new Error('Electron APIが利用できません');
+      Assertion.assert('Electron APIが利用できません', Assertion.no(1));
+      return;
     }
   }
 
@@ -58,7 +59,8 @@ export class GitlabApiService {
    */
   public async fetchAllIssues(projectId: string | number): Promise<any[]> {
     if (isNullOrUndefined(this.apiBaseUrl) || isNullOrUndefined(this.config)) {
-      throw new Error('GitLab APIの設定が未初期化です');
+      Assertion.assert('GitLab APIの設定が未初期化です', Assertion.no(2));
+      return [];
     }
     const perPage = 100;
     let page = 1;
@@ -74,9 +76,11 @@ export class GitlabApiService {
         },
       });
       if (!response.ok) {
-        throw new Error(
-          `GitLab APIリクエスト失敗: ${response.status} ${response.statusText}`
+        Assertion.assert(
+          `GitLab APIリクエスト失敗: ${response.status} ${response.statusText}`,
+          Assertion.no(3)
         );
+        return [];
       }
       const issues = await response.json();
       allIssues = allIssues.concat(issues);
