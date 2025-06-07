@@ -50,7 +50,7 @@ app.on("activate", () => {
 });
 
 ipcMain.handle('read-config', async () => {
-  const configPath = path.join(__dirname, 'config.json');
+  const configPath = path.join(__dirname, 'gitlab.config.json');
   const data = fs.readFileSync(configPath, 'utf-8');
   return JSON.parse(data);
 });

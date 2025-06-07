@@ -1,7 +1,7 @@
 declare global {
   interface Window {
     electronAPI: {
-      readConfig: (filePath: string) => Promise<GitLabConfig>;
+      readConfig: () => Promise<GitLabConfig>;
     };
   }
 }

@@ -16,10 +16,10 @@ export class GitLabConfigStoreService {
   /**
    * Electron経由でconfig.jsonを読み込む
    */
-  loadConfig(filePath: string): Observable<GitLabConfig | null> {
+  loadConfig(): Observable<GitLabConfig | null> {
     return from(
       window.electronAPI
-        .readConfig(filePath)
+        .readConfig()
         .then((config) => {
           this.configSubject.next(config);
           return config;
