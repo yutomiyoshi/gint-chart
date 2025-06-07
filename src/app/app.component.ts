@@ -27,7 +27,7 @@ export class AppComponent implements OnInit {
       next: (config) => {
         this.issueStore.syncAllIssues().subscribe({
           error: () => {}, //サービス側からエラーハンドリングするため不要
-          next: () => {
+          next: (issues) => {
             this.loadingOverlay = false;
           },
         });
