@@ -1,6 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { IssuesStoreService } from './issues-store.service';
+import { ConfigStoreService } from './config-store.service';
+import { Assertion } from './utils';
 
 declare global {
   interface Window {
@@ -23,18 +26,22 @@ declare global {
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })
-export class AppComponent {
-  async readConfig() {
-    try {
-      const config = await window.electron.ipcRenderer.invoke('read-config');
-      console.log(config.gitlabUrl, config.accessToken);
-      alert('設定ファイルが読み込まれました！');
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        alert('設定ファイルの読み込みに失敗しました: ' + error.message);
-      } else {
-        alert('設定ファイルの読み込みに失敗しました: 不明なエラー');
+export class AppComponent implements OnInit {
+  constructor(
+    private issueStore: IssuesStoreService,
+    private configStore: ConfigStoreService
+  ) {}
+
+  ngOnInit() {
+    this.configStore.loadConfig().subscribe((config) => {
+      if (!config || !(config as any).projectId) {
+        Assertion.assert(
+          'config.jsonにprojectIdが設定されていません',
+          Assertion.no(10)
+        );
+        return;
       }
-    }
+      this.issueStore.syncAllIssues((config as any).projectId).subscribe();
+    });
   }
 }
