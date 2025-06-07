@@ -33,7 +33,7 @@ export class AppComponent implements OnInit {
           );
           return;
         }
-        this.issueStore.syncAllIssues((config as any).projectId).subscribe({
+        this.issueStore.syncAllIssues().subscribe({
           error: () => {}, //サービス側からエラーハンドリングするため不要
           next: () => {
             this.loadingOverlay = false;

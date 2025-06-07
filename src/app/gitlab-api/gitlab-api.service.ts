@@ -8,39 +8,37 @@ import { GitLabConfig, GitLabProject } from '@src/app/gitlab-config';
   providedIn: 'root',
 })
 export class GitlabApiService {
-  private get accessToken(): string {
-    return this.gitLabConfigStore.getConfig().accessToken;
-  }
-
-  constructor(private gitLabConfigStore: GitLabConfigStoreService) {}
-
   /**
    * 任意のGitLab APIエンドポイントからデータを取得し、アプリ用の型に変換して返すObservableを返します。
    *
    * @template T APIから取得する生データの型
    * @template S 変換後のアプリ用データ型
-   * @param project プロジェクト情報（url, projectId）
+   * @param host GitLabのホストURL
+   * @param projectId プロジェクトID
+   * @param accessToken アクセストークン
    * @param endpoint プロジェクト配下のAPIエンドポイント（例: 'issues', 'merge_requests' など）
    * @param mapFn APIのレスポンスTをアプリ用型Sに変換する関数
    * @returns Observable<S[]> 変換後データの配列を流すObservable
    */
   public fetch<T, S>(
-    project: GitLabProject,
+    host: string,
+    projectId: string,
+    accessToken: string,
     endpoint: string,
     mapFn: (data: T) => S | null
   ): Observable<S[]> {
     return defer(() => {
-      if (!project || !project.url) {
+      if (host === '' || projectId === '' || accessToken === '') {
         Assertion.assert('GitLabプロジェクト情報が未設定です', Assertion.no(2));
         return from([[] as S[]]);
       }
-      const url = `${project.url}/api/v4/projects/${encodeURIComponent(
-        project.projectId
+      const url = `${host}/api/v4/projects/${encodeURIComponent(
+        projectId
       )}/${endpoint}`;
       return from(
         fetch(url, {
           headers: {
-            'Private-Token': this.accessToken,
+            'Private-Token': accessToken,
             'Content-Type': 'application/json',
           },
         })
@@ -70,7 +68,9 @@ export class GitlabApiService {
    *
    * @template T APIから返る生データの型
    * @template S 変換後のアプリ用データ型
-   * @param project プロジェクト情報（url, projectId）
+   * @param host GitLabホストURL
+   * @param projectId プロジェクトID
+   * @param accessToken アクセストークン
    * @param endpoint プロジェクト配下のAPIエンドポイント（例: 'issues/1', 'merge_requests/2' など）
    * @param body 送信するデータ（JSON）
    * @param method HTTPメソッド（'PATCH' | 'PUT' | 'POST'）
@@ -78,25 +78,27 @@ export class GitlabApiService {
    * @returns Observable<S> 変換後データを流すObservable
    */
   public update<T, S>(
-    project: GitLabProject,
+    host: string,
+    projectId: string,
+    accessToken: string,
     endpoint: string,
     body: any,
     method: 'PATCH' | 'PUT' | 'POST',
     mapFn: (data: T) => S
   ): Observable<S> {
     return defer(() => {
-      if (!project || !project.url) {
+      if (host === '' || projectId === '' || accessToken === '') {
         Assertion.assert('GitLabプロジェクト情報が未設定です', Assertion.no(2));
         return from([null as unknown as S]);
       }
-      const url = `${project.url}/api/v4/projects/${encodeURIComponent(
-        project.projectId
+      const url = `${host}/api/v4/projects/${encodeURIComponent(
+        projectId
       )}/${endpoint}`;
       return from(
         fetch(url, {
           method,
           headers: {
-            'Private-Token': this.accessToken,
+            'Private-Token': accessToken,
             'Content-Type': 'application/json',
           },
           body: JSON.stringify(body),

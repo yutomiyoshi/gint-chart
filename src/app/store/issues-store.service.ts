@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, from } from 'rxjs';
+import { mergeMap, map, toArray, tap } from 'rxjs/operators';
 import { GitlabApiService } from '@src/app/gitlab-api/gitlab-api.service';
 import { Issue, convertJsonToIssue } from '@src/app/issue';
-import { tap } from 'rxjs';
-import { GitLabApiIssue } from '@src/app/gitlab-api/gitlab-issue.model';
 import { GitLabProject } from '@src/app/gitlab-config';
+import { GitLabConfigStoreService } from './git-lab-config-store.service';
 
 @Injectable({
   providedIn: 'root',
@@ -13,21 +13,33 @@ export class IssuesStoreService {
   private issuesSubject = new BehaviorSubject<Issue[]>([]);
   public issues$: Observable<Issue[]> = this.issuesSubject.asObservable();
 
-  constructor(private gitlabApi: GitlabApiService) {}
+  constructor(
+    private gitlabApi: GitlabApiService,
+    private gitlabConfigStore: GitLabConfigStoreService
+  ) {}
 
   /**
-   * 指定プロジェクトの全issuesをAPIから取得し、ストアに反映する
-   * @param project GitLabのプロジェクト情報
+   * configにある全プロジェクトの全issuesをAPIから取得し、ストアに反映する
    * @returns Observable<Issue[]> 取得・反映後のissues配列を流すObservable
    */
-  syncAllIssues(project: GitLabProject): Observable<Issue[]> {
-    return this.gitlabApi
-      .fetch<GitLabApiIssue, Issue>(
-        project,
-        'issues?per_page=100',
-        convertJsonToIssue
-      )
-      .pipe(tap((issues) => this.issuesSubject.next(issues)));
+  syncAllIssues(): Observable<Issue[]> {
+    const config = this.gitlabConfigStore.getConfig();
+    const projects = config.projects || [];
+    const accessToken = config.accessToken || '';
+    if (projects.length === 0) {
+      this.issuesSubject.next([]);
+      return from([[]]);
+    }
+
+    // 各プロジェクトごとに全ページのissuesを取得
+    return from(projects).pipe(
+      mergeMap((project) =>
+        this.fetchAllIssuesForProject(project, accessToken)
+      ),
+      toArray(), // [[Issue], [Issue], ...] の配列に
+      map((issuesArr) => issuesArr.flat()), // 1次元配列に
+      tap((allIssues) => this.issuesSubject.next(allIssues))
+    );
   }
 
   /**
@@ -35,5 +47,27 @@ export class IssuesStoreService {
    */
   getIssues(): Issue[] {
     return this.issuesSubject.getValue();
+  }
+
+  /**
+   * 指定されたプロジェクトの全issuesをGitLab APIから取得します。
+   *
+   * @param project GitLabプロジェクト情報
+   * @param accessToken アクセストークン
+   * @returns Observable<Issue[]> 取得したissues配列を流すObservable
+   */
+  private fetchAllIssuesForProject(
+    project: GitLabProject,
+    accessToken: string
+  ): Observable<Issue[]> {
+    const urlObj = new URL(project.url);
+    const host = urlObj.origin;
+    return this.gitlabApi.fetch<any, Issue>(
+      host,
+      String(project.projectId),
+      accessToken,
+      'issues',
+      convertJsonToIssue
+    );
   }
 }
