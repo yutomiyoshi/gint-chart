@@ -25,14 +25,6 @@ export class AppComponent implements OnInit {
     this.gitLabConfigStore.loadConfig().subscribe({
       error: () => {}, //サービス側からエラーハンドリングするため不要
       next: (config) => {
-        console.log(config);
-        if (!config || !(config as any).projectId) {
-          Assertion.assert(
-            'config.jsonにprojectIdが設定されていません',
-            Assertion.no(10)
-          );
-          return;
-        }
         this.issueStore.syncAllIssues().subscribe({
           error: () => {}, //サービス側からエラーハンドリングするため不要
           next: () => {
