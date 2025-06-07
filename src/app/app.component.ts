@@ -8,6 +8,11 @@ declare global {
       readTextFile: (filePath: string) => Promise<string>;
       writeTextFile: (filePath: string, content: string) => Promise<string>;
     };
+    electron: {
+      ipcRenderer: {
+        invoke: (channel: string, ...args: any[]) => Promise<any>;
+      };
+    };
   }
 }
 
@@ -19,31 +24,16 @@ declare global {
   styleUrl: './app.component.scss',
 })
 export class AppComponent {
-  filePath = './mydata.txt'; // アプリケーションのルートからの相対パスなどを指定
-  fileContent = '';
-
-  async readFile() {
+  async readConfig() {
     try {
-      this.fileContent = await window.electronAPI.readTextFile(this.filePath);
-      alert('ファイルが読み込まれました！');
+      const config = await window.electron.ipcRenderer.invoke('read-config');
+      console.log(config.gitlabUrl, config.accessToken);
+      alert('設定ファイルが読み込まれました！');
     } catch (error: unknown) {
       if (error instanceof Error) {
-        alert('ファイルの読み込みに失敗しました: ' + error.message);
+        alert('設定ファイルの読み込みに失敗しました: ' + error.message);
       } else {
-        alert('ファイルの読み込みに失敗しました: 不明なエラー');
-      }
-    }
-  }
-
-  async writeFile() {
-    try {
-      await window.electronAPI.writeTextFile(this.filePath, this.fileContent);
-      alert('ファイルが書き込まれました！');
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        alert('ファイルの書き込みに失敗しました: ' + error.message);
-      } else {
-        alert('ファイルの書き込みに失敗しました: 不明なエラー');
+        alert('設定ファイルの読み込みに失敗しました: 不明なエラー');
       }
     }
   }

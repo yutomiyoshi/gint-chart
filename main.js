@@ -49,23 +49,8 @@ app.on("activate", () => {
   }
 });
 
-// --- ファイル読み書きの例 (メインプロセス) ---
-ipcMain.handle("read-text-file", async (event, filePath) => {
-  try {
-    const data = fs.readFileSync(filePath, "utf8");
-    return data;
-  } catch (error) {
-    console.error("Error reading file:", error);
-    throw error;
-  }
-});
-
-ipcMain.handle("write-text-file", async (event, filePath, content) => {
-  try {
-    fs.writeFileSync(filePath, content, "utf8");
-    return "File written successfully";
-  } catch (error) {
-    console.error("Error writing file:", error);
-    throw error;
-  }
+ipcMain.handle('read-config', async () => {
+  const configPath = path.join(__dirname, 'config.json');
+  const data = fs.readFileSync(configPath, 'utf-8');
+  return JSON.parse(data);
 });
