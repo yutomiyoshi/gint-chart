@@ -1,19 +1,14 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, from } from 'rxjs';
 import { Assertion } from 'app/utils';
-
-export interface AppConfig {
-  gitlabUrl: string;
-  accessToken: string;
-  // 必要に応じて他の設定項目も追加
-}
+import { GitLabConfig } from '@app/gitlab-config';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ConfigStoreService {
-  private configSubject = new BehaviorSubject<AppConfig | null>(null);
-  public config$: Observable<AppConfig | null> =
+  private configSubject = new BehaviorSubject<GitLabConfig | null>(null);
+  public config$: Observable<GitLabConfig | null> =
     this.configSubject.asObservable();
 
   constructor() {}
@@ -21,10 +16,10 @@ export class ConfigStoreService {
   /**
    * Electron経由でconfig.jsonを読み込む
    */
-  loadConfig(): Observable<AppConfig | null> {
+  loadConfig(filePath: string): Observable<GitLabConfig | null> {
     return from(
-      window.electron.ipcRenderer
-        .invoke('read-config')
+      window.electronAPI
+        .readConfig(filePath)
         .then((config) => {
           this.configSubject.next(config);
           return config;
@@ -43,7 +38,7 @@ export class ConfigStoreService {
   /**
    * 現在の設定を取得
    */
-  getConfig(): AppConfig | null {
+  getConfig(): GitLabConfig | null {
     return this.configSubject.getValue();
   }
 }

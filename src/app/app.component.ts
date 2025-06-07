@@ -5,19 +5,7 @@ import { IssuesStoreService } from 'app/store/issues-store.service';
 import { ConfigStoreService } from 'app/store/config-store.service';
 import { Assertion } from 'app/utils';
 
-declare global {
-  interface Window {
-    electronAPI: {
-      readTextFile: (filePath: string) => Promise<string>;
-      writeTextFile: (filePath: string, content: string) => Promise<string>;
-    };
-    electron: {
-      ipcRenderer: {
-        invoke: (channel: string, ...args: any[]) => Promise<any>;
-      };
-    };
-  }
-}
+const gitlabConfigPath = './gitlab.config.json';
 
 @Component({
   selector: 'app-root',
@@ -34,7 +22,7 @@ export class AppComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.configStore.loadConfig().subscribe({
+    this.configStore.loadConfig(gitlabConfigPath).subscribe({
       error: () => {}, //サービス側からエラーハンドリングするため不要
       next: (config) => {
         if (!config || !(config as any).projectId) {
