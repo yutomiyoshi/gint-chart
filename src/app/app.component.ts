@@ -1,20 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { IssuesStoreService } from '@src/app/store/issues-store.service';
+import { GitLabConfigStoreService } from '@src/app/store/git-lab-config-store.service';
+import { Assertion } from '@src/app/utils';
 
-declare global {
-  interface Window {
-    electronAPI: {
-      readTextFile: (filePath: string) => Promise<string>;
-      writeTextFile: (filePath: string, content: string) => Promise<string>;
-    };
-    electron: {
-      ipcRenderer: {
-        invoke: (channel: string, ...args: any[]) => Promise<any>;
-      };
-    };
-  }
-}
+const gitlabConfigPath = './gitlab.config.json';
 
 @Component({
   selector: 'app-root',
@@ -23,18 +14,24 @@ declare global {
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })
-export class AppComponent {
-  async readConfig() {
-    try {
-      const config = await window.electron.ipcRenderer.invoke('read-config');
-      console.log(config.gitlabUrl, config.accessToken);
-      alert('設定ファイルが読み込まれました！');
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        alert('設定ファイルの読み込みに失敗しました: ' + error.message);
-      } else {
-        alert('設定ファイルの読み込みに失敗しました: 不明なエラー');
-      }
-    }
+export class AppComponent implements OnInit {
+  loadingOverlay = true;
+  constructor(
+    private issueStore: IssuesStoreService,
+    private gitLabConfigStore: GitLabConfigStoreService
+  ) {}
+
+  ngOnInit() {
+    this.gitLabConfigStore.loadConfig().subscribe({
+      error: () => {}, //サービス側からエラーハンドリングするため不要
+      next: (config) => {
+        this.issueStore.syncAllIssues().subscribe({
+          error: () => {}, //サービス側からエラーハンドリングするため不要
+          next: (issues) => {
+            this.loadingOverlay = false;
+          },
+        });
+      },
+    });
   }
 }
