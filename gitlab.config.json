@@ -1,4 +1,13 @@
 {
-  "gitlabUrl": "https://gitlab.com",
+  "projects": [
+    {
+      "url": "https://gitlab.com",
+      "projectId": 144
+    },
+    {
+      "url": "https://gitlab.com",
+      "projectId": 145
+    }
+  ],
   "accessToken": "glpat-xxxxxxxxxxxxxxxxxxxx"
 }

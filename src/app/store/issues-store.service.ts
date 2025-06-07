@@ -4,6 +4,7 @@ import { GitlabApiService } from '@src/app/gitlab-api/gitlab-api.service';
 import { Issue, convertJsonToIssue } from '@src/app/issue';
 import { tap } from 'rxjs';
 import { GitLabApiIssue } from '@src/app/gitlab-api/gitlab-issue.model';
+import { GitLabProject } from '@src/app/gitlab-config';
 
 @Injectable({
   providedIn: 'root',
@@ -16,13 +17,13 @@ export class IssuesStoreService {
 
   /**
    * 指定プロジェクトの全issuesをAPIから取得し、ストアに反映する
-   * @param projectId GitLabのプロジェクトID
+   * @param project GitLabのプロジェクト情報
    * @returns Observable<Issue[]> 取得・反映後のissues配列を流すObservable
    */
-  syncAllIssues(projectId: string | number): Observable<Issue[]> {
+  syncAllIssues(project: GitLabProject): Observable<Issue[]> {
     return this.gitlabApi
       .fetch<GitLabApiIssue, Issue>(
-        projectId,
+        project,
         'issues?per_page=100',
         convertJsonToIssue
       )

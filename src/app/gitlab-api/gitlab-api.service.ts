@@ -2,20 +2,12 @@ import { Injectable } from '@angular/core';
 import { GitLabConfigStoreService } from '@src/app/store/git-lab-config-store.service';
 import { isNull, Assertion } from '@src/app/utils';
 import { Observable, defer, from } from 'rxjs';
-
-export interface GitLabConfig {
-  gitlabUrl: string;
-  accessToken: string;
-}
+import { GitLabConfig, GitLabProject } from '@src/app/gitlab-config';
 
 @Injectable({
   providedIn: 'root',
 })
 export class GitlabApiService {
-  private get apiBaseUrl(): string {
-    return this.gitLabConfigStore.getConfig().gitlabUrl;
-  }
-
   private get accessToken(): string {
     return this.gitLabConfigStore.getConfig().accessToken;
   }
@@ -27,23 +19,23 @@ export class GitlabApiService {
    *
    * @template T APIから取得する生データの型
    * @template S 変換後のアプリ用データ型
-   * @param projectId GitLabのプロジェクトID（数値またはパス）
+   * @param project プロジェクト情報（url, projectId）
    * @param endpoint プロジェクト配下のAPIエンドポイント（例: 'issues', 'merge_requests' など）
    * @param mapFn APIのレスポンスTをアプリ用型Sに変換する関数
    * @returns Observable<S[]> 変換後データの配列を流すObservable
    */
   public fetch<T, S>(
-    projectId: string | number,
+    project: GitLabProject,
     endpoint: string,
     mapFn: (data: T) => S | null
   ): Observable<S[]> {
     return defer(() => {
-      if (this.apiBaseUrl === '') {
-        Assertion.assert('GitLab APIの設定が未初期化です', Assertion.no(2));
+      if (!project || !project.url) {
+        Assertion.assert('GitLabプロジェクト情報が未設定です', Assertion.no(2));
         return from([[] as S[]]);
       }
-      const url = `${this.apiBaseUrl}/projects/${encodeURIComponent(
-        projectId
+      const url = `${project.url}/api/v4/projects/${encodeURIComponent(
+        project.projectId
       )}/${endpoint}`;
       return from(
         fetch(url, {
@@ -78,7 +70,7 @@ export class GitlabApiService {
    *
    * @template T APIから返る生データの型
    * @template S 変換後のアプリ用データ型
-   * @param projectId GitLabのプロジェクトID（数値またはパス）
+   * @param project プロジェクト情報（url, projectId）
    * @param endpoint プロジェクト配下のAPIエンドポイント（例: 'issues/1', 'merge_requests/2' など）
    * @param body 送信するデータ（JSON）
    * @param method HTTPメソッド（'PATCH' | 'PUT' | 'POST'）
@@ -86,19 +78,19 @@ export class GitlabApiService {
    * @returns Observable<S> 変換後データを流すObservable
    */
   public update<T, S>(
-    projectId: string | number,
+    project: GitLabProject,
     endpoint: string,
     body: any,
     method: 'PATCH' | 'PUT' | 'POST',
     mapFn: (data: T) => S
   ): Observable<S> {
     return defer(() => {
-      if (this.apiBaseUrl === '') {
-        Assertion.assert('GitLab APIの設定が未初期化です', Assertion.no(2));
+      if (!project || !project.url) {
+        Assertion.assert('GitLabプロジェクト情報が未設定です', Assertion.no(2));
         return from([null as unknown as S]);
       }
-      const url = `${this.apiBaseUrl}/projects/${encodeURIComponent(
-        projectId
+      const url = `${project.url}/api/v4/projects/${encodeURIComponent(
+        project.projectId
       )}/${endpoint}`;
       return from(
         fetch(url, {

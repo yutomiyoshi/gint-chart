@@ -6,7 +6,12 @@ declare global {
   }
 }
 
+export interface GitLabProject {
+  url: string;
+  projectId: number;
+}
+
 export interface GitLabConfig {
-  gitlabUrl: string;
+  projects: GitLabProject[];
   accessToken: string;
 }
