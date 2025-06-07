@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IssuesStoreService } from './issues-store.service';
-import { ConfigStoreService } from './config-store.service';
+import { IssuesStoreService } from './store/issues-store.service';
+import { ConfigStoreService } from './store/config-store.service';
 import { Assertion } from './utils';
 
 declare global {
