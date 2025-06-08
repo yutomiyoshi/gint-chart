@@ -1,5 +1,6 @@
 import { GanttItem } from '@worktile/gantt/class/item';
 import { GitLabApiIssue } from '@src/app/git-lab-api/git-lab-issue.model';
+import { isUndefined } from './utils';
 
 export interface Issue extends GanttItem<GitLabApiIssue> {
   /**
@@ -85,12 +86,17 @@ export function convertJsonToIssue(apiIssue: GitLabApiIssue): Issue | null {
 
     /**
      * 終了日の取得
+     * 開始日より前の場合は無効とする
      */
     const endMatch = apiIssue.description.match(
       /\$end-date:([0-9]{4}-[0-9]{2}-[0-9]{2})/
     );
     if (endMatch) {
-      end = new Date(endMatch[1]);
+      const endDate = new Date(endMatch[1]);
+      // 開始日が設定されており、終了日が開始日より前の場合は無効
+      if (!isUndefined(start) && endDate >= start) {
+        end = endDate;
+      }
     }
   }
 
