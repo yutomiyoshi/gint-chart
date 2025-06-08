@@ -1,1 +1,9 @@
 <p>chart-area works!</p>
+
+<ngx-gantt [items]="ganttItems">
+  <ngx-gantt-table>
+    <ngx-gantt-column name="タイトル" width="300px">
+      <ng-template #cell let-item="item">{{ item.title }}</ng-template>
+    </ngx-gantt-column>
+  </ngx-gantt-table>
+</ngx-gantt>
