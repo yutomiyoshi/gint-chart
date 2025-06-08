@@ -1,6 +1,7 @@
 import { Issue } from './issue';
+import { GitLabApiIssue } from './git-lab-api/git-lab-issue.model';
 
-export const SAMPLE_ISSUES: Issue[] = [
+const SAMPLE_ISSUES_ORIGIN: GitLabApiIssue[] = [
   {
     id: 1,
     iid: 101,
@@ -36,3 +37,10 @@ export const SAMPLE_ISSUES: Issue[] = [
     due_date: null,
   },
 ];
+
+export const SAMPLE_ISSUES: Issue[] = SAMPLE_ISSUES_ORIGIN.map((origin) => ({
+  id: String(origin.id),
+  title: origin.title,
+  origin,
+  // 必要に応じて他のGanttItemプロパティもここでセット
+}));
