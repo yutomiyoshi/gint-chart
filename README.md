@@ -1,30 +1,41 @@
 # なんだかんだ手軽に使えるタスク管理ツールがない
 
-Redmineはなんだか使いにくいし、BackLogはお金かかる。
+Redmine はなんだか使いにくいし、BackLog はお金かかる。
 
-GitLabはPremiumにしないとガントチャートが使えない。
+GitLab は Premium にしないとガントチャートが使えない。
 
-Githubのプロジェクトは便利だけど、会社から使っちゃダメって言われた。
+Github のプロジェクトは便利だけど、会社から使っちゃダメって言われた。
 
 # サーバーレスなタスク管理：Gint-Chart
 
-特別なサーバーなし、GitLabに情報を集約してタスク管理する。
+特別なサーバーなし、GitLab に情報を集約してタスク管理する。
 
-GitLabのリポジトリにチケットのデータをpushして、更新してcommitする。
+GitLab のリポジトリにチケットのデータを push して、更新して commit する。
 
 ![1](./asset/system-configuration1.png)
 
-GitLabのグループがあれば、メンバー間でタスク管理できる。
+GitLab のグループがあれば、メンバー間でタスク管理できる。
 
 ![2](./asset/system-configuration2.png)
 
-必要なのは、GitLabのリポジトリ1つと各メンバーのPCにgint-chartのネイティブアプリ。
+必要なのは、GitLab のリポジトリ 1 つと各メンバーの PC に gint-chart のネイティブアプリ。
 
 ![3](./asset/system-configuration3.png)
 
-将来的には、Google Chatみたいなコミュニケーションツールに、チケットの更新を通知する。
+将来的には、Google Chat みたいなコミュニケーションツールに、チケットの更新を通知する。
 
 ![4](./asset/system-configuration4.png)
+
+## 使い方
+
+GitLab の Issue の description に
+
+```
+$start-date:yyyy-mm-dd
+$end-date:yyyy-mm-dd
+```
+
+---
 
 ## うみだしたい
 
@@ -50,9 +61,9 @@ GitLabのグループがあれば、メンバー間でタスク管理できる�
 
 - 最速（MVP）
 
-- 横着（AI駆動）
+- 横着（AI 駆動）
 
-- UIにはこだわる
+- UI にはこだわる
 
 - CI/CD
 
