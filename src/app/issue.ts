@@ -1,3 +1,5 @@
+import { GitLabApiIssue } from '@src/app/git-lab-api/git-lab-issue.model';
+
 export interface Issue {
   id: number; // グローバルID
   iid: number; // プロジェクト内ID
@@ -17,7 +19,7 @@ export interface Issue {
 }
 
 // GitLab APIのissueレスポンス型からIssue型へ変換する関数
-export function convertJsonToIssue(apiIssue: any): Issue | null {
+export function convertJsonToIssue(apiIssue: GitLabApiIssue): Issue | null {
   if (
     typeof apiIssue.id !== 'number' ||
     typeof apiIssue.iid !== 'number' ||

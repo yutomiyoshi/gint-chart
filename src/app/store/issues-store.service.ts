@@ -7,6 +7,7 @@ import { GitLabProject } from '@src/app/git-lab-config';
 import { GitLabConfigStoreService } from './git-lab-config-store.service';
 import { SAMPLE_ISSUES } from '@src/app/sample-issues';
 import { environment } from '@src/environments/environment';
+import { GitLabApiIssue } from '@src/app/git-lab-api/git-lab-issue.model';
 
 @Injectable({
   providedIn: 'root',
@@ -69,7 +70,7 @@ export class IssuesStoreService {
   ): Observable<Issue[]> {
     const urlObj = new URL(project.url);
     const host = urlObj.origin;
-    return this.gitlabApi.fetch<any, Issue>(
+    return this.gitlabApi.fetch<GitLabApiIssue, Issue>(
       host,
       String(project.projectId),
       accessToken,

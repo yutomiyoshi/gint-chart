@@ -3,9 +3,6 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IssuesStoreService } from '@src/app/store/issues-store.service';
 import { GitLabConfigStoreService } from '@src/app/store/git-lab-config-store.service';
-import { Assertion } from '@src/app/utils';
-
-const gitlabConfigPath = './gitlab.config.json';
 
 @Component({
   selector: 'app-root',
