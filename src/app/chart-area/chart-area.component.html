@@ -1,1 +1,14 @@
-<p>chart-area works!</p>
+<div class="chart-area-container">
+  <div class="calendar-area">
+    <app-calendar></app-calendar>
+  </div>
+  <div class="issue-row-area">
+    <app-issue-row
+      *ngFor="let issue of issues"
+      [title]="issue.title"
+      [state]="issue.state"
+      [startDate]="issue.start_date"
+      [endDate]="issue.end_date"
+    ></app-issue-row>
+  </div>
+</div>

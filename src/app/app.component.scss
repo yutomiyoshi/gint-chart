@@ -52,3 +52,16 @@
     transform: rotate(0deg);
   }
 }
+
+$header-height: 40px;
+
+.header {
+  width: 100%;
+  height: $header-height;
+  background-color: #1976d2;
+}
+
+.chart-area {
+  width: 100%;
+  height: calc(100vh - $header-height);
+}

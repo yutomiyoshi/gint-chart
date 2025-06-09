@@ -1,4 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { IssuesStoreService } from '../store/issues-store.service';
+import { Issue } from '../issue';
 
 @Component({
   selector: 'app-chart-area',
@@ -6,4 +8,17 @@ import { Component } from '@angular/core';
   templateUrl: './chart-area.component.html',
   styleUrls: ['./chart-area.component.scss'],
 })
-export class ChartAreaComponent {}
+export class ChartAreaComponent implements OnInit {
+  issues: Issue[] = [];
+
+  constructor(private issueStore: IssuesStoreService) {}
+
+  ngOnInit(): void {
+    this.issueStore.issues$.subscribe((issues) => {
+      // TODO: ここでissuesをソートする
+      // TODO: ここでissuesをグループ化する
+      // TODO: ここでissuesをフィルターする
+      this.issues = issues;
+    });
+  }
+}
