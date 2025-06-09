@@ -1,55 +1,125 @@
 import { GitLabApiIssue } from '@src/app/git-lab-api/git-lab-issue.model';
+import { isUndefined } from './utils';
+
+// $$start_date:yyyy-mm-dd$$や$$end_date:yyyy-mm-dd$$のパターンは不変なので関数外で定義
+const startDatePattern = /\$\$start_date:(\d{4}-\d{2}-\d{2})\$\$/;
+const endDatePattern = /\$\$end_date:(\d{4}-\d{2}-\d{2})\$\$/;
 
 export interface Issue {
-  id: number; // グローバルID
-  iid: number; // プロジェクト内ID
+  /**
+   * id
+   * @type {number}
+   */
+  id: number;
+
+  /**
+   * project_id
+   * @type {number}
+   */
   project_id: number;
+
+  /**
+   * milestone_id
+   * @type {number | null}
+   */
+  milestone_id: number | null;
+
+  /**
+   * title
+   * @type {string}
+   */
   title: string;
-  description: string | null;
+
+  /**
+   * description
+   * @type {string}
+   */
+  description: string;
+
+  /**
+   * start_date
+   * @type {Date | undefined}
+   */
+  start_date: Date | undefined;
+
+  /**
+   * end_date
+   * @type {Date | undefined}
+   */
+  end_date: Date | undefined;
+
+  /**
+   * state
+   * @type {string}
+   */
   state: 'opened' | 'closed' | string;
-  created_at: string; // ISO8601
-  updated_at: string; // ISO8601
-  closed_at: string | null; // ISO8601 or null
+
+  /**
+   * label
+   * @type {string[]}
+   */
   labels: string[];
-  milestone?: number | null;
-  assignees: number[];
-  author: number;
-  web_url: string;
-  due_date?: string | null;
 }
 
 // GitLab APIのissueレスポンス型からIssue型へ変換する関数
 export function convertJsonToIssue(apiIssue: GitLabApiIssue): Issue | null {
+  // 必須フィールドのバリデーション
   if (
     typeof apiIssue.id !== 'number' ||
-    typeof apiIssue.iid !== 'number' ||
     typeof apiIssue.project_id !== 'number' ||
     typeof apiIssue.title !== 'string' ||
     typeof apiIssue.state !== 'string' ||
-    typeof apiIssue.created_at !== 'string' ||
-    typeof apiIssue.updated_at !== 'string' ||
-    !Array.isArray(apiIssue.labels) ||
-    !Array.isArray(apiIssue.assignees) ||
-    typeof apiIssue.author !== 'number' ||
-    typeof apiIssue.web_url !== 'string'
+    !Array.isArray(apiIssue.labels)
   ) {
     return null;
   }
+
+  // milestone_idの取得
+  const milestone_id = apiIssue.milestone ? apiIssue.milestone.id : null;
+
+  let description =
+    typeof apiIssue.description === 'string' ? apiIssue.description : '';
+
+  // start_date, end_dateの取得（description内の記法のみ使用）
+  let start_date: Date | undefined = undefined;
+  let end_date: Date | undefined = undefined;
+
+  const startMatch = description.match(startDatePattern);
+  if (startMatch) {
+    const d = new Date(startMatch[1]);
+    if (!isNaN(d.getTime())) {
+      start_date = d;
+      // start_dateが取得できた場合はdescriptionから該当部分を削除
+      description = description.replace(startDatePattern, '');
+    }
+  }
+
+  const endMatch = description.match(endDatePattern);
+  if (endMatch) {
+    const d = new Date(endMatch[1]);
+    if (!isNaN(d.getTime())) {
+      end_date = d;
+      // end_dateが取得できた場合はdescriptionから該当部分を削除
+      description = description.replace(endDatePattern, '');
+    }
+  }
+  if (
+    !isUndefined(start_date) &&
+    !isUndefined(end_date) &&
+    end_date < start_date
+  ) {
+    end_date = undefined;
+  }
+
   return {
     id: apiIssue.id,
-    iid: apiIssue.iid,
     project_id: apiIssue.project_id,
+    milestone_id,
     title: apiIssue.title,
-    description: apiIssue.description,
+    description: description,
+    start_date,
+    end_date,
     state: apiIssue.state,
-    created_at: apiIssue.created_at,
-    updated_at: apiIssue.updated_at,
-    closed_at: apiIssue.closed_at,
     labels: apiIssue.labels,
-    milestone: apiIssue.milestone,
-    assignees: apiIssue.assignees,
-    author: apiIssue.author,
-    web_url: apiIssue.web_url,
-    due_date: apiIssue.due_date,
   };
 }
