@@ -16,5 +16,6 @@ import { NgxGanttModule } from '@worktile/gantt';
     ChartAreaComponent,
   ],
   imports: [BrowserModule, CommonModule, FormsModule, NgxGanttModule],
+  bootstrap: [AppComponent],
 })
 export class AppModule {}
