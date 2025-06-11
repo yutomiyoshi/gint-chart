@@ -1,5 +1,8 @@
 import { Component, Input } from '@angular/core';
-import { Issue } from '@src/app/issue';
+import {
+  calendarEndDateOffset,
+  calendarStartDateOffset,
+} from '../calendar-view-default';
 
 @Component({
   selector: 'app-issue-row',
@@ -18,6 +21,15 @@ export class IssueRowComponent {
   @Input() startDate: Date | undefined = undefined;
 
   @Input() endDate: Date | undefined = undefined;
+
+  // 日付の表示範囲、カレンダーと同期する
+  @Input() dispStartDate: Date = new Date(
+    new Date().setDate(new Date().getDate() - calendarStartDateOffset)
+  );
+
+  @Input() dispEndDate: Date = new Date(
+    new Date().setDate(new Date().getDate() + calendarEndDateOffset)
+  );
 
   /**
    * UI fields

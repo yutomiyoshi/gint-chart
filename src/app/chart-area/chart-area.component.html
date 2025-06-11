@@ -1,6 +1,9 @@
 <div class="chart-area-container">
   <div class="calendar-area">
-    <app-calendar></app-calendar>
+    <app-calendar
+      [dispStartDate]="dispStartDate"
+      [dispEndDate]="dispEndDate"
+    ></app-calendar>
   </div>
   <div class="issue-row-area">
     <app-issue-row
@@ -9,6 +12,8 @@
       [state]="issue.state"
       [startDate]="issue.start_date"
       [endDate]="issue.end_date"
+      [dispStartDate]="dispStartDate"
+      [dispEndDate]="dispEndDate"
     ></app-issue-row>
   </div>
 </div>

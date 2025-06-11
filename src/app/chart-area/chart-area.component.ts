@@ -1,6 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { IssuesStoreService } from '../store/issues-store.service';
 import { Issue } from '../issue';
+import {
+  calendarEndDateOffset,
+  calendarStartDateOffset,
+} from './calendar-view-default';
 
 @Component({
   selector: 'app-chart-area',
@@ -9,7 +13,19 @@ import { Issue } from '../issue';
   styleUrls: ['./chart-area.component.scss'],
 })
 export class ChartAreaComponent implements OnInit {
+  /**
+   * Logic fields
+   */
   issues: Issue[] = [];
+
+  // 日付の表示範囲、カレンダーとIssueRowで同期する
+  dispStartDate: Date = new Date(
+    new Date().setDate(new Date().getDate() - calendarStartDateOffset)
+  );
+
+  dispEndDate: Date = new Date(
+    new Date().setDate(new Date().getDate() + calendarEndDateOffset)
+  );
 
   constructor(private issueStore: IssuesStoreService) {}
 
