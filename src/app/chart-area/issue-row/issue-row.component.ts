@@ -3,6 +3,7 @@ import {
   calendarEndDateOffset,
   calendarStartDateOffset,
 } from '../calendar-view-default';
+import { statusWidthDefault, titleWidthDefault } from '../column-view-default';
 
 @Component({
   selector: 'app-issue-row',
@@ -36,13 +37,13 @@ export class IssueRowComponent {
    */
 
   titleStyle: { [key: string]: string } = {
-    width: '100px',
-    flex: '0 0 100px',
+    width: titleWidthDefault + 'px',
+    flex: '0 0 ' + titleWidthDefault + 'px',
   };
 
   statusStyle: { [key: string]: string } = {
-    width: '100px',
-    flex: '0 0 100px',
+    width: statusWidthDefault + 'px',
+    flex: '0 0 ' + statusWidthDefault + 'px',
   };
 
   @Input()

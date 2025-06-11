@@ -5,6 +5,7 @@ import {
   calendarEndDateOffset,
   calendarStartDateOffset,
 } from './calendar-view-default';
+import { statusWidthDefault, titleWidthDefault } from './column-view-default';
 
 @Component({
   selector: 'app-chart-area',
@@ -26,6 +27,12 @@ export class ChartAreaComponent implements OnInit {
   dispEndDate: Date = new Date(
     new Date().setDate(new Date().getDate() + calendarEndDateOffset)
   );
+
+  // タイトルの幅
+  titleWidth: number = titleWidthDefault;
+
+  // ステータスの幅
+  statusWidth: number = statusWidthDefault;
 
   constructor(private issueStore: IssuesStoreService) {}
 

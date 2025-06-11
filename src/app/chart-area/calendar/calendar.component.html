@@ -1,1 +1,14 @@
-<p>calendar works!</p>
+<div class="calendar-row" style="display: flex; align-items: center">
+  <div class="calendar-title-space" [ngStyle]="titleStyle">Title</div>
+  <div class="calendar-status-space" [ngStyle]="statusStyle">Status</div>
+  <div class="calendar-days" style="display: flex; flex: 1">
+    <ng-container *ngFor="let date of getDateRange">
+      <div
+        class="calendar-day"
+        style="width: 40px; text-align: center; border-right: 1px solid #eee"
+      >
+        {{ date | date : "MM/dd" }}
+      </div>
+    </ng-container>
+  </div>
+</div>
