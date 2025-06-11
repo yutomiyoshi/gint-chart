@@ -9,12 +9,24 @@
 .issue-column-status-space {
   /* 必要に応じてスタイルを追加 */
 }
-.issue-column-days {
+.issue-column-calendar {
   display: flex;
-  flex: 1;
+  flex: 1 1 auto;
 }
 .issue-column-day {
-  width: 40px;
-  text-align: center;
+  flex: 1 1 auto;
   border-right: 1px solid #eee;
+
+  display: flex;
+  flex-direction: column;
+
+  > .month {
+    flex: 1 1 auto;
+    font-size: 12px;
+  }
+
+  > .day {
+    flex: 1 1 auto;
+    font-size: 12px;
+  }
 }

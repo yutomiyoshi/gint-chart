@@ -1,4 +1,11 @@
-import { Component, Input } from '@angular/core';
+import {
+  Component,
+  Input,
+  Output,
+  EventEmitter,
+  ViewChild,
+  ElementRef,
+} from '@angular/core';
 import {
   calendarEndDateOffset,
   calendarStartDateOffset,
@@ -15,14 +22,11 @@ export class IssueColumnComponent {
   /**
    * Logic fields
    */
-  // 日付の表示範囲、IssueRowと同期する
-  @Input() dispStartDate: Date = new Date(
-    new Date().setDate(new Date().getDate() - calendarStartDateOffset)
-  );
+  @Input() dispStartDate!: Date;
+  @Output() dispStartDateChange = new EventEmitter<Date>();
 
-  @Input() dispEndDate: Date = new Date(
-    new Date().setDate(new Date().getDate() + calendarEndDateOffset)
-  );
+  @Input() dispEndDate!: Date;
+  @Output() dispEndDateChange = new EventEmitter<Date>();
 
   /**
    * UI fields
@@ -54,6 +58,9 @@ export class IssueColumnComponent {
     };
   }
 
+  @ViewChild('calendarDay', { static: false })
+  calendarDayRef!: ElementRef<HTMLDivElement>;
+
   /**
    * dispStartDateとdispEndDateの間の日付配列を返す
    */
@@ -65,5 +72,52 @@ export class IssueColumnComponent {
       current.setDate(current.getDate() + 1);
     }
     return dates;
+  }
+
+  /**
+   * スクロールイベントで日付範囲を親に通知
+   */
+  onWheel(event: WheelEvent) {
+    event.preventDefault();
+    if (event.ctrlKey) {
+      // カレンダー領域の幅から1日あたりの幅を計算
+      const calendarElem = this.calendarDayRef?.nativeElement;
+      const calendarWidth = calendarElem ? calendarElem.offsetWidth : 0;
+      const totalDays = Math.round(
+        (this.dispEndDate.getTime() - this.dispStartDate.getTime()) /
+          (1000 * 60 * 60 * 24)
+      );
+      const dayWidth = totalDays > 0 ? calendarWidth / (totalDays + 1) : 40; // Fallback: 40px
+      const offsetX = event.offsetX;
+      const cursorIndex = Math.floor(offsetX / dayWidth);
+      // カーソル下の日付
+      const cursorDate = new Date(this.dispStartDate);
+      cursorDate.setDate(cursorDate.getDate() + cursorIndex);
+      // 拡大・縮小
+      const delta = event.deltaY > 0 ? 1 : -1; // 下で拡大、上で縮小
+      let newRange = totalDays + 1 + delta * 2; // 両端で2日ずつ増減
+      if (newRange < 1) newRange = 1;
+      // 新しいstartDateを計算（カーソル下の日付が同じインデックスに来るように）
+      let newStart = new Date(cursorDate);
+      newStart.setDate(newStart.getDate() - cursorIndex - (delta > 0 ? 1 : 0));
+      let newEnd = new Date(newStart);
+      newEnd.setDate(newStart.getDate() + newRange);
+      // 範囲が1日未満にならないように
+      if (newEnd <= newStart) {
+        newStart = new Date(this.dispStartDate);
+        newEnd = new Date(this.dispEndDate);
+      }
+      this.dispStartDateChange.emit(newStart);
+      this.dispEndDateChange.emit(newEnd);
+    } else {
+      // 範囲全体をスライド
+      const moveDays = event.deltaY > 0 ? 1 : -1;
+      const newStart = new Date(this.dispStartDate);
+      newStart.setDate(newStart.getDate() + moveDays);
+      const newEnd = new Date(this.dispEndDate);
+      newEnd.setDate(newEnd.getDate() + moveDays);
+      this.dispStartDateChange.emit(newStart);
+      this.dispEndDateChange.emit(newEnd);
+    }
   }
 }

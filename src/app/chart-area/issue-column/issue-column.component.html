@@ -1,13 +1,11 @@
 <div class="issue-column-row" style="display: flex; align-items: center">
   <div class="issue-column-title-space" [ngStyle]="titleStyle">Title</div>
   <div class="issue-column-status-space" [ngStyle]="statusStyle">Status</div>
-  <div class="issue-column-days" style="display: flex; flex: 1">
+  <div class="issue-column-calendar" (wheel)="onWheel($event)">
     <ng-container *ngFor="let date of getDateRange">
-      <div
-        class="issue-column-day"
-        style="width: 40px; text-align: center; border-right: 1px solid #eee"
-      >
-        {{ date | date : "MM/dd" }}
+      <div #calendarDay class="issue-column-day">
+        <div class="month">{{ date | date : "MM" }}</div>
+        <div class="day">{{ date | date : "dd" }}</div>
       </div>
     </ng-container>
   </div>
