@@ -6,7 +6,7 @@ import { AppComponent } from './app.component';
 import { HeaderComponent } from './header/header.component';
 import { ChartAreaComponent } from './chart-area/chart-area.component';
 import { IssueRowComponent } from './chart-area/issue-row/issue-row.component';
-import { CalendarComponent } from './chart-area/calendar/calendar.component';
+import { IssueColumnComponent } from './chart-area/issue-column/issue-column.component';
 
 @NgModule({
   declarations: [
@@ -14,7 +14,7 @@ import { CalendarComponent } from './chart-area/calendar/calendar.component';
     HeaderComponent,
     ChartAreaComponent,
     IssueRowComponent,
-    CalendarComponent,
+    IssueColumnComponent,
   ],
   imports: [BrowserModule, FormsModule, CommonModule],
   providers: [],

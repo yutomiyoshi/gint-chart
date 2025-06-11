@@ -6,12 +6,12 @@ import {
 import { statusWidthDefault, titleWidthDefault } from '../column-view-default';
 
 @Component({
-  selector: 'app-calendar',
+  selector: 'app-issue-column',
   standalone: false,
-  templateUrl: './calendar.component.html',
-  styleUrl: './calendar.component.scss',
+  templateUrl: './issue-column.component.html',
+  styleUrl: './issue-column.component.scss',
 })
-export class CalendarComponent {
+export class IssueColumnComponent {
   /**
    * Logic fields
    */
