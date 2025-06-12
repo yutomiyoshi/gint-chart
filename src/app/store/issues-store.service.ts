@@ -69,7 +69,7 @@ export class IssuesStoreService {
     accessToken: string
   ): Observable<Issue[]> {
     const urlObj = new URL(project.url);
-    const host = urlObj.origin;
+    const host = urlObj.href;
     return this.gitlabApi.fetch<GitLabApiIssue, Issue>(
       host,
       String(project.projectId),

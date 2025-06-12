@@ -1,0 +1,32 @@
+/* IssueColumnComponent */
+.issue-column-row {
+  display: flex;
+  align-items: center;
+}
+.issue-column-title-space {
+  /* 必要に応じてスタイルを追加 */
+}
+.issue-column-status-space {
+  /* 必要に応じてスタイルを追加 */
+}
+.issue-column-calendar {
+  display: flex;
+  flex: 1 1 auto;
+}
+.issue-column-day {
+  flex: 1 1 auto;
+  border-right: 1px solid #eee;
+
+  display: flex;
+  flex-direction: column;
+
+  > .month {
+    flex: 1 1 auto;
+    font-size: 12px;
+  }
+
+  > .day {
+    flex: 1 1 auto;
+    font-size: 12px;
+  }
+}

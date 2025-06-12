@@ -1,0 +1,48 @@
+$issue-row-height: 20px;
+
+.issue-row-container {
+  width: 100%;
+  height: $issue-row-height;
+  background-color: #f0f0f0;
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.title {
+  width: 200px;
+  flex: 0 0 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.status {
+  width: 100px;
+  flex: 0 0 100px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.calendar-area {
+  position: relative;
+  flex: 1 1 auto;
+  height: 100%;
+  padding: 0 4px;
+
+  > .issue-bar {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #4a90e2;
+
+    &:hover {
+      opacity: 0.8;
+    }
+  }
+}
