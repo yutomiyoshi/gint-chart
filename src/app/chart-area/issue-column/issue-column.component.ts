@@ -133,6 +133,18 @@ export class IssueColumnComponent {
       newStart.setDate(newStart.getDate() - newCursorIndex);
       const newEnd = new Date(newStart);
       newEnd.setDate(newStart.getDate() + newRange - 1);
+      const newCursorDate = new Date(newStart);
+      newCursorDate.setDate(newCursorDate.getDate() + newCursorIndex);
+
+      if (cursorDate < newCursorDate) {
+        newStart.setDate(newStart.getDate() - 1);
+        newEnd.setDate(newEnd.getDate() - 1);
+      }
+
+      if (cursorDate > newCursorDate) {
+        newStart.setDate(newStart.getDate() + 1);
+        newEnd.setDate(newEnd.getDate() + 1);
+      }
 
       this.dispStartDateChange.emit(newStart);
       this.dispEndDateChange.emit(newEnd);
