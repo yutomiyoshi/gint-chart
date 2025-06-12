@@ -1,9 +1,7 @@
 <div class="issue-row-container">
-  <div class="title" [ngStyle]="titleStyle">
-    {{ title }}
+  <div class="title" [ngStyle]="titleStyle">{{ title }}</div>
+  <div class="status" [ngStyle]="statusStyle">{{ state }}</div>
+  <div class="calendar-area">
+    <div class="issue-bar" [ngStyle]="barStyle"></div>
   </div>
-  <div class="status" [ngStyle]="statusStyle">
-    {{ state }}
-  </div>
-  <div class="bar"></div>
 </div>
