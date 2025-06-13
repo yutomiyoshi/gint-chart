@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { IssuesStoreService } from '../store/issues-store.service';
-import { Issue } from '../issue';
+import { Issue } from '../model/issue.model';
 import {
   calendarEndDateOffset,
   calendarStartDateOffset,

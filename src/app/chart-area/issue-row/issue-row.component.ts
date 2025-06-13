@@ -4,7 +4,7 @@ import {
   calendarStartDateOffset,
 } from '../calendar-view-default';
 import { statusWidthDefault, titleWidthDefault } from '../column-view-default';
-import { Assertion, isUndefined } from '@src/app/utils';
+import { Assertion, isUndefined } from '@src/app/utils/utils';
 
 @Component({
   selector: 'app-issue-row',
