@@ -16,9 +16,9 @@ export class IssueRowComponent {
   /**
    * Logic fields
    */
-  @Input() title: string = 'dummy title';
+  @Input() title = 'dummy title';
 
-  @Input() state: string = 'dummy state';
+  @Input() state = 'dummy state';
 
   @Input() startDate: Date | undefined = undefined;
 
@@ -111,7 +111,7 @@ export class IssueRowComponent {
 
     let left = (startOffset / totalDays) * 100; // %
     let width = (duration / totalDays) * 100; // %
-    let borderRadius = [4, 4, 4, 4]; // px
+    const borderRadius = [4, 4, 4, 4]; // px
 
     if (left < 0) {
       width += left;
