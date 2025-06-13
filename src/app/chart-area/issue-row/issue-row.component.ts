@@ -5,6 +5,8 @@ import {
 } from '@src/app/chart-area/calendar-view-default';
 import { statusWidthDefault, titleWidthDefault } from '@src/app/chart-area/column-view-default';
 import { Assertion, isUndefined } from '@src/app/utils/utils';
+import { barBorderRadiusDefault } from './issue-row-default';
+import { DateHandler } from '@src/app/utils/time';
 
 @Component({
   selector: 'app-issue-row',
@@ -92,38 +94,34 @@ export class IssueRowComponent {
       return { display: 'none' };
     }
 
-    const totalDays =
-      Math.round(
-        (this.dispEndDate.getTime() - this.dispStartDate.getTime()) /
-          (1000 * 60 * 60 * 24)
-      ) + 1;
+    const totalDays = DateHandler.countDateBetween(this.dispEndDate, this.dispStartDate);
 
-    const startOffset = Math.round(
-      (this.startDate.getTime() - this.dispStartDate.getTime()) /
-        (1000 * 60 * 60 * 24)
-    );
+    const startOffset = DateHandler.countOffset(this.startDate, this.dispStartDate); 
 
-    const duration =
-      Math.round(
-        (this.endDate.getTime() - this.startDate.getTime()) /
-          (1000 * 60 * 60 * 24)
-      ) + 1;
+    const duration = DateHandler.countDateBetween(this.endDate, this.startDate);
 
     let left = (startOffset / totalDays) * 100; // %
     let width = (duration / totalDays) * 100; // %
-    const borderRadius = [4, 4, 4, 4]; // px
+    const borderRadius = [
+      barBorderRadiusDefault, // 左上
+      barBorderRadiusDefault, // 右上
+      barBorderRadiusDefault, // 右下
+      barBorderRadiusDefault　// 左下
+    ]; // px
 
     if (left < 0) {
+      // バーの左端が見切れる
       width += left;
       left = 0;
-      borderRadius[0] = 0;
-      borderRadius[3] = 0;
+      borderRadius[0] = 0; // 左上の角を丸める
+      borderRadius[3] = 0; // 左下の角を丸める
     }
 
     if (left + width > 100) {
+      // バーの右端が見切れる
       width = 100 - left;
-      borderRadius[1] = 0;
-      borderRadius[2] = 0;
+      borderRadius[1] = 0; // 右上の角を丸める
+      borderRadius[2] = 0; // 右下の角を丸める
     }
 
     return {
