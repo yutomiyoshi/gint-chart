@@ -2,8 +2,8 @@ import { Component, Input } from '@angular/core';
 import {
   calendarEndDateOffset,
   calendarStartDateOffset,
-} from '../calendar-view-default';
-import { statusWidthDefault, titleWidthDefault } from '../column-view-default';
+} from '@src/app/chart-area/calendar-view-default';
+import { statusWidthDefault, titleWidthDefault } from '@src/app/chart-area/column-view-default';
 import { Assertion, isUndefined } from '@src/app/utils/utils';
 
 @Component({
