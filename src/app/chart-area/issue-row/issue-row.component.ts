@@ -3,10 +3,14 @@ import {
   calendarEndDateOffset,
   calendarStartDateOffset,
 } from '@src/app/chart-area/calendar-view-default';
-import { statusWidthDefault, titleWidthDefault } from '@src/app/chart-area/column-view-default';
+import {
+  statusWidthDefault,
+  titleWidthDefault,
+} from '@src/app/chart-area/column-view-default';
 import { Assertion, isUndefined } from '@src/app/utils/utils';
 import { barBorderRadiusDefault } from './issue-row-default';
 import { DateHandler } from '@src/app/utils/time';
+import { U } from '@angular/cdk/unique-selection-dispatcher.d-DSFqf1MM';
 
 @Component({
   selector: 'app-issue-row',
@@ -22,9 +26,31 @@ export class IssueRowComponent {
 
   @Input() state = 'dummy state';
 
-  @Input() startDate: Date | undefined = undefined;
+  bar: IssueScheduledBar = new NonScheduledBar();
 
-  @Input() endDate: Date | undefined = undefined;
+  @Input()
+  set startDate(value: Date | undefined) {
+    if (
+      (isUndefined(this.bar.startDate) && isUndefined(value)) ||
+      (!isUndefined(this.bar.startDate) && !isUndefined(value))
+    ) {
+      this.bar.startDate = value;
+    } else {
+      this.bar = barFactory(value, this.bar.endDate);
+    }
+  }
+
+  @Input()
+  set endDate(value: Date | undefined) {
+    if (
+      (isUndefined(this.bar.endDate) && isUndefined(value)) ||
+      (!isUndefined(this.bar.endDate) && !isUndefined(value))
+    ) {
+      this.bar.endDate = value;
+    } else {
+      this.bar = barFactory(this.bar.startDate, value);
+    }
+  }
 
   // 日付の表示範囲、カレンダーと同期する
   @Input() dispStartDate: Date = new Date(
@@ -69,36 +95,160 @@ export class IssueRowComponent {
    * バーの位置と幅を計算する
    */
   get barStyle(): { [key: string]: string } {
-    // 表示範囲が逆転している場合は非表示にする
-    if (this.dispStartDate.getTime() > this.dispEndDate.getTime()) {
-      Assertion.assert('Display range is reversed.', Assertion.no(8));
+    return this.bar.barStyle(this.dispStartDate, this.dispEndDate);
+  }
+}
+
+/**
+ * issueの開始日と終了日を持つバー
+ */
+interface IssueScheduledBar {
+  /**
+   * 開始日
+   */
+  startDate: Date | undefined;
+
+  /**
+   * 終了日
+   */
+  endDate: Date | undefined;
+
+  /**
+   * バーのスタイル
+   * @param dispStartDate 表示範囲の開始日
+   * @param dispEndDate 表示範囲の終了日
+   * @returns バーのスタイル
+   */
+  barStyle: (
+    dispStartDate: Date,
+    dispEndDate: Date
+  ) => { [key: string]: string };
+  // onDropLeftHandle: (event: MouseEvent) => void;
+  // onDropRightHandle: (event: MouseEvent) => void;
+  // onDropCenterHandle: (event: MouseEvent) => void;
+  // onMoveLeftHandle: (event: MouseEvent) => void;
+  // onMoveRightHandle: (event: MouseEvent) => void;
+  // onMoveCenterHandle: (event: MouseEvent) => void;
+}
+
+/**
+ * 開始日も終了日も決まっていないバー
+ */
+class NonScheduledBar implements IssueScheduledBar {
+  /**
+   * 開始日
+   */
+  startDate = undefined;
+
+  /**
+   * 終了日
+   */
+  endDate = undefined;
+
+  /**
+   * バーのスタイル
+   */
+  barStyle = (dispStartDate: Date, dispEndDate: Date) => {
+    return { display: 'none' };
+  };
+}
+
+/**
+ * 終了日のみ決まっているバー
+ */
+class EndDateOnlyBar implements IssueScheduledBar {
+  /**
+   * 開始日
+   */
+  startDate = undefined;
+
+  /**
+   * 終了日
+   */
+  endDate: Date = new Date();
+
+  constructor(endDate: Date) {
+    this.endDate = endDate;
+  }
+
+  /**
+   * バーのスタイル
+   */
+  barStyle = (dispStartDate: Date, dispEndDate: Date) => {
+    return { display: 'none' };
+  };
+}
+
+/**
+ * 開始日のみ決まっているバー
+ */
+class StartDateOnlyBar implements IssueScheduledBar {
+  /**
+   * 開始日
+   */
+  startDate: Date = new Date();
+
+  /**
+   * 終了日
+   */
+  endDate = undefined;
+
+  constructor(startDate: Date) {
+    this.startDate = startDate;
+  }
+
+  /**
+   * バーのスタイル
+   */
+  barStyle = (dispStartDate: Date, dispEndDate: Date) => {
+    return { display: 'none' };
+  };
+}
+
+class ScheduledBar implements IssueScheduledBar {
+  /**
+   * 開始日
+   */
+  startDate: Date = new Date();
+
+  /**
+   * 終了日
+   */
+  endDate: Date = new Date();
+
+  constructor(startDate: Date, endDate: Date) {
+    this.startDate = startDate;
+    this.endDate = endDate;
+  }
+
+  /**
+   * バーのスタイル
+   */
+  barStyle = (
+    dispStartDate: Date,
+    dispEndDate: Date
+  ): { [key: string]: string } => {
+    console.log('dispStartDate', dispStartDate);
+    console.log('dispEndDate', dispEndDate);
+    console.log('this.startDate', this.startDate);
+    console.log('this.endDate', this.endDate);
+    if (this.startDate > this.endDate) {
+      Assertion.assert(
+        `${this.startDate} must be before ${this.endDate}`,
+        Assertion.no(8)
+      );
       return { display: 'none' };
     }
 
-    // いったん開始日と終了日がない場合は非表示にする
-    if (isUndefined(this.startDate) || isUndefined(this.endDate)) {
+    if (this.startDate > dispEndDate || this.endDate < dispStartDate) {
       return { display: 'none' };
     }
 
-    // 開始日が終了日より後の場合は非表示にする
-    if (this.startDate.getTime() > this.endDate.getTime()) {
-      Assertion.assert('Start date is after end date.', Assertion.no(9));
-      return { display: 'none' };
-    }
+    const totalDays = DateHandler.countDateBetween(dispStartDate, dispEndDate);
 
-    // 表示領域外の場合は非表示にする
-    if (
-      this.startDate.getTime() > this.dispEndDate.getTime() ||
-      this.endDate.getTime() < this.dispStartDate.getTime()
-    ) {
-      return { display: 'none' };
-    }
+    const startOffset = DateHandler.countOffset(dispStartDate, this.startDate);
 
-    const totalDays = DateHandler.countDateBetween(this.dispEndDate, this.dispStartDate);
-
-    const startOffset = DateHandler.countOffset(this.startDate, this.dispStartDate); 
-
-    const duration = DateHandler.countDateBetween(this.endDate, this.startDate);
+    const duration = DateHandler.countDateBetween(this.startDate, this.endDate);
 
     let left = (startOffset / totalDays) * 100; // %
     let width = (duration / totalDays) * 100; // %
@@ -106,7 +256,7 @@ export class IssueRowComponent {
       barBorderRadiusDefault, // 左上
       barBorderRadiusDefault, // 右上
       barBorderRadiusDefault, // 右下
-      barBorderRadiusDefault　// 左下
+      barBorderRadiusDefault, // 左下
     ]; // px
 
     if (left < 0) {
@@ -125,10 +275,32 @@ export class IssueRowComponent {
     }
 
     return {
-      display: 'block',
-      left: `${left}%`,
-      width: `${width}%`,
-      borderRadius: `${borderRadius[0]}px ${borderRadius[1]}px ${borderRadius[2]}px ${borderRadius[3]}px`,
+      display: 'block', // バーを表示する
+      left: `${left}%`, // バーの左端の位置(%)
+      width: `${width}%`, // バーの幅(%)
+      borderRadius: `${borderRadius[0]}px ${borderRadius[1]}px ${borderRadius[2]}px ${borderRadius[3]}px`, // バーの角の丸み(px)
     };
+  };
+}
+
+/**
+ * バーのインスタンスを生成する
+ * @param startDate 開始日
+ * @param endDate 終了日
+ * @returns バーのインスタンス
+ */
+function barFactory(startDate: Date | undefined, endDate: Date | undefined) {
+  if (!isUndefined(startDate) && !isUndefined(endDate)) {
+    return new ScheduledBar(startDate, endDate);
   }
+
+  if (!isUndefined(startDate)) {
+    return new StartDateOnlyBar(startDate);
+  }
+
+  if (!isUndefined(endDate)) {
+    return new EndDateOnlyBar(endDate);
+  }
+
+  return new NonScheduledBar();
 }
