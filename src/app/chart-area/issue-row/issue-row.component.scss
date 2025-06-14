@@ -1,4 +1,5 @@
 $issue-row-height: 20px;
+$calendar-area-padding: 4px;
 
 .issue-row-container {
   width: 100%;
@@ -30,16 +31,17 @@ $issue-row-height: 20px;
   position: relative;
   flex: 1 1 auto;
   height: 100%;
-  margin: 4px 0;
+  padding: $calendar-area-padding 0;
 
   > .issue-bar {
     display: none;
     position: absolute;
-    top: 0;
+    top: $calendar-area-padding;
     left: 0;
     width: 100%;
-    height: 100%;
+    height: calc(100% - #{$calendar-area-padding * 2});
     background-color: #4a90e2;
+    border-radius: 4px;
 
     &:hover {
       opacity: 0.8;

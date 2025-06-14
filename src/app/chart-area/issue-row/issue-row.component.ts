@@ -8,7 +8,7 @@ import {
   titleWidthDefault,
 } from '@src/app/chart-area/column-view-default';
 import { Assertion, isUndefined } from '@src/app/utils/utils';
-import { barBorderRadiusDefault } from './issue-row-default';
+// import { barBorderRadiusDefault } from './issue-row-default';
 import { DateHandler } from '@src/app/utils/time';
 import { U } from '@angular/cdk/unique-selection-dispatcher.d-DSFqf1MM';
 
@@ -174,8 +174,27 @@ class EndDateOnlyBar implements IssueScheduledBar {
   /**
    * バーのスタイル
    */
-  barStyle = (dispStartDate: Date, dispEndDate: Date) => {
-    return { display: 'none' };
+  barStyle = (
+    dispStartDate: Date,
+    dispEndDate: Date
+  ): { [key: string]: string } => {
+    if (this.endDate < dispStartDate) {
+      return { display: 'none' };
+    }
+
+    const totalDays = DateHandler.countDateBetween(dispStartDate, dispEndDate);
+    const endOffset = DateHandler.countOffset(dispStartDate, this.endDate);
+    const duration = 2; // 開始日と翌日の2日間
+
+    const left = ((endOffset - 2) / totalDays) * 100;
+    const width = (duration / totalDays) * 100;
+
+    return {
+      display: 'block',
+      left: `${left}%`,
+      width: `${width}%`,
+      background: 'linear-gradient(to left, #4a90e2 0%, transparent 100%)',
+    };
   };
 }
 
@@ -200,8 +219,27 @@ class StartDateOnlyBar implements IssueScheduledBar {
   /**
    * バーのスタイル
    */
-  barStyle = (dispStartDate: Date, dispEndDate: Date) => {
-    return { display: 'none' };
+  barStyle = (
+    dispStartDate: Date,
+    dispEndDate: Date
+  ): { [key: string]: string } => {
+    if (this.startDate > dispEndDate) {
+      return { display: 'none' };
+    }
+
+    const totalDays = DateHandler.countDateBetween(dispStartDate, dispEndDate);
+    const startOffset = DateHandler.countOffset(dispStartDate, this.startDate);
+    const duration = 2; // 開始日と翌日の2日間
+
+    const left = (startOffset / totalDays) * 100;
+    const width = (duration / totalDays) * 100;
+
+    return {
+      display: 'block',
+      left: `${left}%`,
+      width: `${width}%`,
+      background: 'linear-gradient(to right, #4a90e2 0%, transparent 100%)',
+    };
   };
 }
 
@@ -248,33 +286,33 @@ class ScheduledBar implements IssueScheduledBar {
 
     let left = (startOffset / totalDays) * 100; // %
     let width = (duration / totalDays) * 100; // %
-    const borderRadius = [
-      barBorderRadiusDefault, // 左上
-      barBorderRadiusDefault, // 右上
-      barBorderRadiusDefault, // 右下
-      barBorderRadiusDefault, // 左下
-    ]; // px
+    // const borderRadius = [
+    //   barBorderRadiusDefault, // 左上
+    //   barBorderRadiusDefault, // 右上
+    //   barBorderRadiusDefault, // 右下
+    //   barBorderRadiusDefault, // 左下
+    // ]; // px
 
-    if (left < 0) {
-      // バーの左端が見切れる
-      width += left;
-      left = 0;
-      borderRadius[0] = 0; // 左上の角を丸める
-      borderRadius[3] = 0; // 左下の角を丸める
-    }
+    // if (left < 0) {
+    //   // バーの左端が見切れる
+    //   width += left;
+    //   left = 0;
+    //   borderRadius[0] = 0; // 左上の角を丸める
+    //   borderRadius[3] = 0; // 左下の角を丸める
+    // }
 
-    if (left + width > 100) {
-      // バーの右端が見切れる
-      width = 100 - left;
-      borderRadius[1] = 0; // 右上の角を丸める
-      borderRadius[2] = 0; // 右下の角を丸める
-    }
+    // if (left + width > 100) {
+    //   // バーの右端が見切れる
+    //   width = 100 - left;
+    //   borderRadius[1] = 0; // 右上の角を丸める
+    //   borderRadius[2] = 0; // 右下の角を丸める
+    // }
 
     return {
       display: 'block', // バーを表示する
       left: `${left}%`, // バーの左端の位置(%)
       width: `${width}%`, // バーの幅(%)
-      borderRadius: `${borderRadius[0]}px ${borderRadius[1]}px ${borderRadius[2]}px ${borderRadius[3]}px`, // バーの角の丸み(px)
+      // borderRadius: `${borderRadius[0]}px ${borderRadius[1]}px ${borderRadius[2]}px ${borderRadius[3]}px`, // バーの角の丸み(px)
     };
   };
 }
