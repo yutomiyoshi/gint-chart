@@ -6,12 +6,8 @@ import {
   ViewChild,
   ElementRef,
 } from '@angular/core';
-import {
-  calendarEndDateOffset,
-  calendarStartDateOffset,
-} from '../calendar-view-default';
-import { statusWidthDefault, titleWidthDefault } from '../column-view-default';
-import { Assertion, isUndefined } from '@src/app/utils';
+import { statusWidthDefault, titleWidthDefault } from '@src/app/chart-area/column-view-default';
+import { Assertion, isUndefined } from '@src/app/utils/utils';
 
 @Component({
   selector: 'app-issue-column',

@@ -1,5 +1,5 @@
 import { GitLabApiIssue } from '@src/app/git-lab-api/git-lab-issue.model';
-import { isUndefined } from './utils';
+import { isUndefined } from '@src/app/utils/utils';
 
 // $$start_date:yyyy-mm-dd$$や$$end_date:yyyy-mm-dd$$のパターンは不変なので関数外で定義
 const startDatePattern = /\$\$start-date:(\d{4}-\d{2}-\d{2})\$\$/;

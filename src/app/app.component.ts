@@ -17,11 +17,11 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     this.gitLabConfigStore.loadConfig().subscribe({
-      error: () => {}, //サービス側からエラーハンドリングするため不要
-      next: (config) => {
+      // error: () => {}, //サービス側からエラーハンドリングするため不要
+      next: () => {
         this.issueStore.syncAllIssues().subscribe({
-          error: () => {}, //サービス側からエラーハンドリングするため不要
-          next: (issues) => {
+          // error: () => {}, //サービス側からエラーハンドリングするため不要
+          next: () => {
             this.loadingOverlay = false;
           },
         });

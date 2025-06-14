@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { isNull, Assertion } from '@src/app/utils';
+import { isNull, Assertion } from '@src/app/utils/utils';
 import { Observable, defer, from } from 'rxjs';
 
 @Injectable({
