@@ -5,11 +5,11 @@ $bar-radius: 10px;
 .issue-row-container {
   width: 100%;
   height: $issue-row-height;
-  background-color: #f0f0f0;
 
   display: flex;
   flex-direction: row;
   align-items: center;
+  position: relative;
 }
 
 .title {
@@ -18,6 +18,8 @@ $bar-radius: 10px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  background-color: white;
+  z-index: 2;
 }
 
 .status {
@@ -26,6 +28,8 @@ $bar-radius: 10px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  background-color: white;
+  z-index: 2;
 }
 
 .calendar-area {
@@ -33,6 +37,7 @@ $bar-radius: 10px;
   flex: 1 1 auto;
   height: 100%;
   padding: $calendar-area-padding 0;
+  z-index: 1;
 
   > .issue-bar {
     display: none;
