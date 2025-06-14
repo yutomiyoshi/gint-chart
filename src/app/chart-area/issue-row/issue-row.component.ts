@@ -228,10 +228,6 @@ class ScheduledBar implements IssueScheduledBar {
     dispStartDate: Date,
     dispEndDate: Date
   ): { [key: string]: string } => {
-    console.log('dispStartDate', dispStartDate);
-    console.log('dispEndDate', dispEndDate);
-    console.log('this.startDate', this.startDate);
-    console.log('this.endDate', this.endDate);
     if (this.startDate > this.endDate) {
       Assertion.assert(
         `${this.startDate} must be before ${this.endDate}`,
