@@ -1,13 +1,15 @@
-$issue-row-height: 20px;
+$issue-row-height: 30px;
+$calendar-area-padding: 5px;
+$bar-radius: 10px;
 
 .issue-row-container {
   width: 100%;
   height: $issue-row-height;
-  background-color: #f0f0f0;
 
   display: flex;
   flex-direction: row;
   align-items: center;
+  position: relative;
 }
 
 .title {
@@ -16,6 +18,8 @@ $issue-row-height: 20px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  background-color: white;
+  z-index: 2;
 }
 
 .status {
@@ -24,22 +28,26 @@ $issue-row-height: 20px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  background-color: white;
+  z-index: 2;
 }
 
 .calendar-area {
   position: relative;
   flex: 1 1 auto;
   height: 100%;
-  padding: 0 4px;
+  padding: $calendar-area-padding 0;
+  z-index: 1;
 
   > .issue-bar {
     display: none;
     position: absolute;
-    top: 0;
+    top: $calendar-area-padding;
     left: 0;
     width: 100%;
-    height: 100%;
+    height: calc(100% - #{$calendar-area-padding * 2});
     background-color: #4a90e2;
+    border-radius: $bar-radius;
 
     &:hover {
       opacity: 0.8;
