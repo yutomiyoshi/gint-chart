@@ -29,26 +29,15 @@ export class IssueRowComponent {
   bar: IssueScheduledBar = new NonScheduledBar();
 
   @Input()
-  set startDate(value: Date | undefined) {
-    if (
-      (isUndefined(this.bar.startDate) && isUndefined(value)) ||
-      (!isUndefined(this.bar.startDate) && !isUndefined(value))
-    ) {
-      this.bar.startDate = value;
+  set schedule(value: {
+    startDate: Date | undefined;
+    endDate: Date | undefined;
+  }) {
+    if (isBarTypeMatch(this.bar, value.startDate, value.endDate)) {
+      this.bar.startDate = value.startDate;
+      this.bar.endDate = value.endDate;
     } else {
-      this.bar = barFactory(value, this.bar.endDate);
-    }
-  }
-
-  @Input()
-  set endDate(value: Date | undefined) {
-    if (
-      (isUndefined(this.bar.endDate) && isUndefined(value)) ||
-      (!isUndefined(this.bar.endDate) && !isUndefined(value))
-    ) {
-      this.bar.endDate = value;
-    } else {
-      this.bar = barFactory(this.bar.startDate, value);
+      this.bar = barFactory(value.startDate, value.endDate);
     }
   }
 
@@ -337,4 +326,24 @@ function barFactory(startDate: Date | undefined, endDate: Date | undefined) {
   }
 
   return new NonScheduledBar();
+}
+
+function isBarTypeMatch(
+  bar: IssueScheduledBar,
+  startDate: Date | undefined,
+  endDate: Date | undefined
+) {
+  if (!isUndefined(startDate) && !isUndefined(endDate)) {
+    return !isUndefined(bar.startDate) && !isUndefined(bar.endDate);
+  }
+
+  if (!isUndefined(startDate)) {
+    return !isUndefined(bar.startDate) && isUndefined(bar.endDate);
+  }
+
+  if (!isUndefined(endDate)) {
+    return isUndefined(bar.startDate) && !isUndefined(bar.endDate);
+  }
+
+  return isUndefined(bar.startDate) && isUndefined(bar.endDate);
 }
