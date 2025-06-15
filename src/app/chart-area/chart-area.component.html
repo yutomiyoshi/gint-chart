@@ -12,10 +12,8 @@
       *ngFor="let issue of issues"
       [title]="issue.title"
       [state]="issue.state"
-      [schedule]="{
-        startDate: issue.start_date,
-        endDate: issue.end_date
-      }"
+      [startDate]="issue.start_date"
+      [endDate]="issue.end_date"
       [dispStartDate]="dispStartDate"
       [dispEndDate]="dispEndDate"
       [titleWidth]="titleWidth"
