@@ -1,4 +1,5 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { CdkDragStart, CdkDragMove, CdkDragEnd } from '@angular/cdk/drag-drop';
 import {
   calendarEndDateOffset,
   calendarStartDateOffset,
@@ -8,10 +9,7 @@ import {
   titleWidthDefault,
 } from '@src/app/chart-area/column-view-default';
 import { Assertion, isUndefined } from '@src/app/utils/utils';
-// import { barBorderRadiusDefault } from './issue-row-default';
 import { DateHandler } from '@src/app/utils/time';
-import { U } from '@angular/cdk/unique-selection-dispatcher.d-DSFqf1MM';
-import { CdkDragStart, CdkDragMove, CdkDragEnd } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-issue-row',
@@ -93,15 +91,15 @@ export class IssueRowComponent {
     endDate: Date | undefined;
   }>();
 
-  onEndDateDragStart(event: Event) {
+  onEndDateDragStart(event: CdkDragStart) {
     console.log('Drag Start:', event);
   }
 
-  onEndDateDragMoved(event: Event) {
+  onEndDateDragMoved(event: CdkDragMove) {
     console.log('Drag Move:', event);
   }
 
-  onEndDateDragEnd(event: Event) {
+  onEndDateDragEnd(event: CdkDragEnd) {
     console.log('Drag End:', event);
   }
 }

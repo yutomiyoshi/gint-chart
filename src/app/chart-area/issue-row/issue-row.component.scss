@@ -57,23 +57,16 @@ $end-date-handle-right-offset: -10px;
 
     .end-date-handle {
       position: absolute;
-      top: 0;
       right: $end-date-handle-right-offset;
+      top: 0;
       width: $end-date-handle-width;
       height: 100%;
-      background-color: rgba(0, 42, 255, 0.5);
+      background-color: #4a90e2;
       border-radius: $end-date-handle-border-radius;
       cursor: ew-resize;
-      opacity: 0.2;
-      touch-action: none;
-      user-select: none;
 
       &:hover {
-        opacity: 0.8;
-      }
-
-      &.cdk-drag-preview {
-        opacity: 0.8;
+        background-color: darken(#4a90e2, 10%);
       }
     }
   }
