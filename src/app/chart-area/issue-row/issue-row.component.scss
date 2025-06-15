@@ -2,7 +2,8 @@ $issue-row-height: 30px;
 $calendar-area-padding: 5px;
 $bar-radius: 10px;
 $end-date-handle-border-radius: 2px;
-$end-date-handle-width: 4px;
+$end-date-handle-width: 6px;
+$end-date-handle-right-offset: -10px;
 
 .issue-row-container {
   width: 100%;
@@ -41,8 +42,7 @@ $end-date-handle-width: 4px;
   padding: $calendar-area-padding 0;
   z-index: 1;
 
-  > .issue-bar {
-    display: none;
+  .issue-bar {
     position: absolute;
     top: $calendar-area-padding;
     left: 0;
@@ -55,19 +55,25 @@ $end-date-handle-width: 4px;
       opacity: 0.8;
     }
 
-    > .end-date-handle {
+    .end-date-handle {
       position: absolute;
-      right: 0;
       top: 0;
-      border-radius: $end-date-handle-border-radius;
+      right: $end-date-handle-right-offset;
       width: $end-date-handle-width;
       height: 100%;
-      opacity: 0;
+      background-color: rgba(0, 42, 255, 0.5);
+      border-radius: $end-date-handle-border-radius;
       cursor: ew-resize;
-      background-color: rgb(0, 0, 0);
+      opacity: 0.2;
+      touch-action: none;
+      user-select: none;
 
       &:hover {
-        opacity: 0.5;
+        opacity: 0.8;
+      }
+
+      &.cdk-drag-preview {
+        opacity: 0.8;
       }
     }
   }

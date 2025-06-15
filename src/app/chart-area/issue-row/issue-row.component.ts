@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import {
   calendarEndDateOffset,
   calendarStartDateOffset,
@@ -11,6 +11,7 @@ import { Assertion, isUndefined } from '@src/app/utils/utils';
 // import { barBorderRadiusDefault } from './issue-row-default';
 import { DateHandler } from '@src/app/utils/time';
 import { U } from '@angular/cdk/unique-selection-dispatcher.d-DSFqf1MM';
+import { CdkDragStart, CdkDragMove, CdkDragEnd } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-issue-row',
@@ -85,6 +86,23 @@ export class IssueRowComponent {
    */
   get barStyle(): { [key: string]: string } {
     return this.bar.barStyle(this.dispStartDate, this.dispEndDate);
+  }
+
+  @Output() scheduleChange = new EventEmitter<{
+    startDate: Date | undefined;
+    endDate: Date | undefined;
+  }>();
+
+  onEndDateDragStart(event: Event) {
+    console.log('Drag Start:', event);
+  }
+
+  onEndDateDragMoved(event: Event) {
+    console.log('Drag Move:', event);
+  }
+
+  onEndDateDragEnd(event: Event) {
+    console.log('Drag End:', event);
   }
 }
 

@@ -2,7 +2,15 @@
   <div class="title" [ngStyle]="titleStyle">{{ title }}</div>
   <div class="status" [ngStyle]="statusStyle">{{ state }}</div>
   <div class="calendar-area">
-    <div class="issue-bar" [ngStyle]="barStyle"></div>
-    <div class="end-date-handle"></div>
+    <div class="issue-bar" [ngStyle]="barStyle">
+      <div
+        class="end-date-handle"
+        cdkDrag
+        cdkDragLockAxis="x"
+        (cdkDragStarted)="onEndDateDragStart($event)"
+        (cdkDragMoved)="onEndDateDragMoved($event)"
+        (cdkDragEnded)="onEndDateDragEnd($event)"
+      ></div>
+    </div>
   </div>
 </div>
