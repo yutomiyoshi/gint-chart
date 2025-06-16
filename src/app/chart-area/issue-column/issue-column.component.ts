@@ -15,7 +15,8 @@ import {
   MIN_CALENDAR_WIDTH,
 } from '@src/app/chart-area/issue-column/issue-column-view.default';
 import { DateHandler } from '@src/app/utils/time';
-import { Assertion, isUndefined } from '@src/app/utils/utils';
+import { isUndefined } from '@src/app/utils/utils';
+import { Assertion } from '@src/app/utils/assertion';
 
 @Component({
   selector: 'app-issue-column',

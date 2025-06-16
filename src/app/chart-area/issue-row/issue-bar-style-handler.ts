@@ -1,6 +1,7 @@
 import { DateHandler } from '@src/app/utils/time';
-import { Assertion, isUndefined } from '@src/app/utils/utils';
+import { isUndefined } from '@src/app/utils/utils';
 import { undefinedDuration } from './issue-row-logic.default';
+import { Assertion } from '@src/app/utils/assertion';
 
 /**
  * バーのスタイルを取得するためのハンドラー

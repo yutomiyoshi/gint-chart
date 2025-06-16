@@ -3,8 +3,9 @@ import { IssuesStoreService } from '@src/app/store/issues-store.service';
 import { GitLabConfigStoreService } from '@src/app/store/git-lab-config-store.service';
 import { Subject, takeUntil } from 'rxjs';
 import { IssueDetailDialogExpansionService } from './issue-detail-dialog/issue-detail-dialog-expansion.service';
-import { Assertion, isUndefined } from './utils/utils';
+import { isUndefined } from './utils/utils';
 import { DIALOG_ANIMATION_DURATION } from './app-view.default';
+import { Assertion } from './utils/assertion';
 
 @Component({
   selector: 'app-root',

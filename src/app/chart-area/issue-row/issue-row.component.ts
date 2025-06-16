@@ -6,7 +6,7 @@ import {
   ElementRef,
   ViewChild,
 } from '@angular/core';
-import { CdkDragStart, CdkDragMove, CdkDragEnd } from '@angular/cdk/drag-drop';
+import { CdkDragMove } from '@angular/cdk/drag-drop';
 import {
   calendarEndDateOffset,
   calendarStartDateOffset,
@@ -15,7 +15,7 @@ import {
   statusWidthDefault,
   titleWidthDefault,
 } from '@src/app/chart-area/issue-column/issue-column-view.default';
-import { Assertion, isUndefined } from '@src/app/utils/utils';
+import { isUndefined } from '@src/app/utils/utils';
 import { DateHandler } from '@src/app/utils/time';
 import { getBarStyle } from './issue-bar-style-handler';
 import { IssueDetailDialogExpansionService } from '@src/app/issue-detail-dialog/issue-detail-dialog-expansion.service';
@@ -23,6 +23,7 @@ import {
   newEndDateCreateOffsetDays,
   undefinedDuration,
 } from './issue-row-logic.default';
+import { Assertion } from '@src/app/utils/assertion';
 
 @Component({
   selector: 'app-issue-row',

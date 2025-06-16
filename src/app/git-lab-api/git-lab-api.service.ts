@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import { isNull, Assertion } from '@src/app/utils/utils';
+import { isNull } from '@src/app/utils/utils';
 import { Observable, defer, from, throwError } from 'rxjs';
 import { catchError, map, mergeMap } from 'rxjs/operators';
+import { Assertion } from '../utils/assertion';
 
 @Injectable({
   providedIn: 'root',
