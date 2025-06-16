@@ -97,16 +97,46 @@ $start-date-handle-left-offset: -10px;
 
   > .no-date-button {
     position: absolute;
-    left: 0;
-    top: 0;
-    height: 100%;
-    width: 6px;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 80%;
+    width: 10px;
     border-radius: 2px;
-    background-color: #ccc;
-    border: none;
+    background-color: transparent;
+    border: 1px dashed #999;
     cursor: pointer;
     padding: 0;
     margin: 0;
     z-index: 1;
+
+    &::before,
+    &::after {
+      content: "";
+      position: absolute;
+      background-color: #999;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    &::before {
+      width: 6px;
+      height: 1px;
+    }
+
+    &::after {
+      width: 1px;
+      height: 6px;
+    }
+
+    &:hover {
+      border-color: #666;
+
+      &::before,
+      &::after {
+        background-color: #666;
+      }
+    }
   }
 }
