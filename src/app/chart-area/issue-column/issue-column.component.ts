@@ -8,6 +8,7 @@ import {
   ElementRef,
   OnInit,
   OnDestroy,
+  AfterViewChecked,
 } from '@angular/core';
 import {
   statusWidthDefault,
@@ -29,7 +30,9 @@ import { Subscription } from 'rxjs';
   templateUrl: './issue-column.component.html',
   styleUrl: './issue-column.component.scss',
 })
-export class IssueColumnComponent implements OnInit, OnDestroy {
+export class IssueColumnComponent
+  implements OnInit, OnDestroy, AfterViewChecked
+{
   private subscription = new Subscription();
 
   constructor(private dateJumpService: DateJumpService) {}
@@ -59,6 +62,11 @@ export class IssueColumnComponent implements OnInit, OnDestroy {
     this.subscription.unsubscribe();
   }
 
+  ngAfterViewChecked() {
+    this.updateDateRange();
+    this.updateIsHiddenDatePattern();
+  }
+
   /**
    * Logic fields
    */
@@ -71,6 +79,10 @@ export class IssueColumnComponent implements OnInit, OnDestroy {
   /**
    * UI fields
    */
+  @Input() isHiddenDatePattern: boolean[] = [];
+  @Output() isHiddenDatePatternChange = new EventEmitter<boolean[]>();
+
+  @Input() isScrollBarActive = false;
 
   get titleStyle(): { [key: string]: string } {
     if (this.titleWidth === 0) {
@@ -121,17 +133,19 @@ export class IssueColumnComponent implements OnInit, OnDestroy {
 
   private updateTitleWidth: ((distance: number) => void) | undefined;
 
+  dateRange: Date[] = [];
+
   /**
    * dispStartDateとdispEndDateの間の日付配列を返す
    */
-  get getDateRange(): Date[] {
+  private updateDateRange(): void {
     const dates: Date[] = [];
     const current = new Date(this.dispStartDate);
     while (current <= this.dispEndDate) {
       dates.push(new Date(current));
       current.setDate(current.getDate() + 1);
     }
-    return dates;
+    this.dateRange = dates;
   }
 
   /**
@@ -258,4 +272,68 @@ export class IssueColumnComponent implements OnInit, OnDestroy {
     if (isUndefined(this.updateTitleWidth)) return;
     this.updateTitleWidth(event.distance.x);
   }
+
+  /**
+   * 日付の配列から、日付ごとに隠すかどうかのパターンを更新する
+   * - 配列の先頭は表示する
+   * - // 今日の日付が含まれる場合は、今日の日付を表示する
+   * - // 次の最初の日付が含まれる場合は、その日付を表示する
+   * - それ以外は、間隔に応じて表示/非表示を切り替える
+   */
+  private updateIsHiddenDatePattern(): void {
+    const pattern =
+      displayPattern.find((p) => this.dateRange.length <= p.maxDatesLength) ||
+      displayPattern[displayPattern.length - 1];
+    const interval = pattern.interval;
+
+    let count = 0;
+
+    const newPattern = this.dateRange.map((_date, index) => {
+      // 配列の先頭は常に表示
+      if (index === 0) {
+        count = 0;
+        return false;
+      }
+
+      // // 今日の日付は表示
+      // if (date.getTime() === today.getTime()) {
+      //   count = 0;
+      //   return false;
+      // }
+
+      // // 次の最初の日付は表示
+      // if (date.getDay() === 1) {
+      //   count = 0;
+      //   return false;
+      // }
+
+      if (count === interval) {
+        count = 0;
+        return false;
+      }
+
+      count++;
+      return true;
+    });
+
+    this.isHiddenDatePattern = newPattern;
+    this.isHiddenDatePatternChange.emit(newPattern);
+  }
 }
+
+/**
+ * 日付の配列の長さに応じた隠す日付の間隔
+ * (例)表示日数が30日以下のときは、隠さない
+ * (例)表示日数が31日以上60日以下のときは、1日おきに隠す
+ */
+const displayPattern = [
+  /** 最大日数 */
+  { maxDatesLength: 30, interval: 0 },
+  { maxDatesLength: 60, interval: 1 },
+  { maxDatesLength: 90, interval: 2 },
+  { maxDatesLength: 120, interval: 3 },
+  { maxDatesLength: 150, interval: 4 },
+  { maxDatesLength: 180, interval: 5 },
+  { maxDatesLength: 210, interval: 6 },
+  { maxDatesLength: 240, interval: 7 },
+] as const;

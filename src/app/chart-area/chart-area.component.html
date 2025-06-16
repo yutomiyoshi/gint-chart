@@ -11,6 +11,8 @@
       [(titleWidth)]="titleWidth"
       [statusWidth]="statusWidth"
       [assigneeWidth]="assigneeWidth"
+      [(isHiddenDatePattern)]="isHiddenDatePattern"
+      [isScrollBarActive]="isScrollBarActive"
     ></app-issue-column>
   </div>
 
@@ -18,7 +20,7 @@
   ** Issue Row Area
   -- issue一つに1行割り当てて、リスト展開する
   -->
-  <div class="issue-row-area">
+  <div class="issue-row-area" #issueRowArea>
     <app-issue-row
       *ngFor="let issue of issues"
       [id]="issue.id"
@@ -32,6 +34,7 @@
       [titleWidth]="titleWidth"
       [statusWidth]="statusWidth"
       [assigneeWidth]="assigneeWidth"
+      [isHiddenDatePattern]="isHiddenDatePattern"
     ></app-issue-row>
   </div>
 </div>

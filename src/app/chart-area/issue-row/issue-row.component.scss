@@ -1,5 +1,4 @@
 $issue-row-height: 30px;
-$calendar-area-padding: 5px;
 $bar-radius: 4px;
 $end-date-handle-border-radius: 2px;
 $end-date-handle-width: 6px;
@@ -77,15 +76,20 @@ $activate-opacity-transition-duration: 0.2s;
   position: relative;
   flex: 1 1 auto;
   height: 100%;
-  padding: $calendar-area-padding 0;
   z-index: 1;
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
 
   .issue-bar {
     position: absolute;
-    top: $calendar-area-padding;
+    top: 50%;
     left: 0;
     width: 100%;
-    height: calc(100% - #{$calendar-area-padding * 2});
+    height: 50%;
+    transform: translateY(-50%);
     background-color: #004a9f;
     border-radius: $bar-radius;
     transition: width 0.1s ease-out, left 0.1s ease-out;
@@ -206,5 +210,15 @@ $activate-opacity-transition-duration: 0.2s;
     &.active {
       opacity: 0.6;
     }
+  }
+}
+
+.issue-row-day {
+  height: 100%;
+  flex: 1 1 auto;
+  border-left: 1px dashed rgb(229, 229, 229);
+
+  &.hidden {
+    border-left: none;
   }
 }

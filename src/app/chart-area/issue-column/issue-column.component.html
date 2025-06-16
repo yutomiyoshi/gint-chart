@@ -30,7 +30,7 @@
   -->
   <div class="issue-column-calendar" #calendar (wheel)="onWheel($event)">
     <!-- 日付ごとにForでループ -->
-    <ng-container *ngFor="let date of getDateRange; index as i">
+    <ng-container *ngFor="let date of dateRange; index as i">
       <div class="issue-column-day">
         <!-- 月の表示 -->
         <div class="month" [class.hidden]="date.getDate() !== 1 && i !== 0">
@@ -38,8 +38,17 @@
         </div>
 
         <!-- 日の表示 -->
-        <div class="day">{{ date | date : "dd" }}</div>
+        <div class="day" [class.hidden]="isHiddenDatePattern[i]">
+          {{ date | date : "dd" }}
+        </div>
       </div>
     </ng-container>
   </div>
+
+  <!--
+  ** Scroll Bar
+  - スクロールバーの表示
+  - ホイール操作でスクロールバーの位置を調整する
+  -->
+  <div class="issue-column-scroll-bar" [class.active]="isScrollBarActive"></div>
 </div>
