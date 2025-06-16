@@ -30,7 +30,9 @@
 }
 .issue-column-calendar {
   display: flex;
+  flex-direction: row;
   flex: 1 1 auto;
+  height: 100%;
 }
 .issue-column-day {
   flex: 1 1 auto;
