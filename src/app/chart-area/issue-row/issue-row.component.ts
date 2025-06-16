@@ -50,12 +50,12 @@ export class IssueRowComponent {
   @Output() endDateChange = new EventEmitter<Date | undefined>();
 
   // 日付の表示範囲、カレンダーと同期する
-  @Input() dispStartDate: Date = new Date(
-    new Date().setDate(new Date().getDate() - calendarStartDateOffset)
+  @Input() dispStartDate: Date = DateHandler.getTodayOffsetDate(
+    calendarStartDateOffset
   );
 
-  @Input() dispEndDate: Date = new Date(
-    new Date().setDate(new Date().getDate() + calendarEndDateOffset)
+  @Input() dispEndDate: Date = DateHandler.getTodayOffsetDate(
+    calendarEndDateOffset
   );
 
   /**

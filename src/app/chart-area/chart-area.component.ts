@@ -9,6 +9,7 @@ import {
   statusWidthDefault,
   titleWidthDefault,
 } from '@src/app/chart-area/issue-column/issue-column-view.default';
+import { DateHandler } from '@src/app/utils/time';
 
 @Component({
   selector: 'app-chart-area',
@@ -26,13 +27,9 @@ export class ChartAreaComponent implements OnInit {
   issues: Issue[] = [];
 
   // 日付の表示範囲、カレンダーとIssueRowで同期する
-  dispStartDate: Date = new Date(
-    new Date().setDate(new Date().getDate() - calendarStartDateOffset)
-  );
+  dispStartDate: Date = DateHandler.getTodayOffsetDate(calendarStartDateOffset);
 
-  dispEndDate: Date = new Date(
-    new Date().setDate(new Date().getDate() + calendarEndDateOffset)
-  );
+  dispEndDate: Date = DateHandler.getTodayOffsetDate(calendarEndDateOffset);
 
   // タイトルの幅
   get titleWidth() {
