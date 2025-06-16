@@ -3,6 +3,7 @@ import { IssuesStoreService } from '@src/app/store/issues-store.service';
 import { GitLabConfigStoreService } from '@src/app/store/git-lab-config-store.service';
 import { Subscription } from 'rxjs';
 import { IssueDetailDialogExpansionService } from './issue-detail-dialog/issue-detail-dialog-expansion.service';
+import { isUndefined } from './utils/utils';
 
 @Component({
   selector: 'app-root',
@@ -14,6 +15,7 @@ export class AppComponent implements OnInit, OnDestroy {
   loadingOverlay = true;
   isShowTitle = true;
   isShowStatus = true;
+  isIssueDetailDialogExpanded = false;
   private subscription = new Subscription();
 
   constructor(
@@ -26,7 +28,7 @@ export class AppComponent implements OnInit, OnDestroy {
     this.subscription.add(
       this.issueDetailDialogExpansionService.expandedIssueId$.subscribe({
         next: (issueId: number | undefined) => {
-          console.log(issueId);
+          this.isIssueDetailDialogExpanded = !isUndefined(issueId);
         },
       })
     );
