@@ -1,3 +1,4 @@
+import { CdkDragMove, CdkDragStart } from '@angular/cdk/drag-drop';
 import {
   Component,
   Input,
@@ -6,7 +7,12 @@ import {
   ViewChild,
   ElementRef,
 } from '@angular/core';
-import { statusWidthDefault, titleWidthDefault } from '@src/app/chart-area/column-view-default';
+import {
+  statusWidthDefault,
+  titleWidthDefault,
+  MAX_TITLE_WIDTH,
+  MIN_TITLE_WIDTH,
+} from '@src/app/chart-area/issue-column/issue-column-view.default';
 import { Assertion, isUndefined } from '@src/app/utils/utils';
 
 @Component({
@@ -29,34 +35,28 @@ export class IssueColumnComponent {
    * UI fields
    */
 
-  titleStyle: { [key: string]: string } = {
-    width: titleWidthDefault + 'px',
-    flex: '0 0 ' + titleWidthDefault + 'px',
-  };
+  get titleStyle(): { [key: string]: string } {
+    return {
+      width: this.titleWidth + 'px',
+      flex: '0 0 ' + this.titleWidth + 'px',
+    };
+  }
+
+  @Input() titleWidth: number = titleWidthDefault;
 
   statusStyle: { [key: string]: string } = {
     width: statusWidthDefault + 'px',
     flex: '0 0 ' + statusWidthDefault + 'px',
   };
 
-  @Input()
-  set titleWidth(value: number) {
-    this.titleStyle = {
-      width: value + 'px',
-      flex: '0 0 ' + value + 'px',
-    };
-  }
+  @Input() statusWidth: number = statusWidthDefault;
 
-  @Input()
-  set statusWidth(value: number) {
-    this.statusStyle = {
-      width: value + 'px',
-      flex: '0 0 ' + value + 'px',
-    };
-  }
+  @Output() titleWidthChange = new EventEmitter<number>();
 
   @ViewChild('calendar', { static: false })
   calendarRef!: ElementRef<HTMLDivElement>;
+
+  private updateTitleWidth: ((distance: number) => void) | undefined;
 
   /**
    * dispStartDateとdispEndDateの間の日付配列を返す
@@ -154,5 +154,27 @@ export class IssueColumnComponent {
       this.dispStartDateChange.emit(newStart);
       this.dispEndDateChange.emit(newEnd);
     }
+  }
+
+  onTitleDragStart(_event: CdkDragStart) {
+    // 現在のタイトル幅を保存
+    const initialTitleWidth = this.titleWidth;
+    this.updateTitleWidth = (distance: number) => {
+      let newWidth = initialTitleWidth + distance;
+      if (newWidth >= MAX_TITLE_WIDTH) {
+        newWidth = MAX_TITLE_WIDTH;
+      }
+      if (newWidth <= MIN_TITLE_WIDTH) {
+        newWidth = MIN_TITLE_WIDTH;
+      }
+      this.titleWidth = newWidth;
+      this.titleWidthChange.emit(newWidth);
+    };
+  }
+
+  onTitleDragMove(event: CdkDragMove) {
+    // ドラッグ量に応じて新しい幅を計算
+    if (isUndefined(this.updateTitleWidth)) return;
+    this.updateTitleWidth(event.distance.x);
   }
 }

@@ -5,7 +5,10 @@ import {
   calendarEndDateOffset,
   calendarStartDateOffset,
 } from './calendar-view-default';
-import { statusWidthDefault, titleWidthDefault } from './column-view-default';
+import {
+  statusWidthDefault,
+  titleWidthDefault,
+} from '@src/app/chart-area/issue-column/issue-column-view.default';
 
 @Component({
   selector: 'app-chart-area',
