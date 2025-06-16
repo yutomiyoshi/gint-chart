@@ -17,6 +17,7 @@ import {
 } from '@src/app/chart-area/column-view-default';
 import { Assertion, isUndefined } from '@src/app/utils/utils';
 import { DateHandler } from '@src/app/utils/time';
+import { barStyleFactory } from './issue-bar-style-handler';
 
 @Component({
   selector: 'app-issue-row',
@@ -46,6 +47,10 @@ export class IssueRowComponent {
     new Date().setDate(new Date().getDate() + calendarEndDateOffset)
   );
 
+  /**
+   * 終了日のドラッグ中に呼ばれる関数
+   * ドラッグ中に終了日を更新する
+   */
   private updateEndDate: ((distance: number) => void) | undefined;
 
   /**
@@ -90,7 +95,11 @@ export class IssueRowComponent {
     );
   }
 
-  onEndDateDragStart(event: CdkDragStart) {
+  /**
+   * 終了日のドラッグ開始時に呼ばれる関数
+   * 終了日のドラッグ中に呼ばれる関数を設定する
+   */
+  onEndDateDragStart(_event: CdkDragStart) {
     if (
       isUndefined(this.calendarArea) ||
       isUndefined(this.calendarArea.nativeElement)
@@ -131,138 +140,22 @@ export class IssueRowComponent {
     };
   }
 
+  /**
+   * 終了日のドラッグ中に呼ばれる関数
+   * ドラッグ中に終了日を更新する
+   */
   onEndDateDragMoved(event: CdkDragMove) {
     if (isUndefined(this.updateEndDate)) return;
     this.updateEndDate(event.distance.x);
   }
 
+  /**
+   * 終了日のドラッグ終了時に呼ばれる関数
+   * 終了日を更新し、変更を通知する
+   * ドラッグ中に呼ばれる関数を削除する
+   */
   onEndDateDragEnd(_event: CdkDragEnd) {
     this.endDateChange.emit(this.endDate);
     this.updateEndDate = undefined;
   }
-}
-
-type BarStyleHandler = (
-  dispStartDate: Date,
-  dispEndDate: Date,
-  startDate: Date | undefined,
-  endDate: Date | undefined
-) => { [key: string]: string | undefined };
-
-const nonScheduledBarStyleHandler: BarStyleHandler = (
-  _dispStartDate: Date,
-  _dispEndDate: Date,
-  _startDate: Date | undefined,
-  _endDate: Date | undefined
-) => {
-  return { display: 'none' };
-};
-
-const startDateOnlyBarStyleHandler: BarStyleHandler = (
-  dispStartDate: Date,
-  dispEndDate: Date,
-  startDate: Date | undefined,
-  _endDate: Date | undefined
-) => {
-  if (isUndefined(startDate) || startDate > dispEndDate) {
-    return { display: 'none' };
-  }
-
-  const totalDays = DateHandler.countDateBetween(dispStartDate, dispEndDate);
-  const startOffset = DateHandler.countOffset(dispStartDate, startDate);
-  const duration = 2;
-
-  const left = (startOffset / totalDays) * 100;
-  const width = (duration / totalDays) * 100;
-
-  return {
-    display: 'block',
-    left: `${left}%`,
-    width: `${width}%`,
-    background: 'linear-gradient(to right, #4a90e2 0%, transparent 100%)',
-  };
-};
-
-const endDateOnlyBarStyleHandler: BarStyleHandler = (
-  dispStartDate: Date,
-  dispEndDate: Date,
-  _startDate: Date | undefined,
-  endDate: Date | undefined
-) => {
-  if (isUndefined(endDate) || endDate < dispStartDate) {
-    return { display: 'none' };
-  }
-
-  const totalDays = DateHandler.countDateBetween(dispStartDate, dispEndDate);
-  const endOffset = DateHandler.countOffset(dispStartDate, endDate);
-  const duration = 2;
-
-  const left = ((endOffset - 2) / totalDays) * 100;
-  const width = (duration / totalDays) * 100;
-
-  return {
-    display: 'block',
-    left: `${left}%`,
-    width: `${width}%`,
-    background: 'linear-gradient(to left, #4a90e2 0%, transparent 100%)',
-  };
-};
-
-const scheduledBarStyleHandler: BarStyleHandler = (
-  dispStartDate: Date,
-  dispEndDate: Date,
-  startDate: Date | undefined,
-  endDate: Date | undefined
-) => {
-  if (isUndefined(startDate) || isUndefined(endDate)) {
-    Assertion.assert('startDate or endDate is undefined.', Assertion.no(8));
-    return { display: 'none' };
-  }
-
-  if (startDate > endDate) {
-    Assertion.assert(`${startDate} must be before ${endDate}`, Assertion.no(9));
-    return { display: 'none' };
-  }
-
-  if (startDate > dispEndDate || endDate < dispStartDate) {
-    return { display: 'none' };
-  }
-
-  const totalDays = DateHandler.countDateBetween(dispStartDate, dispEndDate);
-  const startOffset = DateHandler.countOffset(dispStartDate, startDate);
-  const duration = DateHandler.countDateBetween(startDate, endDate);
-
-  const left = (startOffset / totalDays) * 100;
-  const width = (duration / totalDays) * 100;
-
-  return {
-    display: 'block',
-    left: `${left}%`,
-    width: `${width}%`,
-  };
-};
-
-/**
- * バーのスタイルを取得する
- * @param startDate 開始日
- * @param endDate 終了日
- * @returns バーのスタイル
- */
-function barStyleFactory(
-  startDate: Date | undefined,
-  endDate: Date | undefined
-): BarStyleHandler {
-  if (!isUndefined(startDate) && !isUndefined(endDate)) {
-    return scheduledBarStyleHandler;
-  }
-
-  if (!isUndefined(startDate)) {
-    return startDateOnlyBarStyleHandler;
-  }
-
-  if (!isUndefined(endDate)) {
-    return endDateOnlyBarStyleHandler;
-  }
-
-  return nonScheduledBarStyleHandler;
 }
