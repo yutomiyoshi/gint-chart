@@ -9,11 +9,14 @@
   align-items: center;
   height: 100%;
   position: relative;
+  font-size: 1.2em;
+  padding-left: 6px;
+  border-right: 1px solid gray;
 
   > .title-drag-handle {
-    width: 1px;
+    width: 3px;
     height: 100%;
-    background-color: #000;
+    background-color: transparent;
     position: absolute;
     right: 0;
     top: 0;
@@ -27,10 +30,15 @@
   flex-direction: row;
   align-items: center;
   height: 100%;
+  font-size: 1.2em;
+  padding-left: 6px;
+  border-right: 1px solid gray;
 }
 .issue-column-calendar {
   display: flex;
+  flex-direction: row;
   flex: 1 1 auto;
+  height: 100%;
 }
 .issue-column-day {
   flex: 1 1 auto;
@@ -42,7 +50,6 @@
 
   > .month {
     flex: 1 1 auto;
-    font-size: 12px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -54,7 +61,6 @@
 
   > .day {
     flex: 1 1 auto;
-    font-size: 12px;
     display: flex;
     justify-content: center;
     align-items: center;

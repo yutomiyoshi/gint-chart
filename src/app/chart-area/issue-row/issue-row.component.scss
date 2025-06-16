@@ -1,10 +1,11 @@
 $issue-row-height: 30px;
 $calendar-area-padding: 5px;
-$bar-radius: 10px;
+$bar-radius: 4px;
 $end-date-handle-border-radius: 2px;
 $end-date-handle-width: 6px;
 $end-date-handle-right-offset: -10px;
 $start-date-handle-left-offset: -10px;
+$activate-opacity-transition-duration: 0.2s;
 
 .issue-row-container {
   width: 100%;
@@ -14,26 +15,44 @@ $start-date-handle-left-offset: -10px;
   flex-direction: row;
   align-items: center;
   position: relative;
+
+  border-bottom: 1px solid rgb(176, 176, 176);
 }
 
 .title {
   width: 200px;
+  height: 100%;
   flex: 0 0 200px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   background-color: white;
+  padding-left: 6px;
+  border-right: 1px solid gray;
   z-index: 2;
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
 }
 
 .status {
   width: 100px;
+  height: 100%;
   flex: 0 0 100px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   background-color: white;
+  padding-left: 6px;
+  border-right: 1px solid gray;
   z-index: 2;
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
 }
 
 .calendar-area {
@@ -49,12 +68,12 @@ $start-date-handle-left-offset: -10px;
     left: 0;
     width: 100%;
     height: calc(100% - #{$calendar-area-padding * 2});
-    background-color: #4a90e2;
+    background-color: #004a9f;
     border-radius: $bar-radius;
     transition: width 0.1s ease-out, left 0.1s ease-out;
 
     &:hover {
-      opacity: 0.8;
+      opacity: 0.6;
     }
 
     .start-date-handle {
@@ -63,7 +82,7 @@ $start-date-handle-left-offset: -10px;
       top: 0;
       width: $end-date-handle-width;
       height: 100%;
-      background-color: #4a90e2;
+      border: 1px dashed #7d7e7f;
       border-radius: $end-date-handle-border-radius;
       cursor: ew-resize;
       // CDKのドラッグ操作はtransformを使用して要素を移動させるため、
@@ -72,9 +91,17 @@ $start-date-handle-left-offset: -10px;
       // CDKのtransform値を上書きし、right: -10pxで指定した
       // 位置関係を常に維持する
       transform: translateX(0) !important;
+      opacity: 0;
+      transition: opacity $activate-opacity-transition-duration ease-out;
 
       &:hover {
-        background-color: darken(#4a90e2, 10%);
+        border: none;
+        background-color: #7d7e7f;
+        opacity: 1;
+      }
+
+      &.active {
+        opacity: 0.6;
       }
     }
 
@@ -84,7 +111,7 @@ $start-date-handle-left-offset: -10px;
       top: 0;
       width: $end-date-handle-width;
       height: 100%;
-      background-color: #4a90e2;
+      border: 1px dashed #7d7e7f;
       border-radius: $end-date-handle-border-radius;
       cursor: ew-resize;
       // CDKのドラッグ操作はtransformを使用して要素を移動させるため、
@@ -93,9 +120,17 @@ $start-date-handle-left-offset: -10px;
       // CDKのtransform値を上書きし、right: -10pxで指定した
       // 位置関係を常に維持する
       transform: translateX(0) !important;
+      opacity: 0;
+      transition: opacity $activate-opacity-transition-duration ease-out;
 
       &:hover {
-        background-color: darken(#4a90e2, 10%);
+        border: none;
+        background-color: #7d7e7f;
+        opacity: 1;
+      }
+
+      &.active {
+        opacity: 0.6;
       }
     }
   }
@@ -114,6 +149,8 @@ $start-date-handle-left-offset: -10px;
     padding: 0;
     margin: 0;
     z-index: 1;
+    opacity: 0;
+    transition: opacity $activate-opacity-transition-duration ease-out;
 
     &::before,
     &::after {
@@ -146,6 +183,10 @@ $start-date-handle-left-offset: -10px;
       &::after {
         background-color: #666;
       }
+    }
+
+    &.active {
+      opacity: 0.6;
     }
   }
 }
