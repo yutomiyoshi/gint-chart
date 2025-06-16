@@ -313,4 +313,13 @@ export class IssueRowComponent {
     this.endDate = newEndDate;
     this.endDateChange.emit(this.endDate);
   }
+
+  /**
+   * タイトルクリック時に呼ばれる関数
+   */
+  onTitleClick() {
+    /**
+     * 何もしない
+     */
+  }
 }
