@@ -94,4 +94,19 @@ $start-date-handle-left-offset: -10px;
       }
     }
   }
+
+  > .no-date-button {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 6px;
+    border-radius: 2px;
+    background-color: #ccc;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    margin: 0;
+    z-index: 1;
+  }
 }

@@ -104,6 +104,13 @@ export class IssueRowComponent {
   }
 
   /**
+   * 開始日と終了日が未設定の場合は、終了日作成ボタンを表示する
+   */
+  get showEndDateCreateButton(): boolean {
+    return isUndefined(this.startDate) && isUndefined(this.endDate);
+  }
+
+  /**
    * 終了日のドラッグ開始時に呼ばれる関数
    * 終了日のドラッグ中に呼ばれる関数を設定する
    */
@@ -294,5 +301,16 @@ export class IssueRowComponent {
     /**
      * 開始日も終了日も設定されていない場合、何もしない
      */
+  }
+
+  /**
+   * 終了日作成ボタンがクリックされたときに呼ばれる関数
+   * 今日から5日後の日付を終了日として設定する
+   */
+  onEndDateCreateClick() {
+    const newEndDate = new Date();
+    newEndDate.setDate(newEndDate.getDate() + 5);
+    this.endDate = newEndDate;
+    this.endDateChange.emit(this.endDate);
   }
 }
