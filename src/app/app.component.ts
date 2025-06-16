@@ -34,7 +34,10 @@ export class AppComponent implements OnInit, OnDestroy {
           this.isIssueDetailDialogExpanded = !isUndefined(issueId);
         },
         error: (error) => {
-          console.error('Issue detail dialog expansion error:', error);
+          Assertion.assert(
+            'Issue detail dialog expansion error: ' + error,
+            Assertion.no(16)
+          );
           this.isIssueDetailDialogExpanded = false;
         },
       });
@@ -44,7 +47,10 @@ export class AppComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         error: (error) => {
-          Assertion.assert('Failed to load GitLab config', Assertion.no(1));
+          Assertion.assert(
+            'Failed to load GitLab config: ' + error,
+            Assertion.no(1)
+          );
           this.loadingOverlay = false;
         },
         next: () => {
@@ -53,7 +59,10 @@ export class AppComponent implements OnInit, OnDestroy {
             .pipe(takeUntil(this.destroy$))
             .subscribe({
               error: (error) => {
-                Assertion.assert('Failed to sync issues', Assertion.no(2));
+                Assertion.assert(
+                  'Failed to sync issues: ' + error,
+                  Assertion.no(2)
+                );
                 this.loadingOverlay = false;
               },
               next: () => {
