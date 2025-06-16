@@ -11,11 +11,12 @@
   position: relative;
   font-size: 1.2em;
   padding-left: 6px;
+  border-right: 1px solid gray;
 
   > .title-drag-handle {
-    width: 1px;
+    width: 3px;
     height: 100%;
-    background-color: #000;
+    background-color: transparent;
     position: absolute;
     right: 0;
     top: 0;
@@ -31,6 +32,7 @@
   height: 100%;
   font-size: 1.2em;
   padding-left: 6px;
+  border-right: 1px solid gray;
 }
 .issue-column-calendar {
   display: flex;
