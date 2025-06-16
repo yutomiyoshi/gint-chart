@@ -1,6 +1,10 @@
 $issue-row-height: 30px;
 $calendar-area-padding: 5px;
 $bar-radius: 10px;
+$end-date-handle-border-radius: 2px;
+$end-date-handle-width: 6px;
+$end-date-handle-right-offset: -10px;
+$start-date-handle-left-offset: -10px;
 
 .issue-row-container {
   width: 100%;
@@ -39,8 +43,7 @@ $bar-radius: 10px;
   padding: $calendar-area-padding 0;
   z-index: 1;
 
-  > .issue-bar {
-    display: none;
+  .issue-bar {
     position: absolute;
     top: $calendar-area-padding;
     left: 0;
@@ -51,6 +54,43 @@ $bar-radius: 10px;
 
     &:hover {
       opacity: 0.8;
+    }
+
+    .start-date-handle {
+      position: absolute;
+      left: $start-date-handle-left-offset;
+      top: 0;
+      width: $end-date-handle-width;
+      height: 100%;
+      background-color: #4a90e2;
+      border-radius: $end-date-handle-border-radius;
+      cursor: ew-resize;
+      transform: translateX(0) !important;
+
+      &:hover {
+        background-color: darken(#4a90e2, 10%);
+      }
+    }
+
+    .end-date-handle {
+      position: absolute;
+      right: $end-date-handle-right-offset;
+      top: 0;
+      width: $end-date-handle-width;
+      height: 100%;
+      background-color: #4a90e2;
+      border-radius: $end-date-handle-border-radius;
+      cursor: ew-resize;
+      // CDKのドラッグ操作はtransformを使用して要素を移動させるため、
+      // ドラッグ中にissue-barとの位置関係が崩れる問題が発生
+      // transform: translateX(0) !important を指定することで、
+      // CDKのtransform値を上書きし、right: -10pxで指定した
+      // 位置関係を常に維持する
+      transform: translateX(0) !important;
+
+      &:hover {
+        background-color: darken(#4a90e2, 10%);
+      }
     }
   }
 }
