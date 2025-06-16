@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { isNull } from '@src/app/utils/utils';
 import { Observable, defer, from, throwError } from 'rxjs';
 import { catchError, map, mergeMap } from 'rxjs/operators';
-import { Assertion } from '../utils/assertion';
+import { Assertion } from '@src/app/utils/assertion';
 
 @Injectable({
   providedIn: 'root',

@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { IssueDetailDialogExpansionService } from './issue-detail-dialog-expansion.service';
-import { IssuesStoreService } from '../store/issues-store.service';
-import { isUndefined } from '../utils/utils';
-import { Issue } from '../model/issue.model';
-import { Assertion } from '../utils/assertion';
+import { IssueDetailDialogExpansionService } from '@src/app/issue-detail-dialog/issue-detail-dialog-expansion.service';
+import { IssuesStoreService } from '@src/app/store/issues-store.service';
+import { isUndefined } from '@src/app/utils/utils';
+import { Issue } from '@src/app/model/issue.model';
+import { Assertion } from '@src/app/utils/assertion';
 
 @Component({
   selector: 'app-issue-detail-dialog',

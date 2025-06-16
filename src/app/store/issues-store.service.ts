@@ -4,7 +4,7 @@ import { mergeMap, map, toArray, tap } from 'rxjs/operators';
 import { GitLabApiService } from '@src/app/git-lab-api/git-lab-api.service';
 import { Issue, convertJsonToIssue } from '@src/app/model/issue.model';
 import { GitLabProject } from '@src/app/model/git-lab-config.model';
-import { GitLabConfigStoreService } from './git-lab-config-store.service';
+import { GitLabConfigStoreService } from '@src/app/store/git-lab-config-store.service';
 import { SAMPLE_ISSUES } from '@src/app/model/sample-issues';
 import { environment } from '@src/environments/environment';
 import { GitLabApiIssue } from '@src/app/git-lab-api/git-lab-issue.model';

@@ -2,10 +2,10 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { IssuesStoreService } from '@src/app/store/issues-store.service';
 import { GitLabConfigStoreService } from '@src/app/store/git-lab-config-store.service';
 import { Subject, takeUntil } from 'rxjs';
-import { IssueDetailDialogExpansionService } from './issue-detail-dialog/issue-detail-dialog-expansion.service';
-import { isUndefined } from './utils/utils';
-import { DIALOG_ANIMATION_DURATION } from './app-view.default';
-import { Assertion } from './utils/assertion';
+import { IssueDetailDialogExpansionService } from '@src/app/issue-detail-dialog/issue-detail-dialog-expansion.service';
+import { isUndefined } from '@src/app/utils/utils';
+import { DIALOG_ANIMATION_DURATION } from '@src/app/app-view.default';
+import { Assertion } from '@src/app/utils/assertion';
 
 @Component({
   selector: 'app-root',
