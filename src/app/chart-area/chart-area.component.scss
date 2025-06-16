@@ -1,3 +1,5 @@
+@import "@src/app/style/scroll-bar.scss";
+
 .chart-area-container {
   display: flex;
   flex-direction: column;
@@ -18,4 +20,18 @@
   min-width: 0;
   overflow-x: hidden;
   overflow-y: auto;
+
+  &::-webkit-scrollbar {
+    width: $scroll-bar-width;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: $scroll-bar-thumb-color;
+    border-radius: $scroll-bar-radius;
+  }
+
+  &::-webkit-scrollbar-track {
+    background-color: $scroll-bar-track-color;
+    border-radius: $scroll-bar-radius;
+  }
 }

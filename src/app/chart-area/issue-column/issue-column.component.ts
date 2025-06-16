@@ -78,6 +78,8 @@ export class IssueColumnComponent implements OnInit, OnDestroy {
   @Input() isHiddenDatePattern: boolean[] = [];
   @Output() isHiddenDatePatternChange = new EventEmitter<boolean[]>();
 
+  @Input() isScrollBarActive = false;
+
   get titleStyle(): { [key: string]: string } {
     if (this.titleWidth === 0) {
       return {

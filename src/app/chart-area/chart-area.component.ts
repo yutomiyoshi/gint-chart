@@ -1,4 +1,11 @@
-import { Component, Input, OnInit } from '@angular/core';
+import {
+  Component,
+  Input,
+  OnInit,
+  ViewChild,
+  ElementRef,
+  AfterViewInit,
+} from '@angular/core';
 import { IssuesStoreService } from '@src/app/store/issues-store.service';
 import { Issue } from '@src/app/model/issue.model';
 import {
@@ -18,7 +25,7 @@ import { DateHandler } from '@src/app/utils/time';
   templateUrl: './chart-area.component.html',
   styleUrls: ['./chart-area.component.scss'],
 })
-export class ChartAreaComponent implements OnInit {
+export class ChartAreaComponent implements OnInit, AfterViewInit {
   @Input() isShowTitle = true;
   @Input() isShowStatus = true;
   @Input() isShowAssignee = true;
@@ -72,6 +79,9 @@ export class ChartAreaComponent implements OnInit {
 
   private _assigneeWidth: number = assigneeWidthDefault;
 
+  @ViewChild('issueRowArea') issueRowArea!: ElementRef;
+  isScrollBarActive = false;
+
   constructor(private issueStore: IssuesStoreService) {}
 
   ngOnInit(): void {
@@ -81,5 +91,19 @@ export class ChartAreaComponent implements OnInit {
       // TODO: ここでissuesをフィルターする
       this.issues = issues;
     });
+  }
+
+  ngAfterViewInit(): void {
+    const element = this.issueRowArea.nativeElement;
+    const checkScroll = () => {
+      this.isScrollBarActive = element.scrollHeight > element.clientHeight;
+    };
+
+    // 初期チェック
+    checkScroll();
+
+    // リサイズイベントの監視
+    const resizeObserver = new ResizeObserver(checkScroll);
+    resizeObserver.observe(element);
   }
 }

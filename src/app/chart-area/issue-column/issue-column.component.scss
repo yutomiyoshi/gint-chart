@@ -1,3 +1,5 @@
+@import "@src/app/style/scroll-bar.scss";
+
 .issue-column-row {
   display: flex;
   align-items: center;
@@ -77,5 +79,14 @@
     &.hidden {
       color: transparent;
     }
+  }
+}
+
+.issue-column-scroll-bar {
+  display: none;
+  width: $scroll-bar-width;
+
+  &.active {
+    display: block;
   }
 }
