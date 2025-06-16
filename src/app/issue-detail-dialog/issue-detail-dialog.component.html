@@ -1,1 +1,36 @@
-<div class="issue-detail-dialog"></div>
+<div class="issue-detail-dialog">
+  <div *ngIf="issue" class="issue-content">
+    <h2 class="issue-title">{{ issue.title }}</h2>
+
+    <div class="issue-meta">
+      <div class="meta-item">
+        <span class="label">ステータス:</span>
+        <span class="value" [ngClass]="issue.state">{{ issue.state }}</span>
+      </div>
+
+      <div class="meta-item">
+        <span class="label">開始日:</span>
+        <span class="value">{{ issue.start_date | date : "yyyy/MM/dd" }}</span>
+      </div>
+
+      <div class="meta-item">
+        <span class="label">終了日:</span>
+        <span class="value">{{ issue.end_date | date : "yyyy/MM/dd" }}</span>
+      </div>
+    </div>
+
+    <div class="issue-labels">
+      <span class="label">ラベル:</span>
+      <div class="label-tags">
+        <span *ngFor="let label of issue.labels" class="label-tag">{{
+          label
+        }}</span>
+      </div>
+    </div>
+
+    <div class="issue-description">
+      <h3>説明</h3>
+      <div class="description-content">{{ issue.description }}</div>
+    </div>
+  </div>
+</div>
