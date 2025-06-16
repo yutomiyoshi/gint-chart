@@ -46,6 +46,8 @@ export class IssueRowComponent {
     new Date().setDate(new Date().getDate() + calendarEndDateOffset)
   );
 
+  private updateEndDate: ((distance: number) => void) | undefined;
+
   /**
    * UI fields
    */
@@ -89,10 +91,6 @@ export class IssueRowComponent {
   }
 
   onEndDateDragStart(event: CdkDragStart) {
-    console.log('Drag Start:', event);
-  }
-
-  onEndDateDragMoved(event: CdkDragMove) {
     if (
       isUndefined(this.calendarArea) ||
       isUndefined(this.calendarArea.nativeElement)
@@ -117,24 +115,30 @@ export class IssueRowComponent {
       this.dispEndDate
     );
     const calendarWidth = this.calendarArea.nativeElement.offsetWidth;
-    const daysPerPixel = totalDays / calendarWidth;
-    const movedDays = Math.round(event.distance.x * daysPerPixel);
+    const daysPerPixel = calendarWidth / totalDays;
 
-    const newEndDate = new Date(endDate);
-    newEndDate.setDate(newEndDate.getDate() + movedDays);
+    this.updateEndDate = (distance: number) => {
+      const movedDays = Math.round(distance / daysPerPixel);
+      const newEndDate = new Date(endDate);
+      newEndDate.setDate(newEndDate.getDate() + movedDays);
 
-    console.log('newEndDate:', newEndDate);
+      // 開始日が設定されている場合、終了日が開始日より前にならないようにする
+      if (!isUndefined(this.startDate) && newEndDate < this.startDate) {
+        return;
+      }
 
-    // 開始日が設定されている場合、終了日が開始日より前にならないようにする
-    if (!isUndefined(this.startDate) && newEndDate < this.startDate) {
-      return;
-    }
+      this.endDate = newEndDate;
+    };
+  }
 
-    this.endDate = newEndDate;
+  onEndDateDragMoved(event: CdkDragMove) {
+    if (isUndefined(this.updateEndDate)) return;
+    this.updateEndDate(event.distance.x);
   }
 
   onEndDateDragEnd(_event: CdkDragEnd) {
     this.endDateChange.emit(this.endDate);
+    this.updateEndDate = undefined;
   }
 }
 
