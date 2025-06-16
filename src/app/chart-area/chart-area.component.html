@@ -10,6 +10,7 @@
   <div class="issue-row-area">
     <app-issue-row
       *ngFor="let issue of issues"
+      [id]="issue.id"
       [title]="issue.title"
       [state]="issue.state"
       [(startDate)]="issue.start_date"
