@@ -216,8 +216,9 @@ $activate-opacity-transition-duration: 0.2s;
 .issue-row-day {
   height: 100%;
   flex: 1 1 auto;
+  border-left: 1px dashed rgb(229, 229, 229);
 
-  &.non-hidden {
-    border-right: 1px dashed rgb(229, 229, 229);
+  &.hidden {
+    border-left: none;
   }
 }
