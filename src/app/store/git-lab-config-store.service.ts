@@ -11,8 +11,6 @@ export class GitLabConfigStoreService {
   public config$: Observable<GitLabConfig | null> =
     this.configSubject.asObservable();
 
-  constructor() {}
-
   /**
    * Electron経由でconfig.jsonを読み込む
    */

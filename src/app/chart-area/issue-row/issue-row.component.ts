@@ -124,7 +124,7 @@ export class IssueRowComponent {
    * 終了日のドラッグ開始時に呼ばれる関数
    * 終了日のドラッグ中に呼ばれる関数を設定する
    */
-  onEndDateDragStart(_event: CdkDragStart) {
+  onEndDateDragStart() {
     if (
       isUndefined(this.calendarArea) ||
       isUndefined(this.calendarArea.nativeElement)
@@ -179,7 +179,7 @@ export class IssueRowComponent {
    * 終了日を更新し、変更を通知する
    * ドラッグ中に呼ばれる関数を削除する
    */
-  onEndDateDragEnd(_event: CdkDragEnd) {
+  onEndDateDragEnd() {
     this.endDateChange.emit(this.endDate);
     this.updateEndDate = undefined;
   }
@@ -188,7 +188,7 @@ export class IssueRowComponent {
    * 開始日のドラッグ開始時に呼ばれる関数
    * 開始日のドラッグ中に呼ばれる関数を設定する
    */
-  onStartDateDragStart(_event: CdkDragStart) {
+  onStartDateDragStart() {
     if (
       isUndefined(this.calendarArea) ||
       isUndefined(this.calendarArea.nativeElement)
@@ -259,7 +259,7 @@ export class IssueRowComponent {
    * 開始日を更新し、変更を通知する
    * ドラッグ中に呼ばれる関数を削除する
    */
-  onStartDateDragEnd(_event: CdkDragEnd) {
+  onStartDateDragEnd() {
     this.startDateChange.emit(this.startDate);
     this.updateSchedule = undefined;
   }
@@ -267,7 +267,7 @@ export class IssueRowComponent {
   /**
    * 開始日のハンドルがダブルクリックされた時に呼ばれる関数
    */
-  onStartDateDoubleClick(_event: MouseEvent) {
+  onStartDateDoubleClick() {
     if (!isUndefined(this.startDate)) {
       // startDateが設定されている場合、undefinedに設定
       this.startDate = undefined;
@@ -294,7 +294,7 @@ export class IssueRowComponent {
    * 終了日が未設定の場合は開始日+1日に設定
    * 終了日が設定済みの場合は未設定に変更
    */
-  onEndDateDoubleClick(_event: MouseEvent) {
+  onEndDateDoubleClick() {
     if (!isUndefined(this.endDate)) {
       this.endDate = undefined;
       this.endDateChange.emit(undefined);
