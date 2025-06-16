@@ -10,6 +10,7 @@
   height: 100%;
   position: relative;
   font-size: 1.2em;
+  padding-left: 6px;
 
   > .title-drag-handle {
     width: 1px;
@@ -29,6 +30,7 @@
   align-items: center;
   height: 100%;
   font-size: 1.2em;
+  padding-left: 6px;
 }
 .issue-column-calendar {
   display: flex;
