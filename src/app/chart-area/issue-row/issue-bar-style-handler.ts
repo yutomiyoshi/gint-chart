@@ -41,7 +41,7 @@ const startDateOnlyBarStyleHandler: BarStyleHandler = (
   startDate: Date | undefined,
   _endDate: Date | undefined
 ) => {
-  if (isUndefined(startDate) || startDate > dispEndDate) {
+  if (isUndefined(startDate)) {
     return { display: 'none' };
   }
 
@@ -74,7 +74,7 @@ const endDateOnlyBarStyleHandler: BarStyleHandler = (
   _startDate: Date | undefined,
   endDate: Date | undefined
 ) => {
-  if (isUndefined(endDate) || endDate < dispStartDate) {
+  if (isUndefined(endDate)) {
     return { display: 'none' };
   }
 
@@ -114,10 +114,6 @@ const scheduledBarStyleHandler: BarStyleHandler = (
 
   if (startDate > endDate) {
     Assertion.assert(`${startDate} must be before ${endDate}`, Assertion.no(7));
-    return { display: 'none' };
-  }
-
-  if (startDate > dispEndDate || endDate < dispStartDate) {
     return { display: 'none' };
   }
 
