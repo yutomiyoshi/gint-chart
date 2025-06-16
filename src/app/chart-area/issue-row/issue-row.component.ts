@@ -269,4 +269,28 @@ export class IssueRowComponent {
      * 開始日も終了日も設定されていない場合、何もしない
      */
   }
+
+  /**
+   * 終了日のダブルクリック時に呼ばれる関数
+   * 終了日が未設定の場合は開始日+1日に設定
+   * 終了日が設定済みの場合は未設定に変更
+   */
+  onEndDateDoubleClick(_event: MouseEvent) {
+    if (!isUndefined(this.endDate)) {
+      this.endDate = undefined;
+      this.endDateChange.emit(undefined);
+      return;
+    }
+
+    if (!isUndefined(this.startDate)) {
+      this.endDate = new Date(this.startDate);
+      this.endDate.setDate(this.endDate.getDate() + 1);
+      this.endDateChange.emit(this.endDate);
+      return;
+    }
+
+    /**
+     * 開始日も終了日も設定されていない場合、何もしない
+     */
+  }
 }
