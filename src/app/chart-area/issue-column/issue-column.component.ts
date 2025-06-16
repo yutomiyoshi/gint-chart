@@ -6,6 +6,8 @@ import {
   EventEmitter,
   ViewChild,
   ElementRef,
+  OnInit,
+  OnDestroy,
 } from '@angular/core';
 import {
   statusWidthDefault,
@@ -17,6 +19,8 @@ import {
 import { DateHandler } from '@src/app/utils/time';
 import { isUndefined } from '@src/app/utils/utils';
 import { Assertion } from '@src/app/utils/assertion';
+import { DateJumpService } from './date-jump.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-issue-column',
@@ -24,7 +28,36 @@ import { Assertion } from '@src/app/utils/assertion';
   templateUrl: './issue-column.component.html',
   styleUrl: './issue-column.component.scss',
 })
-export class IssueColumnComponent {
+export class IssueColumnComponent implements OnInit, OnDestroy {
+  private subscription = new Subscription();
+
+  constructor(private dateJumpService: DateJumpService) {}
+
+  ngOnInit() {
+    this.subscription.add(
+      this.dateJumpService.jumpRequest$.subscribe((date) => {
+        const totalDays = DateHandler.countDateBetween(
+          this.dispStartDate,
+          this.dispEndDate
+        );
+        const halfRange = Math.floor(totalDays / 2);
+
+        const newStart = new Date(date);
+        newStart.setDate(newStart.getDate() - halfRange);
+
+        const newEnd = new Date(date);
+        newEnd.setDate(newEnd.getDate() + (totalDays - halfRange - 1));
+
+        this.dispStartDateChange.emit(newStart);
+        this.dispEndDateChange.emit(newEnd);
+      })
+    );
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
+  }
+
   /**
    * Logic fields
    */
