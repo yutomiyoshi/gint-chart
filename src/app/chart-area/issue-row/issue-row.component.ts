@@ -17,7 +17,7 @@ import {
 } from '@src/app/chart-area/column-view-default';
 import { Assertion, isUndefined } from '@src/app/utils/utils';
 import { DateHandler } from '@src/app/utils/time';
-import { barStyleFactory } from './issue-bar-style-handler';
+import { getBarStyle } from './issue-bar-style-handler';
 
 @Component({
   selector: 'app-issue-row',
@@ -93,7 +93,7 @@ export class IssueRowComponent {
    * バーの位置と幅を計算する
    */
   get barStyle(): { [key: string]: string | undefined } {
-    return barStyleFactory(this.startDate, this.endDate)(
+    return getBarStyle(
       this.dispStartDate,
       this.dispEndDate,
       this.startDate,
@@ -243,5 +243,28 @@ export class IssueRowComponent {
   onStartDateDragEnd(_event: CdkDragEnd) {
     this.startDateChange.emit(this.startDate);
     this.updateSchedule = undefined;
+  }
+
+  /**
+   * 開始日のハンドルがダブルクリックされた時に呼ばれる関数
+   */
+  onStartDateDoubleClick(_event: MouseEvent) {
+    if (!isUndefined(this.startDate)) {
+      // startDateが設定されている場合、undefinedに設定
+      this.startDateChange.emit(undefined);
+      return;
+    }
+
+    if (!isUndefined(this.endDate)) {
+      // startDateが設定されていない場合、終了日の1日前に設定
+      const newStartDate = new Date(this.endDate);
+      newStartDate.setDate(newStartDate.getDate() - 1);
+      this.startDateChange.emit(newStartDate);
+      return;
+    }
+
+    /**
+     * 開始日も終了日も設定されていない場合、何もしない
+     */
   }
 }

@@ -1,7 +1,7 @@
 import { DateHandler } from '@src/app/utils/time';
 import { Assertion, isUndefined } from '@src/app/utils/utils';
 
-export type BarStyleHandler = (
+type BarStyleHandler = (
   dispStartDate: Date,
   dispEndDate: Date,
   startDate: Date | undefined,
@@ -107,21 +107,43 @@ const scheduledBarStyleHandler: BarStyleHandler = (
  * @param endDate 終了日
  * @returns バーのスタイル
  */
-export function barStyleFactory(
+export function getBarStyle(
+  dispStartDate: Date,
+  dispEndDate: Date,
   startDate: Date | undefined,
   endDate: Date | undefined
-): BarStyleHandler {
+): { [key: string]: string | undefined } {
   if (!isUndefined(startDate) && !isUndefined(endDate)) {
-    return scheduledBarStyleHandler;
+    return scheduledBarStyleHandler(
+      dispStartDate,
+      dispEndDate,
+      startDate,
+      endDate
+    );
   }
 
   if (!isUndefined(startDate)) {
-    return startDateOnlyBarStyleHandler;
+    return startDateOnlyBarStyleHandler(
+      dispStartDate,
+      dispEndDate,
+      startDate,
+      endDate
+    );
   }
 
   if (!isUndefined(endDate)) {
-    return endDateOnlyBarStyleHandler;
+    return endDateOnlyBarStyleHandler(
+      dispStartDate,
+      dispEndDate,
+      startDate,
+      endDate
+    );
   }
 
-  return nonScheduledBarStyleHandler;
+  return nonScheduledBarStyleHandler(
+    dispStartDate,
+    dispEndDate,
+    startDate,
+    endDate
+  );
 }
