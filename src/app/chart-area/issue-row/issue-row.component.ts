@@ -6,19 +6,24 @@ import {
   ElementRef,
   ViewChild,
 } from '@angular/core';
-import { CdkDragStart, CdkDragMove, CdkDragEnd } from '@angular/cdk/drag-drop';
+import { CdkDragMove } from '@angular/cdk/drag-drop';
 import {
   calendarEndDateOffset,
   calendarStartDateOffset,
-} from '@src/app/chart-area/calendar-view-default';
+} from '@src/app/chart-area/chat-area-view.default';
 import {
   statusWidthDefault,
   titleWidthDefault,
 } from '@src/app/chart-area/issue-column/issue-column-view.default';
-import { Assertion, isUndefined } from '@src/app/utils/utils';
+import { isUndefined } from '@src/app/utils/utils';
 import { DateHandler } from '@src/app/utils/time';
-import { getBarStyle } from './issue-bar-style-handler';
+import { getBarStyle } from '@src/app/chart-area/issue-row/issue-bar-style-handler';
 import { IssueDetailDialogExpansionService } from '@src/app/issue-detail-dialog/issue-detail-dialog-expansion.service';
+import {
+  newEndDateCreateOffsetDays,
+  undefinedDuration,
+} from '@src/app/chart-area/issue-row/issue-row-logic.default';
+import { Assertion } from '@src/app/utils/assertion';
 
 @Component({
   selector: 'app-issue-row',
@@ -36,7 +41,7 @@ export class IssueRowComponent {
   /**
    * Logic fields
    */
-  @Input() id: number = 0;
+  @Input() id = 0;
   @Input() title = 'dummy title';
   @Input() state = 'dummy state';
   @Input() startDate: Date | undefined;
@@ -69,7 +74,7 @@ export class IssueRowComponent {
    * UI fields
    */
 
-  get titleStyle(): { [key: string]: string } {
+  get titleStyle(): Record<string, string> {
     if (this.titleWidth === 0) {
       return {
         display: 'none',
@@ -81,7 +86,7 @@ export class IssueRowComponent {
     };
   }
 
-  get statusStyle(): { [key: string]: string } {
+  get statusStyle(): Record<string, string> {
     if (this.statusWidth === 0) {
       return {
         display: 'none',
@@ -100,7 +105,7 @@ export class IssueRowComponent {
   /**
    * バーの位置と幅を計算する
    */
-  get barStyle(): { [key: string]: string | undefined } {
+  get barStyle(): Record<string, string | undefined> {
     return getBarStyle(
       this.dispStartDate,
       this.dispEndDate,
@@ -120,12 +125,12 @@ export class IssueRowComponent {
    * 終了日のドラッグ開始時に呼ばれる関数
    * 終了日のドラッグ中に呼ばれる関数を設定する
    */
-  onEndDateDragStart(_event: CdkDragStart) {
+  onEndDateDragStart() {
     if (
       isUndefined(this.calendarArea) ||
       isUndefined(this.calendarArea.nativeElement)
     ) {
-      Assertion.assert('calendarArea is undefined.', Assertion.no(1));
+      Assertion.assert('calendarArea is undefined.', Assertion.no(8));
       return;
     }
 
@@ -133,7 +138,7 @@ export class IssueRowComponent {
 
     if (isUndefined(endDate)) {
       if (isUndefined(this.startDate)) {
-        Assertion.assert('startDate is undefined.', Assertion.no(3));
+        Assertion.assert('startDate is undefined.', Assertion.no(9));
         return;
       }
       endDate = new Date(this.startDate.getTime());
@@ -175,7 +180,7 @@ export class IssueRowComponent {
    * 終了日を更新し、変更を通知する
    * ドラッグ中に呼ばれる関数を削除する
    */
-  onEndDateDragEnd(_event: CdkDragEnd) {
+  onEndDateDragEnd() {
     this.endDateChange.emit(this.endDate);
     this.updateEndDate = undefined;
   }
@@ -184,16 +189,16 @@ export class IssueRowComponent {
    * 開始日のドラッグ開始時に呼ばれる関数
    * 開始日のドラッグ中に呼ばれる関数を設定する
    */
-  onStartDateDragStart(_event: CdkDragStart) {
+  onStartDateDragStart() {
     if (
       isUndefined(this.calendarArea) ||
       isUndefined(this.calendarArea.nativeElement)
     ) {
-      Assertion.assert('calendarArea is undefined.', Assertion.no(1));
+      Assertion.assert('calendarArea is undefined.', Assertion.no(10));
       return;
     }
 
-    let endDate = this.endDate;
+    const endDate = this.endDate;
     const startDate = this.startDate;
 
     const totalDays = DateHandler.countDateBetween(
@@ -207,7 +212,7 @@ export class IssueRowComponent {
     // startDateがundefinedの場合は、endDateのみを移動させる
     if (isUndefined(startDate)) {
       if (isUndefined(endDate)) {
-        Assertion.assert('endDate is undefined.', Assertion.no(3));
+        Assertion.assert('endDate is undefined.', Assertion.no(11));
         return;
       }
 
@@ -255,7 +260,7 @@ export class IssueRowComponent {
    * 開始日を更新し、変更を通知する
    * ドラッグ中に呼ばれる関数を削除する
    */
-  onStartDateDragEnd(_event: CdkDragEnd) {
+  onStartDateDragEnd() {
     this.startDateChange.emit(this.startDate);
     this.updateSchedule = undefined;
   }
@@ -263,7 +268,7 @@ export class IssueRowComponent {
   /**
    * 開始日のハンドルがダブルクリックされた時に呼ばれる関数
    */
-  onStartDateDoubleClick(_event: MouseEvent) {
+  onStartDateDoubleClick() {
     if (!isUndefined(this.startDate)) {
       // startDateが設定されている場合、undefinedに設定
       this.startDate = undefined;
@@ -274,7 +279,7 @@ export class IssueRowComponent {
     if (!isUndefined(this.endDate)) {
       // startDateが設定されていない場合、終了日の1日前に設定
       const newStartDate = new Date(this.endDate);
-      newStartDate.setDate(newStartDate.getDate() - 1);
+      newStartDate.setDate(newStartDate.getDate() - undefinedDuration + 1);
       this.startDate = newStartDate;
       this.startDateChange.emit(newStartDate);
       return;
@@ -290,7 +295,7 @@ export class IssueRowComponent {
    * 終了日が未設定の場合は開始日+1日に設定
    * 終了日が設定済みの場合は未設定に変更
    */
-  onEndDateDoubleClick(_event: MouseEvent) {
+  onEndDateDoubleClick() {
     if (!isUndefined(this.endDate)) {
       this.endDate = undefined;
       this.endDateChange.emit(undefined);
@@ -299,7 +304,7 @@ export class IssueRowComponent {
 
     if (!isUndefined(this.startDate)) {
       this.endDate = new Date(this.startDate);
-      this.endDate.setDate(this.endDate.getDate() + 1);
+      this.endDate.setDate(this.endDate.getDate() + undefinedDuration - 1);
       this.endDateChange.emit(this.endDate);
       return;
     }
@@ -315,7 +320,7 @@ export class IssueRowComponent {
    */
   onEndDateCreateClick() {
     const newEndDate = new Date();
-    newEndDate.setDate(newEndDate.getDate() + 5);
+    newEndDate.setDate(newEndDate.getDate() + newEndDateCreateOffsetDays);
     this.endDate = newEndDate;
     this.endDateChange.emit(this.endDate);
   }

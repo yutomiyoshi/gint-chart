@@ -1,4 +1,9 @@
 <div class="chart-area-container">
+  <!--
+  ** Calendar Area
+  -- 表示領域を調整するので、
+  -- 表示領域を受け取る
+  -->
   <div class="calendar-area">
     <app-issue-column
       [(dispStartDate)]="dispStartDate"
@@ -7,6 +12,11 @@
       [statusWidth]="statusWidth"
     ></app-issue-column>
   </div>
+
+  <!--
+  ** Issue Row Area
+  -- issue一つに1行割り当てて、リスト展開する
+  -->
   <div class="issue-row-area">
     <app-issue-row
       *ngFor="let issue of issues"

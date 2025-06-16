@@ -12,11 +12,11 @@ export class HeaderComponent {
   @Output() isShowTitleChange = new EventEmitter<boolean>();
   @Output() isShowStatusChange = new EventEmitter<boolean>();
 
-  onTitleVisibilityChange(_$event: Event) {
+  onTitleVisibilityChange() {
     this.isShowTitleChange.emit(this.isShowTitle);
   }
 
-  onStatusVisibilityChange(_$event: Event) {
+  onStatusVisibilityChange() {
     this.isShowStatusChange.emit(this.isShowStatus);
   }
 }

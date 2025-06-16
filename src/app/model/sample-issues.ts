@@ -1,4 +1,4 @@
-import { Issue } from './issue.model';
+import { Issue } from '@src/app/model/issue.model';
 
 export const SAMPLE_ISSUES: Issue[] = [
   {

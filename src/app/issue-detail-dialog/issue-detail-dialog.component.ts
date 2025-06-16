@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
-import { IssueDetailDialogExpansionService } from './issue-detail-dialog-expansion.service';
-import { IssuesStoreService } from '../store/issues-store.service';
-import { Assertion, isUndefined } from '../utils/utils';
-import { Issue } from '../model/issue.model';
+import { Component, OnInit } from '@angular/core';
+import { IssueDetailDialogExpansionService } from '@src/app/issue-detail-dialog/issue-detail-dialog-expansion.service';
+import { IssuesStoreService } from '@src/app/store/issues-store.service';
+import { isUndefined } from '@src/app/utils/utils';
+import { Issue } from '@src/app/model/issue.model';
+import { Assertion } from '@src/app/utils/assertion';
 
 @Component({
   selector: 'app-issue-detail-dialog',
@@ -10,7 +11,7 @@ import { Issue } from '../model/issue.model';
   templateUrl: './issue-detail-dialog.component.html',
   styleUrl: './issue-detail-dialog.component.scss',
 })
-export class IssueDetailDialogComponent {
+export class IssueDetailDialogComponent implements OnInit {
   issue: Issue | undefined;
 
   constructor(
@@ -22,7 +23,7 @@ export class IssueDetailDialogComponent {
     const issueId = this.issueDetailDialogExpansionService.getExpandedIssueId();
 
     if (isUndefined(issueId)) {
-      Assertion.assert('issueId is undefined', Assertion.no(10));
+      Assertion.assert('issueId is undefined', Assertion.no(14));
       return;
     }
 

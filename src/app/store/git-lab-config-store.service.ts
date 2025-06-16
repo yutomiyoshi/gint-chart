@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, from } from 'rxjs';
-import { Assertion, isNull } from '@src/app/utils/utils';
+import { isNull } from '@src/app/utils/utils';
 import { GitLabConfig } from '@src/app/model/git-lab-config.model';
+import { Assertion } from '@src/app/utils/assertion';
 
 @Injectable({
   providedIn: 'root',
@@ -10,8 +11,6 @@ export class GitLabConfigStoreService {
   private configSubject = new BehaviorSubject<GitLabConfig | null>(null);
   public config$: Observable<GitLabConfig | null> =
     this.configSubject.asObservable();
-
-  constructor() {}
 
   /**
    * Electron経由でconfig.jsonを読み込む
@@ -27,8 +26,8 @@ export class GitLabConfigStoreService {
         .catch(() => {
           this.configSubject.next(null);
           Assertion.assert(
-            '設定ファイル(config.json)の読み込みに失敗しました。アプリの前提条件を確認してください。',
-            Assertion.no(5)
+            'Failed to load config.json. Please check the application prerequisites.',
+            Assertion.no(15)
           );
           return null;
         })

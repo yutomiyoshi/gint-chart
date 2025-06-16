@@ -66,6 +66,11 @@ $start-date-handle-left-offset: -10px;
       background-color: #4a90e2;
       border-radius: $end-date-handle-border-radius;
       cursor: ew-resize;
+      // CDKのドラッグ操作はtransformを使用して要素を移動させるため、
+      // ドラッグ中にissue-barとの位置関係が崩れる問題が発生
+      // transform: translateX(0) !important を指定することで、
+      // CDKのtransform値を上書きし、right: -10pxで指定した
+      // 位置関係を常に維持する
       transform: translateX(0) !important;
 
       &:hover {
@@ -95,7 +100,7 @@ $start-date-handle-left-offset: -10px;
     }
   }
 
-  > .no-date-button {
+  > .end-date-create-button {
     position: absolute;
     left: 10px;
     top: 50%;
@@ -120,11 +125,15 @@ $start-date-handle-left-offset: -10px;
       transform: translate(-50%, -50%);
     }
 
+    // ＋マーク
+    // の横棒
     &::before {
       width: 6px;
       height: 1px;
     }
 
+    // ＋マーク
+    // の縦棒
     &::after {
       width: 1px;
       height: 6px;

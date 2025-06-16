@@ -1,11 +1,59 @@
 import { Injectable } from '@angular/core';
-import { isNull, Assertion } from '@src/app/utils/utils';
-import { Observable, defer, from } from 'rxjs';
+import { isNull } from '@src/app/utils/utils';
+import { Observable, defer, from, throwError } from 'rxjs';
+import { catchError, map, mergeMap } from 'rxjs/operators';
+import { Assertion } from '@src/app/utils/assertion';
 
 @Injectable({
   providedIn: 'root',
 })
 export class GitLabApiService {
+  private createRequestOptions(
+    accessToken: string,
+    method: string,
+    body?: any
+  ): RequestInit {
+    return {
+      method,
+      headers: {
+        'Private-Token': accessToken,
+        'Content-Type': 'application/json',
+      },
+      ...(body && { body: JSON.stringify(body) }),
+    };
+  }
+
+  private handleResponse<T>(response: Response): Promise<T> {
+    if (!response.ok) {
+      return Promise.reject(
+        new Error(
+          `GitLab API request failed: ${response.status} ${response.statusText}`
+        )
+      );
+    }
+    return response.json();
+  }
+
+  private validateRequestParams(
+    host: string,
+    projectId: string,
+    accessToken: string
+  ): void {
+    if (host === '' || projectId === '' || accessToken === '') {
+      throw new Error('GitLab project information is not configured');
+    }
+  }
+
+  private buildApiUrl(
+    host: string,
+    projectId: string,
+    endpoint: string
+  ): string {
+    return `${host}/api/v4/projects/${encodeURIComponent(
+      projectId
+    )}/${endpoint}`;
+  }
+
   /**
    * 任意のGitLab APIエンドポイントからデータを取得し、アプリ用の型に変換して返すObservableを返します。
    *
@@ -27,7 +75,10 @@ export class GitLabApiService {
   ): Observable<S[]> {
     return defer(() => {
       if (host === '' || projectId === '' || accessToken === '') {
-        Assertion.assert('GitLabプロジェクト情報が未設定です', Assertion.no(2));
+        Assertion.assert(
+          'GitLab project information is not configured',
+          Assertion.no(12)
+        );
         return from([[] as S[]]);
       }
       const url = `${host}/api/v4/projects/${encodeURIComponent(
@@ -43,8 +94,8 @@ export class GitLabApiService {
           .then((response) => {
             if (!response.ok) {
               Assertion.assert(
-                `GitLab APIリクエスト失敗: ${response.status} ${response.statusText}`,
-                Assertion.no(3)
+                `GitLab API request failed: ${response.status} ${response.statusText}`,
+                Assertion.no(13)
               );
               return [];
             }
@@ -84,36 +135,22 @@ export class GitLabApiService {
     method: 'PATCH' | 'PUT' | 'POST',
     mapFn: (data: T) => S
   ): Observable<S> {
-    return defer(() => {
-      if (host === '' || projectId === '' || accessToken === '') {
-        Assertion.assert('GitLabプロジェクト情報が未設定です', Assertion.no(2));
-        return from([null as unknown as S]);
-      }
-      const url = `${host}/api/v4/projects/${encodeURIComponent(
-        projectId
-      )}/${endpoint}`;
-      return from(
-        fetch(url, {
-          method,
-          headers: {
-            'Private-Token': accessToken,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(body),
+    try {
+      this.validateRequestParams(host, projectId, accessToken);
+      const url = this.buildApiUrl(host, projectId, endpoint);
+      const options = this.createRequestOptions(accessToken, method, body);
+
+      return from(fetch(url, options)).pipe(
+        mergeMap((response) => from(this.handleResponse<T>(response))),
+        map((data) => mapFn(data)),
+        catchError((error) => {
+          console.error('GitLab API error:', error);
+          return throwError(() => error);
         })
-          .then((response) => {
-            if (!response.ok) {
-              Assertion.assert(
-                `GitLab APIリクエスト失敗: ${response.status} ${response.statusText}`,
-                Assertion.no(4)
-              );
-              return null as unknown as S;
-            }
-            return response.json();
-          })
-          .then((jsonData) => mapFn(jsonData))
       );
-    });
+    } catch (error) {
+      return throwError(() => error);
+    }
   }
   // ここにGitLab APIリクエスト用のメソッドを追加していきます
 }

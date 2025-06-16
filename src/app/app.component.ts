@@ -1,9 +1,11 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { IssuesStoreService } from '@src/app/store/issues-store.service';
 import { GitLabConfigStoreService } from '@src/app/store/git-lab-config-store.service';
-import { Subscription } from 'rxjs';
-import { IssueDetailDialogExpansionService } from './issue-detail-dialog/issue-detail-dialog-expansion.service';
-import { isUndefined } from './utils/utils';
+import { Subject, takeUntil } from 'rxjs';
+import { IssueDetailDialogExpansionService } from '@src/app/issue-detail-dialog/issue-detail-dialog-expansion.service';
+import { isUndefined } from '@src/app/utils/utils';
+import { DIALOG_ANIMATION_DURATION } from '@src/app/app-view.default';
+import { Assertion } from '@src/app/utils/assertion';
 
 @Component({
   selector: 'app-root',
@@ -17,7 +19,7 @@ export class AppComponent implements OnInit, OnDestroy {
   isShowStatus = true;
   isIssueDetailDialogExpanded = false;
   isDialogClosing = false;
-  private subscription = new Subscription();
+  private destroy$ = new Subject<void>();
 
   constructor(
     private issueStore: IssuesStoreService,
@@ -26,31 +28,55 @@ export class AppComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    this.subscription.add(
-      this.issueDetailDialogExpansionService.expandedIssueId$.subscribe({
+    this.issueDetailDialogExpansionService.expandedIssueId$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
         next: (issueId: number | undefined) => {
           this.isIssueDetailDialogExpanded = !isUndefined(issueId);
         },
-      })
-    );
-
-    this.subscription.add(
-      this.gitLabConfigStore.loadConfig().subscribe({
-        // error: () => {}, //サービス側からエラーハンドリングするため不要
-        next: () => {
-          this.issueStore.syncAllIssues().subscribe({
-            // error: () => {}, //サービス側からエラーハンドリングするため不要
-            next: () => {
-              this.loadingOverlay = false;
-            },
-          });
+        error: (error) => {
+          Assertion.assert(
+            'Issue detail dialog expansion error: ' + error,
+            Assertion.no(16)
+          );
+          this.isIssueDetailDialogExpanded = false;
         },
-      })
-    );
+      });
+
+    this.gitLabConfigStore
+      .loadConfig()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        error: (error) => {
+          Assertion.assert(
+            'Failed to load GitLab config: ' + error,
+            Assertion.no(1)
+          );
+          this.loadingOverlay = false;
+        },
+        next: () => {
+          this.issueStore
+            .syncAllIssues()
+            .pipe(takeUntil(this.destroy$))
+            .subscribe({
+              error: (error) => {
+                Assertion.assert(
+                  'Failed to sync issues: ' + error,
+                  Assertion.no(2)
+                );
+                this.loadingOverlay = false;
+              },
+              next: () => {
+                this.loadingOverlay = false;
+              },
+            });
+        },
+      });
   }
 
-  ngOnDestroy(): void {
-    this.subscription.unsubscribe();
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   onIssueDetailDialogOverlayClick(event: MouseEvent): void {
@@ -61,7 +87,7 @@ export class AppComponent implements OnInit, OnDestroy {
       setTimeout(() => {
         this.issueDetailDialogExpansionService.setExpandedIssueId(undefined);
         this.isDialogClosing = false;
-      }, 300); // アニメーション時間と同じ
+      }, DIALOG_ANIMATION_DURATION);
     }
   }
 }
