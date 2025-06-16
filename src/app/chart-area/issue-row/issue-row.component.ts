@@ -14,7 +14,7 @@ import {
 import {
   statusWidthDefault,
   titleWidthDefault,
-} from '@src/app/chart-area/column-view-default';
+} from '@src/app/chart-area/issue-column/issue-column-view.default';
 import { Assertion, isUndefined } from '@src/app/utils/utils';
 import { DateHandler } from '@src/app/utils/time';
 import { getBarStyle } from './issue-bar-style-handler';
@@ -63,31 +63,33 @@ export class IssueRowComponent {
    * UI fields
    */
 
-  titleStyle: { [key: string]: string } = {
-    width: titleWidthDefault + 'px',
-    flex: '0 0 ' + titleWidthDefault + 'px',
-  };
-
-  statusStyle: { [key: string]: string } = {
-    width: statusWidthDefault + 'px',
-    flex: '0 0 ' + statusWidthDefault + 'px',
-  };
-
-  @Input()
-  set titleWidth(value: number) {
-    this.titleStyle = {
-      width: value + 'px',
-      flex: '0 0 ' + value + 'px',
+  get titleStyle(): { [key: string]: string } {
+    if (this.titleWidth === 0) {
+      return {
+        display: 'none',
+      };
+    }
+    return {
+      width: this.titleWidth + 'px',
+      flex: '0 0 ' + this.titleWidth + 'px',
     };
   }
 
-  @Input()
-  set statusWidth(value: number) {
-    this.statusStyle = {
-      width: value + 'px',
-      flex: '0 0 ' + value + 'px',
+  get statusStyle(): { [key: string]: string } {
+    if (this.statusWidth === 0) {
+      return {
+        display: 'none',
+      };
+    }
+    return {
+      width: this.statusWidth + 'px',
+      flex: '0 0 ' + this.statusWidth + 'px',
     };
   }
+
+  @Input() titleWidth: number = titleWidthDefault;
+
+  @Input() statusWidth: number = statusWidthDefault;
 
   /**
    * バーの位置と幅を計算する

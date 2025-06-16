@@ -9,6 +9,19 @@
   flex-direction: row;
   align-items: center;
   height: 100%;
+  position: relative;
+
+  > .title-drag-handle {
+    width: 1px;
+    height: 100%;
+    background-color: #000;
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    transform: translateX(0) !important;
+    cursor: col-resize;
+  }
 }
 .issue-column-status-space {
   display: flex;
