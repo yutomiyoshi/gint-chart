@@ -1,3 +1,5 @@
+$dialog-animation-duration: 0.3s;
+
 .loading-overlay {
   position: fixed;
   top: 0;
@@ -84,11 +86,11 @@ $header-height: 40px;
   transform: translateY(-50%);
   width: 60vw;
   height: 80vh;
-  animation: slideIn 0.3s ease-out forwards;
+  animation: slideIn $dialog-animation-duration ease-out forwards;
 }
 
 .issue-detail-dialog-overlay.closing .dialog-slide-in-animation {
-  animation: slideOut 0.3s ease-in forwards;
+  animation: slideOut $dialog-animation-duration ease-in forwards;
 }
 
 @keyframes slideIn {

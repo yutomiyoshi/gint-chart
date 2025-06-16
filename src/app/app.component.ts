@@ -4,6 +4,7 @@ import { GitLabConfigStoreService } from '@src/app/store/git-lab-config-store.se
 import { Subject, takeUntil } from 'rxjs';
 import { IssueDetailDialogExpansionService } from './issue-detail-dialog/issue-detail-dialog-expansion.service';
 import { Assertion, isUndefined } from './utils/utils';
+import { DIALOG_ANIMATION_DURATION } from './app-view.default';
 
 @Component({
   selector: 'app-root',
@@ -76,7 +77,7 @@ export class AppComponent implements OnInit, OnDestroy {
       setTimeout(() => {
         this.issueDetailDialogExpansionService.setExpandedIssueId(undefined);
         this.isDialogClosing = false;
-      }, 300); // アニメーション時間と同じ
+      }, DIALOG_ANIMATION_DURATION);
     }
   }
 }

@@ -1,3 +1,7 @@
+<!--
+** Loading Overlay
+- ローディング中に表示するオーバーレイ
+ -->
 <div *ngIf="loadingOverlay" class="loading-overlay">
   <div class="spinner">
     <div class="ring"></div>
@@ -5,6 +9,11 @@
   </div>
 </div>
 
+<!--
+** Issue Detail Dialog Overlay
+- イシュー詳細ダイアログを表示するオーバーレイ
+- ダイアログの外側をクリックするとダイアログを閉じる
+ -->
 <div
   *ngIf="isIssueDetailDialogExpanded"
   class="issue-detail-dialog-overlay"
@@ -16,6 +25,7 @@
   </div>
 </div>
 
+<!-- Header -->
 <div class="header">
   <app-header
     [(isShowTitle)]="isShowTitle"
@@ -23,6 +33,7 @@
   ></app-header>
 </div>
 
+<!-- Chart Area -->
 <div class="chart-area">
   <app-chart-area
     [isShowTitle]="isShowTitle"
