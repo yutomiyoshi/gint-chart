@@ -10,6 +10,8 @@ function createWindow() {
   win = new BrowserWindow({
     width: 1000,
     height: 800,
+    minWidth: 400,
+    minHeight: 300,
     webPreferences: {
       nodeIntegration: false, // セキュリティのためにfalseを推奨
       contextIsolation: true, // セキュリティのためにtrueを推奨
