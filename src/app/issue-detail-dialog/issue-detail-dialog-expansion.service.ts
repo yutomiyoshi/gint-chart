@@ -16,4 +16,11 @@ export class IssueDetailDialogExpansionService {
   setExpandedIssueId(issueId: number | undefined) {
     this.expandedIssueIdSubject.next(issueId);
   }
+
+  /**
+   * 展開中のIssueのIDを取得する
+   */
+  getExpandedIssueId() {
+    return this.expandedIssueIdSubject.getValue();
+  }
 }
