@@ -17,6 +17,7 @@ export class AppComponent implements OnInit, OnDestroy {
   loadingOverlay = true;
   isShowTitle = true;
   isShowStatus = true;
+  isShowAssignee = true;
   isIssueDetailDialogExpanded = false;
   isDialogClosing = false;
   private destroy$ = new Subject<void>();

@@ -55,6 +55,24 @@ $activate-opacity-transition-duration: 0.2s;
   justify-content: flex-start;
 }
 
+.assignee {
+  width: 100px;
+  height: 100%;
+  flex: 0 0 100px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  background-color: white;
+  padding-left: 6px;
+  border-right: 1px solid gray;
+  z-index: 2;
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+}
+
 .calendar-area {
   position: relative;
   flex: 1 1 auto;

@@ -13,6 +13,7 @@ import {
   calendarStartDateOffset,
 } from '@src/app/chart-area/chat-area-view.default';
 import {
+  assigneeWidthDefault,
   statusWidthDefault,
   titleWidthDefault,
 } from '@src/app/chart-area/issue-column/issue-column-view.default';
@@ -50,6 +51,7 @@ export class IssueRowComponent {
   @Input() id = 0;
   @Input() title = 'dummy title';
   @Input() state = 'dummy state';
+  @Input() assignee: string | undefined;
   @Input() startDate: Date | undefined;
   @Input() endDate: Date | undefined;
   @Output() startDateChange = new EventEmitter<Date | undefined>();
@@ -104,9 +106,23 @@ export class IssueRowComponent {
     };
   }
 
+  get assigneeStyle(): Record<string, string> {
+    if (this.assigneeWidth === 0) {
+      return {
+        display: 'none',
+      };
+    }
+    return {
+      width: this.assigneeWidth + 'px',
+      flex: '0 0 ' + this.assigneeWidth + 'px',
+    };
+  }
+
   @Input() titleWidth: number = titleWidthDefault;
 
   @Input() statusWidth: number = statusWidthDefault;
+
+  @Input() assigneeWidth: number = assigneeWidthDefault;
 
   /**
    * バーの位置と幅を計算する

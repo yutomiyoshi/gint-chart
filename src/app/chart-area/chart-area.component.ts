@@ -6,6 +6,7 @@ import {
   calendarStartDateOffset,
 } from '@src/app/chart-area/chat-area-view.default';
 import {
+  assigneeWidthDefault,
   statusWidthDefault,
   titleWidthDefault,
 } from '@src/app/chart-area/issue-column/issue-column-view.default';
@@ -20,6 +21,7 @@ import { DateHandler } from '@src/app/utils/time';
 export class ChartAreaComponent implements OnInit {
   @Input() isShowTitle = true;
   @Input() isShowStatus = true;
+  @Input() isShowAssignee = true;
 
   /**
    * Logic fields
@@ -33,7 +35,7 @@ export class ChartAreaComponent implements OnInit {
 
   // タイトルの幅
   get titleWidth() {
-    return this.isShowTitle ? 0 : this._titleWidth;
+    return this.isShowTitle ? this._titleWidth : 0;
   }
 
   set titleWidth(value: number) {
@@ -44,7 +46,7 @@ export class ChartAreaComponent implements OnInit {
 
   // ステータスの幅
   get statusWidth() {
-    return this.isShowStatus ? 0 : this._statusWidth;
+    return this.isShowStatus ? this._statusWidth : 0;
   }
 
   set statusWidth(value: number) {
@@ -52,6 +54,17 @@ export class ChartAreaComponent implements OnInit {
   }
 
   private _statusWidth: number = statusWidthDefault;
+
+  // 担当者の幅
+  get assigneeWidth() {
+    return this.isShowAssignee ? this._assigneeWidth : 0;
+  }
+
+  set assigneeWidth(value: number) {
+    this._assigneeWidth = value;
+  }
+
+  private _assigneeWidth: number = assigneeWidthDefault;
 
   constructor(private issueStore: IssuesStoreService) {}
 

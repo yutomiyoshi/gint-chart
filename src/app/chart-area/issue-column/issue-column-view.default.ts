@@ -3,6 +3,7 @@
  */
 export const titleWidthDefault = 200;
 export const statusWidthDefault = 100;
+export const assigneeWidthDefault = 100;
 
 /**
  * タイトルの最小幅
