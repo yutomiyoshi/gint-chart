@@ -71,7 +71,7 @@ $activate-opacity-transition-duration: 0.2s;
     transition: width 0.1s ease-out, left 0.1s ease-out;
 
     &:hover {
-      opacity: 0.8;
+      opacity: 0.6;
     }
 
     .start-date-handle {
@@ -80,7 +80,7 @@ $activate-opacity-transition-duration: 0.2s;
       top: 0;
       width: $end-date-handle-width;
       height: 100%;
-      background-color: #4a90e2;
+      border: 1px dashed #7d7e7f;
       border-radius: $end-date-handle-border-radius;
       cursor: ew-resize;
       // CDKのドラッグ操作はtransformを使用して要素を移動させるため、
@@ -93,7 +93,9 @@ $activate-opacity-transition-duration: 0.2s;
       transition: opacity $activate-opacity-transition-duration ease-out;
 
       &:hover {
-        background-color: darken(#4a90e2, 10%);
+        border: none;
+        background-color: #7d7e7f;
+        opacity: 1;
       }
 
       &.active {
@@ -107,7 +109,7 @@ $activate-opacity-transition-duration: 0.2s;
       top: 0;
       width: $end-date-handle-width;
       height: 100%;
-      background-color: #4a90e2;
+      border: 1px dashed #7d7e7f;
       border-radius: $end-date-handle-border-radius;
       cursor: ew-resize;
       // CDKのドラッグ操作はtransformを使用して要素を移動させるため、
@@ -120,7 +122,9 @@ $activate-opacity-transition-duration: 0.2s;
       transition: opacity $activate-opacity-transition-duration ease-out;
 
       &:hover {
-        background-color: darken(#4a90e2, 10%);
+        border: none;
+        background-color: #7d7e7f;
+        opacity: 1;
       }
 
       &.active {
