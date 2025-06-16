@@ -11,6 +11,7 @@ export const SAMPLE_ISSUES: Issue[] = [
     end_date: undefined,
     state: 'opened',
     labels: ['bug', 'urgent'],
+    assignee: '田中太郎',
   },
   {
     id: 2,
@@ -22,6 +23,7 @@ export const SAMPLE_ISSUES: Issue[] = [
     end_date: undefined,
     state: 'closed',
     labels: ['feature'],
+    assignee: '佐藤花子',
   },
   // 3件目以降を自動生成
   {
@@ -34,6 +36,7 @@ export const SAMPLE_ISSUES: Issue[] = [
     end_date: undefined,
     state: 'opened',
     labels: ['refactor'],
+    assignee: '鈴木一郎',
   },
   {
     id: 4,
@@ -45,6 +48,7 @@ export const SAMPLE_ISSUES: Issue[] = [
     end_date: new Date('2025-06-22'),
     state: 'opened',
     labels: ['docs'],
+    assignee: '山田次郎',
   },
   {
     id: 5,
@@ -56,6 +60,7 @@ export const SAMPLE_ISSUES: Issue[] = [
     end_date: new Date('2025-06-21'),
     state: 'opened',
     labels: ['ci', 'devops'],
+    assignee: '高橋三郎',
   },
   {
     id: 6,
@@ -67,6 +72,7 @@ export const SAMPLE_ISSUES: Issue[] = [
     end_date: undefined,
     state: 'opened',
     labels: ['bug'],
+    assignee: '伊藤四郎',
   },
   {
     id: 7,
@@ -78,6 +84,7 @@ export const SAMPLE_ISSUES: Issue[] = [
     end_date: new Date('2025-06-25'),
     state: 'opened',
     labels: ['feature', 'ui'],
+    assignee: '渡辺五郎',
   },
   {
     id: 8,
@@ -89,6 +96,7 @@ export const SAMPLE_ISSUES: Issue[] = [
     end_date: new Date('2025-06-23'),
     state: 'opened',
     labels: ['performance'],
+    assignee: '小林六郎',
   },
   {
     id: 9,
@@ -100,6 +108,7 @@ export const SAMPLE_ISSUES: Issue[] = [
     end_date: undefined,
     state: 'opened',
     labels: ['test'],
+    assignee: '加藤七郎',
   },
   {
     id: 10,
@@ -111,6 +120,7 @@ export const SAMPLE_ISSUES: Issue[] = [
     end_date: undefined,
     state: 'opened',
     labels: ['security'],
+    assignee: '吉田八郎',
   },
   // 11〜40件目はバリエーションを持たせて自動生成
   ...Array.from({ length: 30 }, (_, i) => {
@@ -131,6 +141,7 @@ export const SAMPLE_ISSUES: Issue[] = [
         idx % 5 === 0 ? 'urgent' : undefined,
         idx % 7 === 0 ? 'test' : undefined,
       ].filter(Boolean) as string[],
+      assignee: `担当者${idx}`,
     };
   }),
 ];

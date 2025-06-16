@@ -10,6 +10,7 @@
       [(dispEndDate)]="dispEndDate"
       [(titleWidth)]="titleWidth"
       [statusWidth]="statusWidth"
+      [assigneeWidth]="assigneeWidth"
     ></app-issue-column>
   </div>
 
@@ -23,12 +24,14 @@
       [id]="issue.id"
       [title]="issue.title"
       [state]="issue.state"
+      [assignee]="issue.assignee"
       [(startDate)]="issue.start_date"
       [(endDate)]="issue.end_date"
       [dispStartDate]="dispStartDate"
       [dispEndDate]="dispEndDate"
       [titleWidth]="titleWidth"
       [statusWidth]="statusWidth"
+      [assigneeWidth]="assigneeWidth"
     ></app-issue-row>
   </div>
 </div>

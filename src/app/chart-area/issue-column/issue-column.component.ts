@@ -15,6 +15,7 @@ import {
   MAX_TITLE_WIDTH,
   MIN_TITLE_WIDTH,
   MIN_CALENDAR_WIDTH,
+  assigneeWidthDefault,
 } from '@src/app/chart-area/issue-column/issue-column-view.default';
 import { DateHandler } from '@src/app/utils/time';
 import { isUndefined } from '@src/app/utils/utils';
@@ -98,6 +99,20 @@ export class IssueColumnComponent implements OnInit, OnDestroy {
   }
 
   @Input() statusWidth: number = statusWidthDefault;
+
+  get assigneeStyle(): { [key: string]: string } {
+    if (this.assigneeWidth === 0) {
+      return {
+        display: 'none',
+      };
+    }
+    return {
+      width: this.assigneeWidth + 'px',
+      flex: '0 0 ' + this.assigneeWidth + 'px',
+    };
+  }
+
+  @Input() assigneeWidth: number = assigneeWidthDefault;
 
   @Output() titleWidthChange = new EventEmitter<number>();
 

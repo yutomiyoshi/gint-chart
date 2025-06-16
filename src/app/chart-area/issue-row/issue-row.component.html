@@ -7,6 +7,11 @@
   <!-- Status -->
   <div class="status" [ngStyle]="statusStyle">{{ state }}</div>
 
+  <!-- Assignee -->
+  <div class="assignee" [ngStyle]="assigneeStyle">
+    {{ assignee }}
+  </div>
+
   <!-- Calendar Area -->
   <div class="calendar-area" #calendarArea>
     <!-- Start DateもEndDateも未設定の場合は、EndDate定義ボタンを表示 -->

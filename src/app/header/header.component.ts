@@ -10,8 +10,10 @@ import { DateJumpService } from '../chart-area/issue-column/date-jump.service';
 export class HeaderComponent {
   @Input() isShowTitle = true;
   @Input() isShowStatus = true;
+  @Input() isShowAssignee = true;
   @Output() isShowTitleChange = new EventEmitter<boolean>();
   @Output() isShowStatusChange = new EventEmitter<boolean>();
+  @Output() isShowAssigneeChange = new EventEmitter<boolean>();
 
   constructor(private dateJumpService: DateJumpService) {}
 
@@ -21,6 +23,10 @@ export class HeaderComponent {
 
   onStatusVisibilityChange() {
     this.isShowStatusChange.emit(this.isShowStatus);
+  }
+
+  onAssigneeVisibilityChange() {
+    this.isShowAssigneeChange.emit(this.isShowAssignee);
   }
 
   jumpToToday(): void {

@@ -16,6 +16,14 @@
       />
       ステータスを表示
     </label>
+    <label>
+      <input
+        type="checkbox"
+        [(ngModel)]="isShowAssignee"
+        (change)="onAssigneeVisibilityChange()"
+      />
+      担当者を表示
+    </label>
   </div>
   <button class="today-button" (click)="jumpToToday()">Today</button>
 </div>
