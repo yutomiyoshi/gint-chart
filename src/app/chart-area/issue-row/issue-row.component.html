@@ -2,6 +2,11 @@
   <div class="title" [ngStyle]="titleStyle">{{ title }}</div>
   <div class="status" [ngStyle]="statusStyle">{{ state }}</div>
   <div class="calendar-area" #calendarArea>
+    <button
+      class="no-date-button"
+      *ngIf="showEndDateCreateButton"
+      (click)="onEndDateCreateClick()"
+    ></button>
     <div class="issue-bar" [ngStyle]="barStyle">
       <div
         class="start-date-handle"
@@ -19,6 +24,7 @@
         (cdkDragStarted)="onEndDateDragStart($event)"
         (cdkDragMoved)="onEndDateDragMoved($event)"
         (cdkDragEnded)="onEndDateDragEnd($event)"
+        (dblclick)="onEndDateDoubleClick($event)"
       ></div>
     </div>
   </div>
