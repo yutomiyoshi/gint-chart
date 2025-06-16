@@ -22,7 +22,7 @@ export class IssueDetailDialogComponent {
     const issueId = this.issueDetailDialogExpansionService.getExpandedIssueId();
 
     if (isUndefined(issueId)) {
-      Assertion.assert('issueId is undefined', Assertion.no(10));
+      Assertion.assert('issueId is undefined', Assertion.no(14));
       return;
     }
 

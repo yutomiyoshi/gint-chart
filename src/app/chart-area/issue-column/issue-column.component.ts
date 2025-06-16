@@ -91,14 +91,14 @@ export class IssueColumnComponent {
     if (event.ctrlKey) {
       // カレンダー領域の幅から1日あたりの幅を計算
       if (isUndefined(this.calendarRef)) {
-        Assertion.assert('CalendarRef is undefined.', Assertion.no(1));
+        Assertion.assert('CalendarRef is undefined.', Assertion.no(3));
         return;
       }
 
       if (isUndefined(this.calendarRef.nativeElement)) {
         Assertion.assert(
           'CalendarRef.nativeElement is undefined.',
-          Assertion.no(6)
+          Assertion.no(4)
         );
         return;
       }
@@ -112,7 +112,7 @@ export class IssueColumnComponent {
       if (totalDays <= 0) {
         Assertion.assert(
           'TotalDays is less than or equal to 0.',
-          Assertion.no(7)
+          Assertion.no(5)
         );
         return;
       }

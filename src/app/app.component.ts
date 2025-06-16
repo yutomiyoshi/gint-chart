@@ -1,9 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { IssuesStoreService } from '@src/app/store/issues-store.service';
 import { GitLabConfigStoreService } from '@src/app/store/git-lab-config-store.service';
-import { Subscription } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 import { IssueDetailDialogExpansionService } from './issue-detail-dialog/issue-detail-dialog-expansion.service';
-import { isUndefined } from './utils/utils';
+import { Assertion, isUndefined } from './utils/utils';
 
 @Component({
   selector: 'app-root',
@@ -17,7 +17,7 @@ export class AppComponent implements OnInit, OnDestroy {
   isShowStatus = true;
   isIssueDetailDialogExpanded = false;
   isDialogClosing = false;
-  private subscription = new Subscription();
+  private destroy$ = new Subject<void>();
 
   constructor(
     private issueStore: IssuesStoreService,
@@ -26,31 +26,46 @@ export class AppComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    this.subscription.add(
-      this.issueDetailDialogExpansionService.expandedIssueId$.subscribe({
+    this.issueDetailDialogExpansionService.expandedIssueId$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
         next: (issueId: number | undefined) => {
           this.isIssueDetailDialogExpanded = !isUndefined(issueId);
         },
-      })
-    );
-
-    this.subscription.add(
-      this.gitLabConfigStore.loadConfig().subscribe({
-        // error: () => {}, //サービス側からエラーハンドリングするため不要
-        next: () => {
-          this.issueStore.syncAllIssues().subscribe({
-            // error: () => {}, //サービス側からエラーハンドリングするため不要
-            next: () => {
-              this.loadingOverlay = false;
-            },
-          });
+        error: (error) => {
+          console.error('Issue detail dialog expansion error:', error);
+          this.isIssueDetailDialogExpanded = false;
         },
-      })
-    );
+      });
+
+    this.gitLabConfigStore
+      .loadConfig()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        error: (error) => {
+          Assertion.assert('Failed to load GitLab config', Assertion.no(1));
+          this.loadingOverlay = false;
+        },
+        next: () => {
+          this.issueStore
+            .syncAllIssues()
+            .pipe(takeUntil(this.destroy$))
+            .subscribe({
+              error: (error) => {
+                Assertion.assert('Failed to sync issues', Assertion.no(2));
+                this.loadingOverlay = false;
+              },
+              next: () => {
+                this.loadingOverlay = false;
+              },
+            });
+        },
+      });
   }
 
-  ngOnDestroy(): void {
-    this.subscription.unsubscribe();
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   onIssueDetailDialogOverlayClick(event: MouseEvent): void {

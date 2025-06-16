@@ -125,7 +125,7 @@ export class IssueRowComponent {
       isUndefined(this.calendarArea) ||
       isUndefined(this.calendarArea.nativeElement)
     ) {
-      Assertion.assert('calendarArea is undefined.', Assertion.no(1));
+      Assertion.assert('calendarArea is undefined.', Assertion.no(8));
       return;
     }
 
@@ -133,7 +133,7 @@ export class IssueRowComponent {
 
     if (isUndefined(endDate)) {
       if (isUndefined(this.startDate)) {
-        Assertion.assert('startDate is undefined.', Assertion.no(3));
+        Assertion.assert('startDate is undefined.', Assertion.no(9));
         return;
       }
       endDate = new Date(this.startDate.getTime());
@@ -189,7 +189,7 @@ export class IssueRowComponent {
       isUndefined(this.calendarArea) ||
       isUndefined(this.calendarArea.nativeElement)
     ) {
-      Assertion.assert('calendarArea is undefined.', Assertion.no(1));
+      Assertion.assert('calendarArea is undefined.', Assertion.no(10));
       return;
     }
 
@@ -207,7 +207,7 @@ export class IssueRowComponent {
     // startDateがundefinedの場合は、endDateのみを移動させる
     if (isUndefined(startDate)) {
       if (isUndefined(endDate)) {
-        Assertion.assert('endDate is undefined.', Assertion.no(3));
+        Assertion.assert('endDate is undefined.', Assertion.no(11));
         return;
       }
 
