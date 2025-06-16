@@ -16,6 +16,7 @@ export class AppComponent implements OnInit, OnDestroy {
   isShowTitle = true;
   isShowStatus = true;
   isIssueDetailDialogExpanded = false;
+  isDialogClosing = false;
   private subscription = new Subscription();
 
   constructor(
@@ -50,5 +51,17 @@ export class AppComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
+  }
+
+  onIssueDetailDialogOverlayClick(event: MouseEvent): void {
+    // クリックされた要素がオーバーレイ自体の場合のみダイアログを閉じる
+    if (event.target === event.currentTarget) {
+      this.isDialogClosing = true;
+      // アニメーション完了後にダイアログを閉じる
+      setTimeout(() => {
+        this.issueDetailDialogExpansionService.setExpandedIssueId(undefined);
+        this.isDialogClosing = false;
+      }, 300); // アニメーション時間と同じ
+    }
   }
 }

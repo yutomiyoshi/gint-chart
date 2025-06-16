@@ -5,7 +5,12 @@
   </div>
 </div>
 
-<div *ngIf="isIssueDetailDialogExpanded" class="issue-detail-dialog-overlay">
+<div
+  *ngIf="isIssueDetailDialogExpanded"
+  class="issue-detail-dialog-overlay"
+  [class.closing]="isDialogClosing"
+  (click)="onIssueDetailDialogOverlayClick($event)"
+>
   <div class="dialog-slide-in-animation">
     <app-issue-detail-dialog></app-issue-detail-dialog>
   </div>

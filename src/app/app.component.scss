@@ -87,6 +87,10 @@ $header-height: 40px;
   animation: slideIn 0.3s ease-out forwards;
 }
 
+.issue-detail-dialog-overlay.closing .dialog-slide-in-animation {
+  animation: slideOut 0.3s ease-in forwards;
+}
+
 @keyframes slideIn {
   from {
     transform: translate(100%, -50%);
@@ -95,5 +99,16 @@ $header-height: 40px;
   to {
     transform: translate(0, -50%);
     opacity: 1;
+  }
+}
+
+@keyframes slideOut {
+  from {
+    transform: translate(0, -50%);
+    opacity: 1;
+  }
+  to {
+    transform: translate(100%, -50%);
+    opacity: 0;
   }
 }
