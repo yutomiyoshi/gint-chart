@@ -251,6 +251,7 @@ export class IssueRowComponent {
   onStartDateDoubleClick(_event: MouseEvent) {
     if (!isUndefined(this.startDate)) {
       // startDateが設定されている場合、undefinedに設定
+      this.startDate = undefined;
       this.startDateChange.emit(undefined);
       return;
     }
@@ -259,6 +260,7 @@ export class IssueRowComponent {
       // startDateが設定されていない場合、終了日の1日前に設定
       const newStartDate = new Date(this.endDate);
       newStartDate.setDate(newStartDate.getDate() - 1);
+      this.startDate = newStartDate;
       this.startDateChange.emit(newStartDate);
       return;
     }
