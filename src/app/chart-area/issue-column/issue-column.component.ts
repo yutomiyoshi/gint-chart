@@ -12,7 +12,9 @@ import {
   titleWidthDefault,
   MAX_TITLE_WIDTH,
   MIN_TITLE_WIDTH,
+  MIN_CALENDAR_WIDTH,
 } from '@src/app/chart-area/issue-column/issue-column-view.default';
+import { DateHandler } from '@src/app/utils/time';
 import { Assertion, isUndefined } from '@src/app/utils/utils';
 
 @Component({
@@ -88,7 +90,7 @@ export class IssueColumnComponent {
    */
   onWheel(event: WheelEvent) {
     event.preventDefault();
-    if (event.ctrlKey) {
+    if (event.ctrlKey === true) {
       // カレンダー領域の幅から1日あたりの幅を計算
       if (isUndefined(this.calendarRef)) {
         Assertion.assert('CalendarRef is undefined.', Assertion.no(3));
@@ -103,11 +105,10 @@ export class IssueColumnComponent {
         return;
       }
       const calendarWidth = this.calendarRef.nativeElement.offsetWidth;
-      const totalDays =
-        Math.round(
-          (this.dispEndDate.getTime() - this.dispStartDate.getTime()) /
-            (1000 * 60 * 60 * 24)
-        ) + 1;
+      const totalDays = DateHandler.countDateBetween(
+        this.dispStartDate,
+        this.dispEndDate
+      );
 
       if (totalDays <= 0) {
         Assertion.assert(
@@ -116,16 +117,21 @@ export class IssueColumnComponent {
         );
         return;
       }
+
       // 1日分の幅
       const dayWidth = calendarWidth / totalDays;
 
       // カーソルの位置
       const offsetX = event.clientX;
 
-      // 拡大・縮小
+      /**
+       * 1スクロールに対して2日分拡大縮小する
+       * - スクロールダウン: 2日分拡大
+       * - スクロールアップ: 2日分縮小
+       */
       const delta = event.deltaY > 0 ? 1 : -1;
       let newRange = totalDays + delta * 2;
-      if (newRange < 4) newRange = 4;
+      if (newRange < MIN_CALENDAR_WIDTH) newRange = MIN_CALENDAR_WIDTH;
 
       // カーソル下の日付
       const cursorIndex = Math.floor(offsetX / dayWidth);
@@ -134,8 +140,10 @@ export class IssueColumnComponent {
 
       // 新しい1日分の幅
       const newDayWidth = calendarWidth / newRange;
+
       // 新しい範囲でカーソル下が何日目か
       const newCursorIndex = Math.floor(offsetX / newDayWidth);
+
       // 新しいstartDateを計算
       const newStart = new Date(cursorDate);
       newStart.setDate(newStart.getDate() - newCursorIndex);
@@ -144,11 +152,19 @@ export class IssueColumnComponent {
       const newCursorDate = new Date(newStart);
       newCursorDate.setDate(newCursorDate.getDate() + newCursorIndex);
 
+      /**
+       * カーソルの位置が新しいカーソルの位置より前の場合、
+       * 開始日と終了日を1日分前にする
+       */
       if (cursorDate < newCursorDate) {
         newStart.setDate(newStart.getDate() - 1);
         newEnd.setDate(newEnd.getDate() - 1);
       }
 
+      /**
+       * カーソルの位置が新しいカーソルの位置より後の場合、
+       * 開始日と終了日を1日分後にする
+       */
       if (cursorDate > newCursorDate) {
         newStart.setDate(newStart.getDate() + 1);
         newEnd.setDate(newEnd.getDate() + 1);
@@ -157,12 +173,16 @@ export class IssueColumnComponent {
       this.dispStartDateChange.emit(newStart);
       this.dispEndDateChange.emit(newEnd);
     } else {
-      // 範囲全体をスライド
+      /**
+       * - スクロールダウン: 1日分前にする
+       * - スクロールアップ: 1日分後にする
+       */
       const moveDays = event.deltaY > 0 ? 1 : -1;
       const newStart = new Date(this.dispStartDate);
       newStart.setDate(newStart.getDate() + moveDays);
       const newEnd = new Date(this.dispEndDate);
       newEnd.setDate(newEnd.getDate() + moveDays);
+
       this.dispStartDateChange.emit(newStart);
       this.dispEndDateChange.emit(newEnd);
     }
