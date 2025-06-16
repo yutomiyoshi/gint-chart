@@ -1,7 +1,18 @@
-<div *ngIf="loadingOverlay" class="overlay">
+<div *ngIf="loadingOverlay" class="loading-overlay">
   <div class="spinner">
     <div class="ring"></div>
     <div class="ring ring2"></div>
+  </div>
+</div>
+
+<div
+  *ngIf="isIssueDetailDialogExpanded"
+  class="issue-detail-dialog-overlay"
+  [class.closing]="isDialogClosing"
+  (click)="onIssueDetailDialogOverlayClick($event)"
+>
+  <div class="dialog-slide-in-animation">
+    <app-issue-detail-dialog></app-issue-detail-dialog>
   </div>
 </div>
 

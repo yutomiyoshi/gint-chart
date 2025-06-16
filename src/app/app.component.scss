@@ -1,4 +1,4 @@
-.overlay {
+.loading-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -53,6 +53,18 @@
   }
 }
 
+.issue-detail-dialog-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(255, 255, 255, 0.5);
+  z-index: 9999;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
 $header-height: 40px;
 
 .header {
@@ -63,4 +75,40 @@ $header-height: 40px;
 .chart-area {
   width: 100%;
   height: calc(100vh - $header-height);
+}
+
+.dialog-slide-in-animation {
+  position: fixed;
+  top: 50%;
+  right: 5vw;
+  transform: translateY(-50%);
+  width: 60vw;
+  height: 80vh;
+  animation: slideIn 0.3s ease-out forwards;
+}
+
+.issue-detail-dialog-overlay.closing .dialog-slide-in-animation {
+  animation: slideOut 0.3s ease-in forwards;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translate(100%, -50%);
+    opacity: 0;
+  }
+  to {
+    transform: translate(0, -50%);
+    opacity: 1;
+  }
+}
+
+@keyframes slideOut {
+  from {
+    transform: translate(0, -50%);
+    opacity: 1;
+  }
+  to {
+    transform: translate(100%, -50%);
+    opacity: 0;
+  }
 }

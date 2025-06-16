@@ -8,6 +8,7 @@ import { HeaderComponent } from './header/header.component';
 import { ChartAreaComponent } from './chart-area/chart-area.component';
 import { IssueRowComponent } from './chart-area/issue-row/issue-row.component';
 import { IssueColumnComponent } from './chart-area/issue-column/issue-column.component';
+import { IssueDetailDialogComponent } from './issue-detail-dialog/issue-detail-dialog.component';
 
 @NgModule({
   declarations: [
@@ -16,6 +17,7 @@ import { IssueColumnComponent } from './chart-area/issue-column/issue-column.com
     ChartAreaComponent,
     IssueRowComponent,
     IssueColumnComponent,
+    IssueDetailDialogComponent,
   ],
   imports: [BrowserModule, FormsModule, CommonModule, DragDropModule],
   providers: [],

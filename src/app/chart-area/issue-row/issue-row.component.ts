@@ -18,6 +18,7 @@ import {
 import { Assertion, isUndefined } from '@src/app/utils/utils';
 import { DateHandler } from '@src/app/utils/time';
 import { getBarStyle } from './issue-bar-style-handler';
+import { IssueDetailDialogExpansionService } from '@src/app/issue-detail-dialog/issue-detail-dialog-expansion.service';
 
 @Component({
   selector: 'app-issue-row',
@@ -26,11 +27,16 @@ import { getBarStyle } from './issue-bar-style-handler';
   styleUrl: './issue-row.component.scss',
 })
 export class IssueRowComponent {
+  constructor(
+    private issueDetailDialogExpansionService: IssueDetailDialogExpansionService
+  ) {}
+
   @ViewChild('calendarArea') calendarArea!: ElementRef<HTMLDivElement>;
 
   /**
    * Logic fields
    */
+  @Input() id: number = 0;
   @Input() title = 'dummy title';
   @Input() state = 'dummy state';
   @Input() startDate: Date | undefined;
@@ -312,5 +318,12 @@ export class IssueRowComponent {
     newEndDate.setDate(newEndDate.getDate() + 5);
     this.endDate = newEndDate;
     this.endDateChange.emit(this.endDate);
+  }
+
+  /**
+   * タイトルクリック時に呼ばれる関数
+   */
+  onTitleClick() {
+    this.issueDetailDialogExpansionService.setExpandedIssueId(this.id);
   }
 }
