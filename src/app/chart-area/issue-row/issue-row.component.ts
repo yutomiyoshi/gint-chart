@@ -10,7 +10,7 @@ import { CdkDragStart, CdkDragMove, CdkDragEnd } from '@angular/cdk/drag-drop';
 import {
   calendarEndDateOffset,
   calendarStartDateOffset,
-} from '@src/app/chart-area/calendar-view-default';
+} from '@src/app/chart-area/chat-area-view.default';
 import {
   statusWidthDefault,
   titleWidthDefault,

@@ -4,7 +4,7 @@ import { Issue } from '@src/app/model/issue.model';
 import {
   calendarEndDateOffset,
   calendarStartDateOffset,
-} from './calendar-view-default';
+} from './chat-area-view.default';
 import {
   statusWidthDefault,
   titleWidthDefault,
