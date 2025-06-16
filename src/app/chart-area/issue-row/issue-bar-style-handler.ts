@@ -15,7 +15,7 @@ type BarStyleHandler = (
   dispEndDate: Date,
   startDate: Date | undefined,
   endDate: Date | undefined
-) => { [key: string]: string | undefined };
+) => Record<string, string | undefined>;
 
 const nonScheduledBarStyleHandler: BarStyleHandler = (
   _dispStartDate: Date,
@@ -145,7 +145,7 @@ export function getBarStyle(
   dispEndDate: Date,
   startDate: Date | undefined,
   endDate: Date | undefined
-): { [key: string]: string | undefined } {
+): Record<string, string | undefined> {
   if (!isUndefined(startDate) && !isUndefined(endDate)) {
     return scheduledBarStyleHandler(
       dispStartDate,

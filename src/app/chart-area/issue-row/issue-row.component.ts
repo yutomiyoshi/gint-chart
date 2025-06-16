@@ -40,7 +40,7 @@ export class IssueRowComponent {
   /**
    * Logic fields
    */
-  @Input() id: number = 0;
+  @Input() id = 0;
   @Input() title = 'dummy title';
   @Input() state = 'dummy state';
   @Input() startDate: Date | undefined;
@@ -73,7 +73,7 @@ export class IssueRowComponent {
    * UI fields
    */
 
-  get titleStyle(): { [key: string]: string } {
+  get titleStyle(): Record<string, string> {
     if (this.titleWidth === 0) {
       return {
         display: 'none',
@@ -85,7 +85,7 @@ export class IssueRowComponent {
     };
   }
 
-  get statusStyle(): { [key: string]: string } {
+  get statusStyle(): Record<string, string> {
     if (this.statusWidth === 0) {
       return {
         display: 'none',
@@ -104,7 +104,7 @@ export class IssueRowComponent {
   /**
    * バーの位置と幅を計算する
    */
-  get barStyle(): { [key: string]: string | undefined } {
+  get barStyle(): Record<string, string | undefined> {
     return getBarStyle(
       this.dispStartDate,
       this.dispEndDate,
@@ -197,7 +197,7 @@ export class IssueRowComponent {
       return;
     }
 
-    let endDate = this.endDate;
+    const endDate = this.endDate;
     const startDate = this.startDate;
 
     const totalDays = DateHandler.countDateBetween(

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { IssueDetailDialogExpansionService } from './issue-detail-dialog-expansion.service';
 import { IssuesStoreService } from '../store/issues-store.service';
 import { Assertion, isUndefined } from '../utils/utils';
@@ -10,7 +10,7 @@ import { Issue } from '../model/issue.model';
   templateUrl: './issue-detail-dialog.component.html',
   styleUrl: './issue-detail-dialog.component.scss',
 })
-export class IssueDetailDialogComponent {
+export class IssueDetailDialogComponent implements OnInit {
   issue: Issue | undefined;
 
   constructor(
