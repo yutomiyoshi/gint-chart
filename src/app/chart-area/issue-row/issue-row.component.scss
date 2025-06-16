@@ -5,6 +5,7 @@ $end-date-handle-border-radius: 2px;
 $end-date-handle-width: 6px;
 $end-date-handle-right-offset: -10px;
 $start-date-handle-left-offset: -10px;
+$activate-opacity-transition-duration: 0.2s;
 
 .issue-row-container {
   width: 100%;
@@ -88,9 +89,15 @@ $start-date-handle-left-offset: -10px;
       // CDKのtransform値を上書きし、right: -10pxで指定した
       // 位置関係を常に維持する
       transform: translateX(0) !important;
+      opacity: 0;
+      transition: opacity $activate-opacity-transition-duration ease-out;
 
       &:hover {
         background-color: darken(#4a90e2, 10%);
+      }
+
+      &.active {
+        opacity: 0.6;
       }
     }
 
@@ -109,9 +116,15 @@ $start-date-handle-left-offset: -10px;
       // CDKのtransform値を上書きし、right: -10pxで指定した
       // 位置関係を常に維持する
       transform: translateX(0) !important;
+      opacity: 0;
+      transition: opacity $activate-opacity-transition-duration ease-out;
 
       &:hover {
         background-color: darken(#4a90e2, 10%);
+      }
+
+      &.active {
+        opacity: 0.6;
       }
     }
   }
@@ -130,6 +143,8 @@ $start-date-handle-left-offset: -10px;
     padding: 0;
     margin: 0;
     z-index: 1;
+    opacity: 0;
+    transition: opacity $activate-opacity-transition-duration ease-out;
 
     &::before,
     &::after {
@@ -162,6 +177,10 @@ $start-date-handle-left-offset: -10px;
       &::after {
         background-color: #666;
       }
+    }
+
+    &.active {
+      opacity: 0.6;
     }
   }
 }

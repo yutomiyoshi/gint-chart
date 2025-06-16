@@ -5,6 +5,7 @@ import {
   EventEmitter,
   ElementRef,
   ViewChild,
+  HostListener,
 } from '@angular/core';
 import { CdkDragMove } from '@angular/cdk/drag-drop';
 import {
@@ -37,6 +38,11 @@ export class IssueRowComponent {
   ) {}
 
   @ViewChild('calendarArea') calendarArea!: ElementRef<HTMLDivElement>;
+
+  /**
+   * ホバー状態を管理するフラグ
+   */
+  isHovered = false;
 
   /**
    * Logic fields
@@ -330,5 +336,21 @@ export class IssueRowComponent {
    */
   onTitleClick() {
     this.issueDetailDialogExpansionService.setExpandedIssueId(this.id);
+  }
+
+  /**
+   * マウスが要素に入った時のイベントハンドラー
+   */
+  @HostListener('mouseenter')
+  onMouseEnter() {
+    this.isHovered = true;
+  }
+
+  /**
+   * マウスが要素から出た時のイベントハンドラー
+   */
+  @HostListener('mouseleave')
+  onMouseLeave() {
+    this.isHovered = false;
   }
 }
