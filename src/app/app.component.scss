@@ -76,3 +76,24 @@ $header-height: 40px;
   width: 100%;
   height: calc(100vh - $header-height);
 }
+
+.dialog-slide-in-animation {
+  position: fixed;
+  top: 50%;
+  right: 5vw;
+  transform: translateY(-50%);
+  width: 60vw;
+  height: 80vh;
+  animation: slideIn 0.3s ease-out forwards;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translate(100%, -50%);
+    opacity: 0;
+  }
+  to {
+    transform: translate(0, -50%);
+    opacity: 1;
+  }
+}

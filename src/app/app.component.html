@@ -6,7 +6,9 @@
 </div>
 
 <div *ngIf="isIssueDetailDialogExpanded" class="issue-detail-dialog-overlay">
-  <app-issue-detail-dialog></app-issue-detail-dialog>
+  <div class="dialog-slide-in-animation">
+    <app-issue-detail-dialog></app-issue-detail-dialog>
+  </div>
 </div>
 
 <div class="header">
