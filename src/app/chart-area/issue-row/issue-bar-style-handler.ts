@@ -1,6 +1,14 @@
 import { DateHandler } from '@src/app/utils/time';
 import { Assertion, isUndefined } from '@src/app/utils/utils';
 
+/**
+ * バーのスタイルを取得するためのハンドラー
+ * @param dispStartDate 表示開始日
+ * @param dispEndDate 表示終了日
+ * @param startDate 開始日
+ * @param endDate 終了日
+ * @returns バーのスタイル
+ */
 type BarStyleHandler = (
   dispStartDate: Date,
   dispEndDate: Date,
@@ -17,6 +25,14 @@ const nonScheduledBarStyleHandler: BarStyleHandler = (
   return { display: 'none' };
 };
 
+/**
+ * 開始日のみ設定されている場合のバーのスタイルを取得する
+ * @param dispStartDate 表示開始日
+ * @param dispEndDate 表示終了日
+ * @param startDate 開始日
+ * @param _endDate 終了日
+ * @returns 開始日は表示し、終了日はゴースト状態
+ */
 const startDateOnlyBarStyleHandler: BarStyleHandler = (
   dispStartDate: Date,
   dispEndDate: Date,
@@ -42,6 +58,14 @@ const startDateOnlyBarStyleHandler: BarStyleHandler = (
   };
 };
 
+/**
+ * 終了日のみ設定されている場合のバーのスタイルを取得する
+ * @param dispStartDate 表示開始日
+ * @param dispEndDate 表示終了日
+ * @param _startDate 開始日
+ * @param endDate 終了日
+ * @returns 終了日は表示し、開始日はゴースト状態
+ */
 const endDateOnlyBarStyleHandler: BarStyleHandler = (
   dispStartDate: Date,
   dispEndDate: Date,
@@ -67,6 +91,14 @@ const endDateOnlyBarStyleHandler: BarStyleHandler = (
   };
 };
 
+/**
+ * 開始日と終了日が設定されている場合のバーのスタイルを取得する
+ * @param dispStartDate 表示開始日
+ * @param dispEndDate 表示終了日
+ * @param startDate 開始日
+ * @param endDate 終了日
+ * @returns 開始日と終了日が設定されている場合のバーのスタイル
+ */
 const scheduledBarStyleHandler: BarStyleHandler = (
   dispStartDate: Date,
   dispEndDate: Date,
