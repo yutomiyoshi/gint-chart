@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Output, EventEmitter, Input } from '@angular/core';
 
 @Component({
   selector: 'app-header',
@@ -6,4 +6,17 @@ import { Component } from '@angular/core';
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
 })
-export class HeaderComponent {}
+export class HeaderComponent {
+  @Input() isShowTitle = true;
+  @Input() isShowStatus = true;
+  @Output() isShowTitleChange = new EventEmitter<boolean>();
+  @Output() isShowStatusChange = new EventEmitter<boolean>();
+
+  onTitleVisibilityChange(_$event: Event) {
+    this.isShowTitleChange.emit(this.isShowTitle);
+  }
+
+  onStatusVisibilityChange(_$event: Event) {
+    this.isShowStatusChange.emit(this.isShowStatus);
+  }
+}

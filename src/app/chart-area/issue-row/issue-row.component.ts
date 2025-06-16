@@ -64,6 +64,11 @@ export class IssueRowComponent {
    */
 
   get titleStyle(): { [key: string]: string } {
+    if (this.titleWidth === 0) {
+      return {
+        display: 'none',
+      };
+    }
     return {
       width: this.titleWidth + 'px',
       flex: '0 0 ' + this.titleWidth + 'px',
@@ -71,6 +76,11 @@ export class IssueRowComponent {
   }
 
   get statusStyle(): { [key: string]: string } {
+    if (this.statusWidth === 0) {
+      return {
+        display: 'none',
+      };
+    }
     return {
       width: this.statusWidth + 'px',
       flex: '0 0 ' + this.statusWidth + 'px',

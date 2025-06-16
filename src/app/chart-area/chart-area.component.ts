@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { IssuesStoreService } from '@src/app/store/issues-store.service';
 import { Issue } from '@src/app/model/issue.model';
 import {
@@ -17,6 +17,9 @@ import {
   styleUrls: ['./chart-area.component.scss'],
 })
 export class ChartAreaComponent implements OnInit {
+  @Input() isShowTitle = true;
+  @Input() isShowStatus = true;
+
   /**
    * Logic fields
    */
@@ -32,10 +35,26 @@ export class ChartAreaComponent implements OnInit {
   );
 
   // タイトルの幅
-  titleWidth: number = titleWidthDefault;
+  get titleWidth() {
+    return this.isShowTitle ? 0 : this._titleWidth;
+  }
+
+  set titleWidth(value: number) {
+    this._titleWidth = value;
+  }
+
+  private _titleWidth: number = titleWidthDefault;
 
   // ステータスの幅
-  statusWidth: number = statusWidthDefault;
+  get statusWidth() {
+    return this.isShowStatus ? 0 : this._statusWidth;
+  }
+
+  set statusWidth(value: number) {
+    this._statusWidth = value;
+  }
+
+  private _statusWidth: number = statusWidthDefault;
 
   constructor(private issueStore: IssuesStoreService) {}
 

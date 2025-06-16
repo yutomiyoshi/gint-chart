@@ -6,9 +6,15 @@
 </div>
 
 <div class="header">
-  <app-header></app-header>
+  <app-header
+    [(isShowTitle)]="isShowTitle"
+    [(isShowStatus)]="isShowStatus"
+  ></app-header>
 </div>
 
 <div class="chart-area">
-  <app-chart-area></app-chart-area>
+  <app-chart-area
+    [isShowTitle]="isShowTitle"
+    [isShowStatus]="isShowStatus"
+  ></app-chart-area>
 </div>

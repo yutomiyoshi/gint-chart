@@ -10,6 +10,9 @@ import { GitLabConfigStoreService } from '@src/app/store/git-lab-config-store.se
 })
 export class AppComponent implements OnInit {
   loadingOverlay = true;
+  isShowTitle = true;
+  isShowStatus = true;
+
   constructor(
     private issueStore: IssuesStoreService,
     private gitLabConfigStore: GitLabConfigStoreService

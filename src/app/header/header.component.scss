@@ -1,0 +1,20 @@
+.header {
+  background-color: #f5f5f5;
+  border-bottom: 1px solid #ddd;
+}
+
+.visibility-controls {
+  display: flex;
+  gap: 1rem;
+
+  label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+
+    input[type="checkbox"] {
+      cursor: pointer;
+    }
+  }
+}

@@ -36,6 +36,11 @@ export class IssueColumnComponent {
    */
 
   get titleStyle(): { [key: string]: string } {
+    if (this.titleWidth === 0) {
+      return {
+        display: 'none',
+      };
+    }
     return {
       width: this.titleWidth + 'px',
       flex: '0 0 ' + this.titleWidth + 'px',
@@ -44,10 +49,17 @@ export class IssueColumnComponent {
 
   @Input() titleWidth: number = titleWidthDefault;
 
-  statusStyle: { [key: string]: string } = {
-    width: statusWidthDefault + 'px',
-    flex: '0 0 ' + statusWidthDefault + 'px',
-  };
+  get statusStyle(): { [key: string]: string } {
+    if (this.statusWidth === 0) {
+      return {
+        display: 'none',
+      };
+    }
+    return {
+      width: this.statusWidth + 'px',
+      flex: '0 0 ' + this.statusWidth + 'px',
+    };
+  }
 
   @Input() statusWidth: number = statusWidthDefault;
 
