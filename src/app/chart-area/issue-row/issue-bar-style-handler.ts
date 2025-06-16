@@ -1,5 +1,6 @@
 import { DateHandler } from '@src/app/utils/time';
 import { Assertion, isUndefined } from '@src/app/utils/utils';
+import { undefinedDuration } from './issue-row-logic.default';
 
 /**
  * バーのスタイルを取得するためのハンドラー
@@ -45,7 +46,7 @@ const startDateOnlyBarStyleHandler: BarStyleHandler = (
 
   const totalDays = DateHandler.countDateBetween(dispStartDate, dispEndDate);
   const startOffset = DateHandler.countOffset(dispStartDate, startDate);
-  const duration = 2;
+  const duration = undefinedDuration;
 
   const left = (startOffset / totalDays) * 100;
   const width = (duration / totalDays) * 100;
@@ -78,9 +79,9 @@ const endDateOnlyBarStyleHandler: BarStyleHandler = (
 
   const totalDays = DateHandler.countDateBetween(dispStartDate, dispEndDate);
   const endOffset = DateHandler.countOffset(dispStartDate, endDate);
-  const duration = 2;
+  const duration = undefinedDuration;
 
-  const left = ((endOffset - 1) / totalDays) * 100;
+  const left = ((endOffset - duration + 1) / totalDays) * 100;
   const width = (duration / totalDays) * 100;
 
   return {

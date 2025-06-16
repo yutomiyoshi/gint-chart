@@ -19,6 +19,10 @@ import { Assertion, isUndefined } from '@src/app/utils/utils';
 import { DateHandler } from '@src/app/utils/time';
 import { getBarStyle } from './issue-bar-style-handler';
 import { IssueDetailDialogExpansionService } from '@src/app/issue-detail-dialog/issue-detail-dialog-expansion.service';
+import {
+  newEndDateCreateOffsetDays,
+  undefinedDuration,
+} from './issue-row-logic.default';
 
 @Component({
   selector: 'app-issue-row',
@@ -274,7 +278,7 @@ export class IssueRowComponent {
     if (!isUndefined(this.endDate)) {
       // startDateが設定されていない場合、終了日の1日前に設定
       const newStartDate = new Date(this.endDate);
-      newStartDate.setDate(newStartDate.getDate() - 1);
+      newStartDate.setDate(newStartDate.getDate() - undefinedDuration + 1);
       this.startDate = newStartDate;
       this.startDateChange.emit(newStartDate);
       return;
@@ -299,7 +303,7 @@ export class IssueRowComponent {
 
     if (!isUndefined(this.startDate)) {
       this.endDate = new Date(this.startDate);
-      this.endDate.setDate(this.endDate.getDate() + 1);
+      this.endDate.setDate(this.endDate.getDate() + undefinedDuration - 1);
       this.endDateChange.emit(this.endDate);
       return;
     }
@@ -315,7 +319,7 @@ export class IssueRowComponent {
    */
   onEndDateCreateClick() {
     const newEndDate = new Date();
-    newEndDate.setDate(newEndDate.getDate() + 5);
+    newEndDate.setDate(newEndDate.getDate() + newEndDateCreateOffsetDays);
     this.endDate = newEndDate;
     this.endDateChange.emit(this.endDate);
   }
