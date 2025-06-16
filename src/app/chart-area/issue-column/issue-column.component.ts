@@ -8,6 +8,7 @@ import {
   ElementRef,
   OnInit,
   OnDestroy,
+  AfterViewChecked,
 } from '@angular/core';
 import {
   statusWidthDefault,
@@ -22,7 +23,6 @@ import { isUndefined } from '@src/app/utils/utils';
 import { Assertion } from '@src/app/utils/assertion';
 import { DateJumpService } from './date-jump.service';
 import { Subscription } from 'rxjs';
-import { TodayService } from '@src/app/utils/today.service';
 
 @Component({
   selector: 'app-issue-column',
@@ -30,13 +30,12 @@ import { TodayService } from '@src/app/utils/today.service';
   templateUrl: './issue-column.component.html',
   styleUrl: './issue-column.component.scss',
 })
-export class IssueColumnComponent implements OnInit, OnDestroy {
+export class IssueColumnComponent
+  implements OnInit, OnDestroy, AfterViewChecked
+{
   private subscription = new Subscription();
 
-  constructor(
-    private dateJumpService: DateJumpService,
-    private todayService: TodayService
-  ) {}
+  constructor(private dateJumpService: DateJumpService) {}
 
   ngOnInit() {
     this.subscription.add(
@@ -61,6 +60,11 @@ export class IssueColumnComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.subscription.unsubscribe();
+  }
+
+  ngAfterViewChecked() {
+    this.updateDateRange();
+    this.updateIsHiddenDatePattern();
   }
 
   /**
@@ -129,21 +133,19 @@ export class IssueColumnComponent implements OnInit, OnDestroy {
 
   private updateTitleWidth: ((distance: number) => void) | undefined;
 
+  dateRange: Date[] = [];
+
   /**
    * dispStartDateとdispEndDateの間の日付配列を返す
    */
-  get getDateRange(): Date[] {
+  private updateDateRange(): void {
     const dates: Date[] = [];
     const current = new Date(this.dispStartDate);
     while (current <= this.dispEndDate) {
       dates.push(new Date(current));
       current.setDate(current.getDate() + 1);
     }
-
-    //HACK miyoshi: コマンド・クエリの約束に反するので、ここではisHiddenDateを更新するのは良くない
-    this.updateIsHiddenDatePattern(dates);
-
-    return dates;
+    this.dateRange = dates;
   }
 
   /**
@@ -277,18 +279,16 @@ export class IssueColumnComponent implements OnInit, OnDestroy {
    * - // 今日の日付が含まれる場合は、今日の日付を表示する
    * - // 次の最初の日付が含まれる場合は、その日付を表示する
    * - それ以外は、間隔に応じて表示/非表示を切り替える
-   * @param dates 日付の配列
    */
-  private updateIsHiddenDatePattern(dates: Date[]): void {
-    const today = this.todayService.getToday();
+  private updateIsHiddenDatePattern(): void {
     const pattern =
-      displayPattern.find((p) => dates.length <= p.maxDatesLength) ||
+      displayPattern.find((p) => this.dateRange.length <= p.maxDatesLength) ||
       displayPattern[displayPattern.length - 1];
     const interval = pattern.interval;
 
     let count = 0;
 
-    const newPattern = dates.map((date, index) => {
+    const newPattern = this.dateRange.map((_date, index) => {
       // 配列の先頭は常に表示
       if (index === 0) {
         count = 0;

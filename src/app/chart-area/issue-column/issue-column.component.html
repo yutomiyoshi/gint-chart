@@ -30,7 +30,7 @@
   -->
   <div class="issue-column-calendar" #calendar (wheel)="onWheel($event)">
     <!-- 日付ごとにForでループ -->
-    <ng-container *ngFor="let date of getDateRange; index as i">
+    <ng-container *ngFor="let date of dateRange; index as i">
       <div class="issue-column-day">
         <!-- 月の表示 -->
         <div class="month" [class.hidden]="date.getDate() !== 1 && i !== 0">
