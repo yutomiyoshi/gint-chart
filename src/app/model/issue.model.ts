@@ -59,6 +59,12 @@ export interface Issue {
    * @type {string[]}
    */
   labels: string[];
+
+  /**
+   * assignee
+   * @type {string | undefined}
+   */
+  assignee: string | undefined;
 }
 
 // GitLab APIのissueレスポンス型からIssue型へ変換する関数
@@ -111,6 +117,8 @@ export function convertJsonToIssue(apiIssue: GitLabApiIssue): Issue | null {
     end_date = undefined;
   }
 
+  const assignee = apiIssue.assignee ? apiIssue.assignee.name : undefined;
+
   return {
     id: apiIssue.id,
     project_id: apiIssue.project_id,
@@ -121,5 +129,6 @@ export function convertJsonToIssue(apiIssue: GitLabApiIssue): Issue | null {
     end_date,
     state: apiIssue.state,
     labels: apiIssue.labels,
+    assignee,
   };
 }
