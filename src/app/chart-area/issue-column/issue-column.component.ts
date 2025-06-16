@@ -171,7 +171,7 @@ export class IssueColumnComponent implements OnInit, OnDestroy {
       const dayWidth = calendarWidth / totalDays;
 
       // カーソルの位置
-      const offsetX = event.clientX;
+      const offsetX = event.clientX - this.calendarRef.nativeElement.offsetLeft;
 
       /**
        * 1スクロールに対して2日分拡大縮小する
