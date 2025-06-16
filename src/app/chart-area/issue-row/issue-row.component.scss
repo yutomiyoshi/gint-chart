@@ -64,6 +64,12 @@ $end-date-handle-right-offset: -10px;
       background-color: #4a90e2;
       border-radius: $end-date-handle-border-radius;
       cursor: ew-resize;
+      // CDKのドラッグ操作はtransformを使用して要素を移動させるため、
+      // ドラッグ中にissue-barとの位置関係が崩れる問題が発生
+      // transform: translateX(0) !important を指定することで、
+      // CDKのtransform値を上書きし、right: -10pxで指定した
+      // 位置関係を常に維持する
+      transform: translateX(0) !important;
 
       &:hover {
         background-color: darken(#4a90e2, 10%);
