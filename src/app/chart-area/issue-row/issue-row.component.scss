@@ -18,6 +18,7 @@ $start-date-handle-left-offset: -10px;
 
 .title {
   width: 200px;
+  height: 100%;
   flex: 0 0 200px;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -28,6 +29,7 @@ $start-date-handle-left-offset: -10px;
 
 .status {
   width: 100px;
+  height: 100%;
   flex: 0 0 100px;
   overflow: hidden;
   text-overflow: ellipsis;
