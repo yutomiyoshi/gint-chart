@@ -38,7 +38,9 @@
         </div>
 
         <!-- 日の表示 -->
-        <div class="day">{{ date | date : "dd" }}</div>
+        <div class="day" [class.hidden]="isHiddenDatePattern[i]">
+          {{ date | date : "dd" }}
+        </div>
       </div>
     </ng-container>
   </div>
