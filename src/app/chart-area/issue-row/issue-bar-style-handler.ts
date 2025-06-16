@@ -56,7 +56,7 @@ const startDateOnlyBarStyleHandler: BarStyleHandler = (
     display: 'block',
     left: `${left}%`,
     width: `${width}%`,
-    background: 'linear-gradient(to right, #4a90e2 0%, transparent 100%)',
+    background: 'linear-gradient(to right, #004a9f 0%, transparent 100%)',
   };
 };
 
@@ -89,7 +89,7 @@ const endDateOnlyBarStyleHandler: BarStyleHandler = (
     display: 'block',
     left: `${left}%`,
     width: `${width}%`,
-    background: 'linear-gradient(to left, #4a90e2 0%, transparent 100%)',
+    background: 'linear-gradient(to left, #004a9f 0%, transparent 100%)',
   };
 };
 
