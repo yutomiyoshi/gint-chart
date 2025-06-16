@@ -54,6 +54,12 @@ export class IssueRowComponent {
   private updateEndDate: ((distance: number) => void) | undefined;
 
   /**
+   * 開始日のドラッグ中に呼ばれる関数
+   * ドラッグ中に開始日を更新する
+   */
+  private updateSchedule: ((distance: number) => void) | undefined;
+
+  /**
    * UI fields
    */
 
@@ -157,5 +163,85 @@ export class IssueRowComponent {
   onEndDateDragEnd(_event: CdkDragEnd) {
     this.endDateChange.emit(this.endDate);
     this.updateEndDate = undefined;
+  }
+
+  /**
+   * 開始日のドラッグ開始時に呼ばれる関数
+   * 開始日のドラッグ中に呼ばれる関数を設定する
+   */
+  onStartDateDragStart(_event: CdkDragStart) {
+    if (
+      isUndefined(this.calendarArea) ||
+      isUndefined(this.calendarArea.nativeElement)
+    ) {
+      Assertion.assert('calendarArea is undefined.', Assertion.no(1));
+      return;
+    }
+
+    let endDate = this.endDate;
+    const startDate = this.startDate;
+
+    const totalDays = DateHandler.countDateBetween(
+      this.dispStartDate,
+      this.dispEndDate
+    );
+
+    const calendarWidth = this.calendarArea.nativeElement.offsetWidth;
+    const daysPerPixel = calendarWidth / totalDays;
+
+    // startDateがundefinedの場合は、endDateのみを移動させる
+    if (isUndefined(startDate)) {
+      if (isUndefined(endDate)) {
+        Assertion.assert('endDate is undefined.', Assertion.no(3));
+        return;
+      }
+
+      this.updateSchedule = (distance: number) => {
+        const movedDays = Math.round(distance / daysPerPixel);
+        const newEndDate = new Date(endDate);
+        newEndDate.setDate(newEndDate.getDate() + movedDays);
+        this.endDate = newEndDate;
+      };
+      return;
+    }
+
+    this.updateSchedule = (distance: number) => {
+      const movedDays = Math.round(distance / daysPerPixel);
+      const newStartDate = new Date(startDate);
+      newStartDate.setDate(newStartDate.getDate() + movedDays);
+
+      // 終了日が設定されている場合、開始日が終了日より後にならないようにする
+      if (!isUndefined(endDate) && newStartDate > endDate) {
+        return;
+      }
+
+      this.startDate = newStartDate;
+
+      // 終了日が設定されている場合、終了日も更新する
+      if (!isUndefined(endDate)) {
+        const newEndDate = new Date(endDate);
+        newEndDate.setDate(newEndDate.getDate() + movedDays);
+        this.endDate = newEndDate;
+      }
+    };
+  }
+
+  /**
+   * 開始日のドラッグ中に呼ばれる関数
+   * ドラッグ中に開始日を更新する
+   */
+  onStartDateDragMoved(event: CdkDragMove) {
+    if (isUndefined(this.updateSchedule)) return;
+    this.updateSchedule(event.distance.x);
+  }
+
+  /**
+   * 開始日のドラッグ終了時に呼ばれる関数
+   * 開始日を更新し、変更を通知する
+   * ドラッグ中に呼ばれる関数を削除する
+   */
+  onStartDateDragEnd(_event: CdkDragEnd) {
+    this.startDateChange.emit(this.startDate);
+    this.updateSchedule = undefined;
   }
 }

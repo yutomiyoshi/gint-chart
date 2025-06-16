@@ -4,6 +4,14 @@
   <div class="calendar-area" #calendarArea>
     <div class="issue-bar" [ngStyle]="barStyle">
       <div
+        class="start-date-handle"
+        cdkDrag
+        cdkDragLockAxis="x"
+        (cdkDragStarted)="onStartDateDragStart($event)"
+        (cdkDragMoved)="onStartDateDragMoved($event)"
+        (cdkDragEnded)="onStartDateDragEnd($event)"
+      ></div>
+      <div
         class="end-date-handle"
         cdkDrag
         cdkDragLockAxis="x"

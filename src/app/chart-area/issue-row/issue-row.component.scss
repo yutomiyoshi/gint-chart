@@ -4,6 +4,7 @@ $bar-radius: 10px;
 $end-date-handle-border-radius: 2px;
 $end-date-handle-width: 6px;
 $end-date-handle-right-offset: -10px;
+$start-date-handle-left-offset: -10px;
 
 .issue-row-container {
   width: 100%;
@@ -53,6 +54,22 @@ $end-date-handle-right-offset: -10px;
 
     &:hover {
       opacity: 0.8;
+    }
+
+    .start-date-handle {
+      position: absolute;
+      left: $start-date-handle-left-offset;
+      top: 0;
+      width: $end-date-handle-width;
+      height: 100%;
+      background-color: #4a90e2;
+      border-radius: $end-date-handle-border-radius;
+      cursor: ew-resize;
+      transform: translateX(0) !important;
+
+      &:hover {
+        background-color: darken(#4a90e2, 10%);
+      }
     }
 
     .end-date-handle {
