@@ -51,6 +51,7 @@ $start-date-handle-left-offset: -10px;
     height: calc(100% - #{$calendar-area-padding * 2});
     background-color: #4a90e2;
     border-radius: $bar-radius;
+    transition: width 0.1s ease-out, left 0.1s ease-out;
 
     &:hover {
       opacity: 0.8;
