@@ -56,7 +56,7 @@ const endDateOnlyBarStyleHandler: BarStyleHandler = (
   const endOffset = DateHandler.countOffset(dispStartDate, endDate);
   const duration = 2;
 
-  const left = ((endOffset - 2) / totalDays) * 100;
+  const left = ((endOffset - 1) / totalDays) * 100;
   const width = (duration / totalDays) * 100;
 
   return {
