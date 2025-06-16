@@ -33,6 +33,12 @@ export class ChartAreaComponent implements OnInit {
 
   dispEndDate: Date = DateHandler.getTodayOffsetDate(calendarEndDateOffset);
 
+  /**
+   * 日付の表示パターン
+   * - 日付ごとに隠すかどうかのパターン
+   */
+  isHiddenDatePattern: boolean[] = [];
+
   // タイトルの幅
   get titleWidth() {
     return this.isShowTitle ? this._titleWidth : 0;

@@ -14,6 +14,15 @@
 
   <!-- Calendar Area -->
   <div class="calendar-area" #calendarArea>
+    <!--
+    ** 日付ごとにForでループ
+    - 背景に線を表示する
+    - 隠されていない日付の右側だけに線を表示する（カレンダーと同期する）
+     -->
+    <ng-container *ngFor="let isHidden of isHiddenDatePattern; index as i">
+      <div class="issue-row-day" [class.non-hidden]="!isHidden"></div>
+    </ng-container>
+
     <!-- Start DateもEndDateも未設定の場合は、EndDate定義ボタンを表示 -->
     <button
       class="end-date-create-button"

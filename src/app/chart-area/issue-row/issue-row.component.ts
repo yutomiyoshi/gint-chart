@@ -82,6 +82,8 @@ export class IssueRowComponent {
    * UI fields
    */
 
+  @Input() isHiddenDatePattern: boolean[] = [];
+
   get titleStyle(): Record<string, string> {
     if (this.titleWidth === 0) {
       return {
