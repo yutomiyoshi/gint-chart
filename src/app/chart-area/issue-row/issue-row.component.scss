@@ -27,6 +27,11 @@ $start-date-handle-left-offset: -10px;
   padding-left: 6px;
   border-right: 1px solid gray;
   z-index: 2;
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
 }
 
 .status {
@@ -40,6 +45,11 @@ $start-date-handle-left-offset: -10px;
   padding-left: 6px;
   border-right: 1px solid gray;
   z-index: 2;
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
 }
 
 .calendar-area {
