@@ -55,7 +55,7 @@ export class IssueRowComponent {
 
   /**
    * 開始日のドラッグ中に呼ばれる関数
-   * ドラッグ中に開始日を更新する
+   * ドラッグ中に開始日・終了日を更新する
    */
   private updateSchedule: ((distance: number) => void) | undefined;
 
