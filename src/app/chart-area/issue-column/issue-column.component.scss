@@ -4,6 +4,7 @@
   display: flex;
   align-items: center;
   height: 40px;
+  will-change: transform;
 }
 .issue-column-title-space {
   display: flex;
@@ -50,18 +51,25 @@
   flex-direction: row;
   flex: 1 1 auto;
   height: 100%;
+  will-change: transform;
+  transform: translateZ(0); /* GPUアクセラレーション強制有効化 */
+  backface-visibility: hidden; /* レンダリング最適化 */
+  perspective: 1000px; /* 3D変換の最適化 */
 }
 .issue-column-day {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  will-change: transform;
+  transform: translateZ(0); /* GPUアクセラレーション強制有効化 */
 
   > .month {
     display: flex;
     justify-content: center;
     align-items: center;
     overflow: visible;
+    will-change: opacity;
 
     &.hidden {
       color: transparent;
@@ -74,6 +82,7 @@
     align-items: center;
     border-left: 1px dashed #9c9c9c;
     overflow: visible;
+    will-change: opacity;
 
     &.hidden {
       color: transparent;

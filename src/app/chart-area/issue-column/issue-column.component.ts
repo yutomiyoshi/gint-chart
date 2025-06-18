@@ -292,4 +292,12 @@ export class IssueColumnComponent implements OnInit, OnDestroy, AfterViewInit {
     if (isUndefined(this.updateTitleWidth)) return;
     this.updateTitleWidth(event.distance.x);
   }
+
+  /**
+   * ngForのトラッキング関数
+   * 日付をキーとして使用して、不要なDOMの再レンダリングを防ぐ
+   */
+  trackByDate(index: number, date: DateDisplay): string {
+    return date.date.toISOString();
+  }
 }
