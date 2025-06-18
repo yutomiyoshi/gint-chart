@@ -1,22 +1,19 @@
 import { Injectable } from '@angular/core';
-import { DateHandler } from '../utils/time';
-import { CalendarRangeService } from './calendar-range.service';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CalendarWidthService {
-  private dayWidth: number = 0;
+  private calendarWidthSubject = new BehaviorSubject<number>(0);
 
-  constructor(private calendarRangeService: CalendarRangeService) {}
+  public calendarWidth$ = this.calendarWidthSubject.asObservable();
 
-  setCalendarWidth(calendarWidth: number): void {
-    const { startDate, endDate } = this.calendarRangeService.getCalendarRange();
-    const totalDays = DateHandler.countDateBetween(startDate, endDate);
-    this.dayWidth = calendarWidth / totalDays;
+  public setCalendarWidth(width: number): void {
+    this.calendarWidthSubject.next(width);
   }
 
-  getUnitWidth(): number {
-    return this.dayWidth;
+  public getCalendarWidth(): number {
+    return this.calendarWidthSubject.getValue();
   }
 }

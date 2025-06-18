@@ -85,4 +85,16 @@ export namespace DateHandler {
     today.setDate(today.getDate() + offset);
     return today;
   }
+
+  /**
+   * 日付に日数を加算する
+   * @param date 日付
+   * @param days 加算する日数
+   * @returns 加算された日付
+   */
+  export function addDays(date: Date, days: number): Date {
+    const _date = new Date(date);
+    _date.setDate(_date.getDate() + days);
+    return _date;
+  }
 }

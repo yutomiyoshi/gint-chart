@@ -6,6 +6,8 @@ import {
   ElementRef,
   ViewChild,
   HostListener,
+  OnInit,
+  OnDestroy,
 } from '@angular/core';
 import { CdkDragMove } from '@angular/cdk/drag-drop';
 import {
@@ -26,6 +28,12 @@ import {
   undefinedDuration,
 } from '@src/app/chart-area/issue-row/issue-row-logic.default';
 import { Assertion } from '@src/app/utils/assertion';
+import { CalendarRangeService } from '../calendar-range.service';
+import { Subscription } from 'rxjs';
+import {
+  CalendarDisplayService,
+  DateDisplay,
+} from '../calendar-display.service';
 
 @Component({
   selector: 'app-issue-row',
@@ -33,10 +41,34 @@ import { Assertion } from '@src/app/utils/assertion';
   templateUrl: './issue-row.component.html',
   styleUrl: './issue-row.component.scss',
 })
-export class IssueRowComponent {
+export class IssueRowComponent implements OnInit, OnDestroy {
+  private subscription = new Subscription();
+
+  dateData: DateDisplay[] = [];
+  private _dayWidth: number = 0;
+
+  get dayWidth(): { width: string } {
+    return { width: this._dayWidth + 'px' };
+  }
+
   constructor(
-    private issueDetailDialogExpansionService: IssueDetailDialogExpansionService
+    private issueDetailDialogExpansionService: IssueDetailDialogExpansionService,
+    private calendarRangeService: CalendarRangeService,
+    private calendarDisplayService: CalendarDisplayService
   ) {}
+
+  ngOnInit(): void {
+    this.subscription.add(
+      this.calendarDisplayService.calendarDisplay$.subscribe((display) => {
+        this.dateData = display.dateData;
+        this._dayWidth = display.dayWidth;
+      })
+    );
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
+  }
 
   @ViewChild('calendarArea') calendarArea!: ElementRef<HTMLDivElement>;
 
@@ -57,15 +89,6 @@ export class IssueRowComponent {
   @Output() startDateChange = new EventEmitter<Date | undefined>();
   @Output() endDateChange = new EventEmitter<Date | undefined>();
 
-  // 日付の表示範囲、カレンダーと同期する
-  @Input() dispStartDate: Date = DateHandler.getTodayOffsetDate(
-    calendarStartDateOffset
-  );
-
-  @Input() dispEndDate: Date = DateHandler.getTodayOffsetDate(
-    calendarEndDateOffset
-  );
-
   /**
    * 終了日のドラッグ中に呼ばれる関数
    * ドラッグ中に終了日を更新する
@@ -77,12 +100,6 @@ export class IssueRowComponent {
    * ドラッグ中に開始日・終了日を更新する
    */
   private updateSchedule: ((distance: number) => void) | undefined;
-
-  /**
-   * UI fields
-   */
-
-  @Input() isHiddenDatePattern: boolean[] = [];
 
   get titleStyle(): Record<string, string> {
     if (this.titleWidth === 0) {
@@ -130,12 +147,8 @@ export class IssueRowComponent {
    * バーの位置と幅を計算する
    */
   get barStyle(): Record<string, string | undefined> {
-    return getBarStyle(
-      this.dispStartDate,
-      this.dispEndDate,
-      this.startDate,
-      this.endDate
-    );
+    const { startDate, endDate } = this.calendarRangeService.getCalendarRange();
+    return getBarStyle(startDate, endDate, this.startDate, this.endDate);
   }
 
   /**
@@ -169,9 +182,11 @@ export class IssueRowComponent {
       endDate.setDate(endDate.getDate() + 2);
     }
 
+    const { startDate: calendarStartDate, endDate: calendarEndDate } =
+      this.calendarRangeService.getCalendarRange();
     const totalDays = DateHandler.countDateBetween(
-      this.dispStartDate,
-      this.dispEndDate
+      calendarStartDate,
+      calendarEndDate
     );
     const calendarWidth = this.calendarArea.nativeElement.offsetWidth;
     const daysPerPixel = calendarWidth / totalDays;
@@ -225,9 +240,11 @@ export class IssueRowComponent {
     const endDate = this.endDate;
     const startDate = this.startDate;
 
+    const { startDate: calendarStartDate, endDate: calendarEndDate } =
+      this.calendarRangeService.getCalendarRange();
     const totalDays = DateHandler.countDateBetween(
-      this.dispStartDate,
-      this.dispEndDate
+      calendarStartDate,
+      calendarEndDate
     );
 
     const calendarWidth = this.calendarArea.nativeElement.offsetWidth;
