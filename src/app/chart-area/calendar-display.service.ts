@@ -161,7 +161,7 @@ function getDateData(
 }
 
 /**
- * 2日ごとに表示する
+ * interval日ごとに表示する
  * @param startDate 開始日
  * @param endDate 終了日
  * @param dayWidth 一日分の幅
