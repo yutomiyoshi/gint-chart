@@ -40,11 +40,6 @@ export class IssueColumnComponent implements OnInit, OnDestroy, AfterViewInit {
   private subscription = new Subscription();
   private resizeObserver: ResizeObserver | undefined;
   public dateData: DateDisplay[] = [];
-  private _dayWidth: number = 0;
-
-  get dayWidth(): { width: string } {
-    return { width: this._dayWidth + 'px' };
-  }
 
   constructor(
     private dateJumpService: DateJumpService,
@@ -74,7 +69,6 @@ export class IssueColumnComponent implements OnInit, OnDestroy, AfterViewInit {
     this.subscription.add(
       this.calendarDisplayService.calendarDisplay$.subscribe((display) => {
         this.dateData = display.dateData;
-        this._dayWidth = display.dayUnitWidth;
       })
     );
   }

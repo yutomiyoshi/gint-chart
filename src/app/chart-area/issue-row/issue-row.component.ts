@@ -45,11 +45,6 @@ export class IssueRowComponent implements OnInit, OnDestroy {
   private subscription = new Subscription();
 
   dateData: DateDisplay[] = [];
-  private _dayWidth: number = 0;
-
-  get dayWidth(): { width: string } {
-    return { width: this._dayWidth + 'px' };
-  }
 
   constructor(
     private issueDetailDialogExpansionService: IssueDetailDialogExpansionService,
@@ -61,7 +56,6 @@ export class IssueRowComponent implements OnInit, OnDestroy {
     this.subscription.add(
       this.calendarDisplayService.calendarDisplay$.subscribe((display) => {
         this.dateData = display.dateData;
-        this._dayWidth = display.dayUnitWidth;
       })
     );
   }
