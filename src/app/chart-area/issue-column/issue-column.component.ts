@@ -74,7 +74,7 @@ export class IssueColumnComponent implements OnInit, OnDestroy, AfterViewInit {
     this.subscription.add(
       this.calendarDisplayService.calendarDisplay$.subscribe((display) => {
         this.dateData = display.dateData;
-        this._dayWidth = display.dayWidth;
+        this._dayWidth = display.dayUnitWidth;
       })
     );
   }

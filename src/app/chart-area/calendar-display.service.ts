@@ -12,11 +12,12 @@ export enum SeparatorLinePattern {
 
 export interface DateDisplay {
   date: Date;
+  width: number;
   separatorLinePattern: SeparatorLinePattern;
 }
 
 export interface CalendarDisplay {
-  dayWidth: number;
+  dayUnitWidth: number;
   dateData: DateDisplay[];
 }
 
@@ -25,7 +26,7 @@ export interface CalendarDisplay {
 })
 export class CalendarDisplayService {
   private calendarDisplaySubject = new BehaviorSubject<CalendarDisplay>({
-    dayWidth: 0,
+    dayUnitWidth: 0,
     dateData: [],
   });
 
@@ -48,7 +49,7 @@ export class CalendarDisplayService {
       const dateData = getDateData(startDate, endDate, dayWidth);
 
       this.calendarDisplaySubject.next({
-        dayWidth,
+        dayUnitWidth: dayWidth,
         dateData,
       });
     });
@@ -66,7 +67,7 @@ export class CalendarDisplayService {
       const dateData = getDateData(startDate, endDate, dayWidth);
 
       this.calendarDisplaySubject.next({
-        dayWidth,
+        dayUnitWidth: dayWidth,
         dateData,
       });
     });
@@ -93,9 +94,16 @@ function getDateData(
      */
     dateData.push({
       date: currentDate,
+      width: dayWidth,
       separatorLinePattern: SeparatorLinePattern.Day,
     });
     currentDate = DateHandler.addDays(currentDate, 1);
   }
   return dateData;
 }
+
+
+const enum dateDisplayLevel {
+  allDayModel = 0,
+  
+};
