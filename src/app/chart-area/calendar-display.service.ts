@@ -5,6 +5,7 @@ import { CalendarWidthService } from './calendar-width.service';
 import { DateHandler } from '../utils/time';
 import { isUndefined } from '../utils/utils';
 import { Assertion } from '../utils/assertion';
+import { DateJumpService } from './issue-column/date-jump.service';
 
 export interface DateDisplay {
   date: Date;
@@ -31,7 +32,8 @@ export class CalendarDisplayService {
 
   constructor(
     private calendarRangeService: CalendarRangeService,
-    private calendarWidthService: CalendarWidthService
+    private calendarWidthService: CalendarWidthService,
+    private dateJumpService: DateJumpService
   ) {
     /**
      * カレンダーの表示範囲が変更されたときは、そのときのカレンダーの幅を参照する
@@ -68,6 +70,24 @@ export class CalendarDisplayService {
         dateData,
       });
     });
+
+    /**
+     * 日付ジャンプのリクエストに対応
+     * カレンダーの表示範囲を更新することで、calendarRange$を発火させる
+     */
+    this.dateJumpService.jumpRequest$.subscribe((date) => {
+      const {startDate, endDate} = this.calendarRangeService.getCalendarRange();
+      const totalDays = DateHandler.countDateBetween(startDate, endDate);
+      const halfRange = Math.floor(totalDays / 2);
+
+        const newStart = new Date(date);
+        newStart.setDate(newStart.getDate() - halfRange);
+
+        const newEnd = new Date(date);
+        newEnd.setDate(newEnd.getDate() + (totalDays - halfRange - 1));
+
+        this.calendarRangeService.setCalendarRange(newStart, newEnd);
+    })
   }
 }
 

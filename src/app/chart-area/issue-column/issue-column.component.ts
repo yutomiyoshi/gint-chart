@@ -21,7 +21,6 @@ import {
 import { DateHandler } from '@src/app/utils/time';
 import { isUndefined } from '@src/app/utils/utils';
 import { Assertion } from '@src/app/utils/assertion';
-import { DateJumpService } from './date-jump.service';
 import { Subscription } from 'rxjs';
 import { CalendarRangeService } from '../calendar-range.service';
 import { CalendarWidthService } from '../calendar-width.service';
@@ -42,30 +41,12 @@ export class IssueColumnComponent implements OnInit, OnDestroy, AfterViewInit {
   public dateData: DateDisplay[] = [];
 
   constructor(
-    private dateJumpService: DateJumpService,
     private calendarRangeService: CalendarRangeService,
     private calendarWidthService: CalendarWidthService,
     private calendarDisplayService: CalendarDisplayService
   ) {}
 
   ngOnInit() {
-    this.subscription.add(
-      this.dateJumpService.jumpRequest$.subscribe((date) => {
-        const { startDate, endDate } =
-          this.calendarRangeService.getCalendarRange();
-        const totalDays = DateHandler.countDateBetween(startDate, endDate);
-        const halfRange = Math.floor(totalDays / 2);
-
-        const newStart = new Date(date);
-        newStart.setDate(newStart.getDate() - halfRange);
-
-        const newEnd = new Date(date);
-        newEnd.setDate(newEnd.getDate() + (totalDays - halfRange - 1));
-
-        this.calendarRangeService.setCalendarRange(newStart, newEnd);
-      })
-    );
-
     this.subscription.add(
       this.calendarDisplayService.calendarDisplay$.subscribe((display) => {
         this.dateData = display.dateData;
