@@ -174,11 +174,16 @@ function calculateDayDisplayPattern(
   dayWidth: number,
   interval: number
 ): DateDisplay[] {
-  const dateDisplay: DateDisplay[] = [];
+
+  /**
+   * このアルゴリズム大変すぎる～～～
+   * 一旦処理の複雑さはおいておいて、愚直に実装するぜ
+   */
+  const dateDisplayFull: DateDisplay[] = [];
   let currentDate = startDate;
   let count = 0;
   while (currentDate <= endDate) {
-    dateDisplay.push({
+    dateDisplayFull.push({
       date: currentDate,
       width: dayWidth,
       dayDisplay: count % interval === 0,
@@ -187,7 +192,17 @@ function calculateDayDisplayPattern(
     count++;
     currentDate = DateHandler.addDays(currentDate, 1);
   }
-  return dateDisplay;
+
+  const dateDisplay: DateDisplay[] = [];
+  let intervalCount = 0;
+  for (const dateDisplayEach of dateDisplayFull.reverse()) {
+    if (dateDisplayEach.dayDisplay === true || dateDisplayEach.monthDisplay === true) {
+      dateDisplay.push({...dateDisplayEach, width: dayWidth * intervalCount});
+      intervalCount = 0;
+    }
+    intervalCount ++;
+  }
+  return dateDisplay.reverse();
 }
 
 /**
@@ -203,10 +218,10 @@ function calculateWeekDisplayPattern(
   endDate: Date,
   dayWidth: number
 ): DateDisplay[] {
-  const dateDisplay: DateDisplay[] = [];
+  const dateDisplayFull: DateDisplay[] = [];
   let currentDate = startDate;
   while (currentDate <= endDate) {
-    dateDisplay.push({
+    dateDisplayFull.push({
       date: currentDate,
       width: dayWidth,
       dayDisplay: currentDate.getDay() === 1,
@@ -214,7 +229,17 @@ function calculateWeekDisplayPattern(
     });
     currentDate = DateHandler.addDays(currentDate, 1);
   }
-  return dateDisplay;
+
+  const dateDisplay: DateDisplay[] = [];
+  let intervalCount = 0;
+  for (const dateDisplayEach of dateDisplayFull) {
+    if (dateDisplayEach.dayDisplay === true || dateDisplayEach.monthDisplay === true) {
+      dateDisplay.push({...dateDisplayEach, width: dayWidth * intervalCount});
+      intervalCount = 0;
+    }
+    intervalCount ++;
+  }
+  return dateDisplay.reverse();
 }
 
 /**
@@ -229,10 +254,10 @@ function calculateHalfMonthDisplayPattern(
   endDate: Date,
   dayWidth: number
 ): DateDisplay[] {
-  const dateDisplay: DateDisplay[] = [];
+  const dateDisplayFull: DateDisplay[] = [];
   let currentDate = startDate;
   while (currentDate <= endDate) {
-    dateDisplay.push({
+    dateDisplayFull.push({
       date: currentDate,
       width: dayWidth,
       dayDisplay: currentDate.getDate() === 1 || currentDate.getDate() === 15,
@@ -240,7 +265,17 @@ function calculateHalfMonthDisplayPattern(
     });
     currentDate = DateHandler.addDays(currentDate, 1);
   }
-  return dateDisplay;
+
+  const dateDisplay: DateDisplay[] = [];
+  let intervalCount = 0;
+  for (const dateDisplayEach of dateDisplayFull) {
+    if (dateDisplayEach.dayDisplay === true || dateDisplayEach.monthDisplay === true) {
+      dateDisplay.push({...dateDisplayEach, width: dayWidth * intervalCount});
+      intervalCount = 0;
+    }
+    intervalCount;
+  }
+  return dateDisplay.reverse();
 }
 
 /**
