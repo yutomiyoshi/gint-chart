@@ -66,28 +66,19 @@
 
   > .month {
     display: flex;
-    justify-content: center;
     align-items: center;
     overflow: visible;
     will-change: opacity;
-
-    &.hidden {
-      color: transparent;
-    }
+    width: 100%;
   }
 
   > .day {
     display: flex;
-    justify-content: center;
     align-items: center;
     border-left: 1px dashed #9c9c9c;
     overflow: visible;
     will-change: opacity;
-
-    &.hidden {
-      color: transparent;
-      border-left: none;
-    }
+    width: 100%;
   }
 }
 

@@ -19,11 +19,10 @@
     - 背景に線を表示する
     - 隠されていない日付の右側だけに線を表示する（カレンダーと同期する）
      -->
-    <ng-container *ngFor="let date of dateData; index as i">
+    <ng-container *ngFor="let dateEach of dateData; index as i; trackBy: trackByDate">
       <div
         class="issue-row-day"
-        [class.hidden]="date.separatorLinePattern === 0"
-        [ngStyle]="dayWidth"
+        [ngStyle]="getDayStyle(i)"
       ></div>
     </ng-container>
 

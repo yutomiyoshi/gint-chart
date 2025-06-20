@@ -382,4 +382,16 @@ export class IssueRowComponent implements OnInit, OnDestroy {
   onMouseLeave() {
     this.isHovered = false;
   }
+
+  /**
+   * ngForのトラッキング関数
+   * 日付をキーとして使用して、不要なDOMの再レンダリングを防ぐ
+   */
+  trackByDate(index: number, date: DateDisplay): string {
+    return date.date.toISOString();
+  }
+
+  getDayStyle(index: number): {[key: string]: string} {
+    return {width: this.dateData[index].width + 'px'};
+  } 
 }

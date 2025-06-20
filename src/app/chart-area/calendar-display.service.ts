@@ -110,11 +110,11 @@ function getDateData(
    * としたとき、x + y の値に応じて日付の表示レベルを決定する
    */
   const dayTotalLevel = DayTotalLevel.find((level) => {
-    return dayTotal >= level.min && dayTotal <= level.max;
+    return level.min <= dayTotal && dayTotal < level.max;
   });
 
   const dayWidthLevel = DayWidthLevel.find((level) => {
-    return dayWidth >= level.min && dayWidth <= level.max;
+    return level.min <= dayWidth && dayWidth < level.max;
   });
 
   if (isUndefined(dayTotalLevel) || isUndefined(dayWidthLevel)) {
@@ -252,7 +252,7 @@ function calculateWeekDisplayPattern(
 
   const dateDisplay: DateDisplay[] = [];
   let intervalCount = 0;
-  for (const dateDisplayEach of dateDisplayFull) {
+  for (const dateDisplayEach of dateDisplayFull.reverse()) {
     if (dateDisplayEach.dayDisplay === true || dateDisplayEach.monthDisplay === true) {
       dateDisplay.push({...dateDisplayEach, width: dayWidth * intervalCount});
       intervalCount = 0;
@@ -288,12 +288,12 @@ function calculateHalfMonthDisplayPattern(
 
   const dateDisplay: DateDisplay[] = [];
   let intervalCount = 0;
-  for (const dateDisplayEach of dateDisplayFull) {
+  for (const dateDisplayEach of dateDisplayFull.reverse()) {
     if (dateDisplayEach.dayDisplay === true || dateDisplayEach.monthDisplay === true) {
       dateDisplay.push({...dateDisplayEach, width: dayWidth * intervalCount});
       intervalCount = 0;
     }
-    intervalCount;
+    intervalCount++;
   }
   return dateDisplay.reverse();
 }
@@ -303,15 +303,15 @@ function calculateHalfMonthDisplayPattern(
  */
 const DayTotalLevel = [
   { level: 0, min: 0, max: 20 },
-  { level: 1, min: 21, max: 60 },
-  { level: 2, min: 61, max: Infinity },
+  { level: 1, min: 20, max: 60 },
+  { level: 2, min: 60, max: Infinity },
 ] as const;
 
 /**
  * 開始日・終了日の間の日数を0-2のレベルに分類する
  */
 const DayWidthLevel = [
-  { level: 0, min: 21, max: Infinity },
-  { level: 1, min: 11, max: 20 },
+  { level: 0, min: 20, max: Infinity },
+  { level: 1, min: 10, max: 20 },
   { level: 2, min: 0, max: 10 },
 ] as const;

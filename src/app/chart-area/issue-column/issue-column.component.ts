@@ -275,4 +275,8 @@ export class IssueColumnComponent implements OnInit, OnDestroy, AfterViewInit {
   trackByDate(index: number, date: DateDisplay): string {
     return date.date.toISOString();
   }
+
+  getDayStyle(index: number): {[key: string]: string} {
+    return {width: this.dateData[index].width + 'px'};
+  } 
 }

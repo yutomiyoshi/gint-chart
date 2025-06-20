@@ -18,6 +18,7 @@ import {
   titleWidthDefault,
 } from '@src/app/chart-area/issue-column/issue-column-view.default';
 import { DateHandler } from '@src/app/utils/time';
+import { CalendarRangeService } from './calendar-range.service';
 
 @Component({
   selector: 'app-chart-area',
@@ -82,9 +83,10 @@ export class ChartAreaComponent implements OnInit, AfterViewInit {
   @ViewChild('issueRowArea') issueRowArea!: ElementRef;
   isScrollBarActive = false;
 
-  constructor(private issueStore: IssuesStoreService) {}
+  constructor(private issueStore: IssuesStoreService, private calendarRangeService: CalendarRangeService) {}
 
   ngOnInit(): void {
+
     this.issueStore.issues$.subscribe((issues) => {
       // TODO: ここでissuesをソートする
       // TODO: ここでissuesをグループ化する
@@ -94,6 +96,10 @@ export class ChartAreaComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
+    this.calendarRangeService.setCalendarRange(
+      DateHandler.getTodayOffsetDate(-4),
+      DateHandler.getTodayOffsetDate(10)
+    );
     const element = this.issueRowArea.nativeElement;
     const checkScroll = () => {
       this.isScrollBarActive = element.scrollHeight > element.clientHeight;
