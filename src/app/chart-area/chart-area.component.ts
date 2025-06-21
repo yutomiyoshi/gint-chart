@@ -22,6 +22,7 @@ import {
   CalendarDisplayService,
   CalendarVerticalLine,
 } from './calendar-vertical-line.service';
+import { CalendarPositionService } from './calendar-position.service';
 
 @Component({
   selector: 'app-chart-area',
@@ -88,8 +89,13 @@ export class ChartAreaComponent implements OnInit, AfterViewInit {
 
   constructor(
     private issueStore: IssuesStoreService,
-    private calendarDisplayService: CalendarDisplayService
+    private calendarDisplayService: CalendarDisplayService,
+    private calendarPositionService: CalendarPositionService
   ) {}
+
+  get calendarOffset(): number {
+    return this.calendarPositionService.currentOffset;
+  }
 
   ngOnInit(): void {
     this.issueStore.issues$.subscribe((issues) => {

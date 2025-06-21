@@ -69,7 +69,6 @@ export class CalendarDisplayService {
   recalculateCalendarVerticalLines(): void {
     const range = this.calendarRangeService.currentRange;
     const width = this.calendarWidthService.currentWidth;
-    const offset = this.calendarPositionService.currentOffset;
     const totalDays = this.calendarRangeService.totalDays;
 
     if (totalDays <= 0) {
@@ -90,7 +89,7 @@ export class CalendarDisplayService {
       const currentDate = new Date(range.startDate);
       currentDate.setDate(range.startDate.getDate() + i);
 
-      const left = offset + i * widthPerDay;
+      const left = i * widthPerDay;
 
       lines.push({
         left: Math.round(left),

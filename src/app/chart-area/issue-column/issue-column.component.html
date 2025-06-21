@@ -29,20 +29,15 @@
   - ホイール操作でカレンダーの表示範囲を調整する
   -->
   <div class="issue-column-calendar" #calendar (wheel)="onWheel($event)">
-    <!-- 日付ごとにForでループ -->
-    <ng-container *ngFor="let date of dateRange; index as i">
-      <div class="issue-column-day">
-        <!-- 月の表示 -->
-        <div class="month" [class.hidden]="date.getDate() !== 1 && i !== 0">
-          {{ date | date : "MM" }}
-        </div>
-
-        <!-- 日の表示 -->
-        <div class="day" [class.hidden]="isHiddenDatePattern[i]">
-          {{ date | date : "dd" }}
-        </div>
-      </div>
-    </ng-container>
+    <!-- 日付の縦線 -->
+    <div
+      *ngFor="let line of calendarVerticalLines"
+      class="calendar-vertical-line"
+      [class.today]="line.isToday"
+      [class.month-start]="line.isMonthStart"
+      [style.left.px]="line.left"
+      [title]="line.date | date : 'yyyy/MM/dd'"
+    ></div>
   </div>
 
   <!--
