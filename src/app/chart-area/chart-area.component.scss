@@ -47,13 +47,26 @@ $calendar-area-height: 40px;
   top: $calendar-area-height;
   bottom: 0;
   border-left: 1px solid #e0e0e0;
+
+  // カレンダーの背景はissue-barの背後にあるので、いかなるイベントも発生しない
   z-index: 0;
+}
+
+.calendar-day-vertical-line {
+  position: absolute;
+  // カレンダーの縦線
+  // カレンダー日付の文字が書いてあるエリアにはみ出さないように
+  top: $calendar-area-height;
+  bottom: 0;
+
+  // カレンダーの縦線はissue-barの全面にあるので、ツールチップイベントに反応する
+  z-index: 2;
 
   &.today {
-    border-left-color: #ff6b6b;
+    border-left: 2px solid #ff6b6b;
   }
 
   &.month-start {
-    border-left-color: #4a90e2;
+    border-left: 2px solid #4a90e2;
   }
 }

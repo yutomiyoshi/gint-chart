@@ -32,14 +32,21 @@
     ></app-issue-row>
   </div>
 
-  <!-- カレンダーの縦線 - スクロール外まで表示 -->
+  <!-- カレンダーの背景 - スクロール外まで表示 -->
   <div
     *ngFor="let line of calendarVerticalLines"
     class="calendar-day-per-block"
+    [style.left.px]="line.left + calendarOffset"
+    [style.width.px]="dayPerWidth"
+  ></div>
+
+  <!-- カレンダーの縦線 - スクロール外まで表示 -->
+  <div
+    *ngFor="let line of calendarVerticalLines"
+    class="calendar-day-vertical-line"
     [class.today]="line.isToday"
     [class.month-start]="line.isMonthStart"
     [style.left.px]="line.left + calendarOffset"
-    [style.width.px]="dayPerWidth"
     [title]="line.date | date : 'yyyy/MM/dd'"
   ></div>
 </div>
