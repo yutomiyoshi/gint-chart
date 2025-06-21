@@ -33,15 +33,14 @@
     <div
       *ngFor="let line of calendarVerticalLines"
       class="calendar-day-per-block"
-      [class.today]="line.isToday"
-      [class.month-start]="line.isMonthStart"
       [style.left.px]="line.left"
+      [style.display]="line.isDisplayed ? 'block' : 'none'"
       [title]="line.date | date : 'yyyy/MM/dd'"
     >
-      <div class="month" [class.active]="line.isMonthStart">
+      <div class="month" [class.hidden]="!line.isMonthStart">
         {{ line.date | date : "MM" }}
       </div>
-      <div class="day" [class.active]="line.isToday">
+      <div class="day">
         {{ line.date | date : "dd" }}
       </div>
     </div>

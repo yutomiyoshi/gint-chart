@@ -106,23 +106,23 @@
 
   > .month {
     height: 50%;
-    color: transparent;
     padding-left: 2px;
+    border-left: 1px dashed #9c9c9c;
 
-    &.active {
-      border-left: 1px dashed #9c9c9c;
-      color: #9c9c9c;
+    &.hidden {
+      color: transparent;
+      border-left: none;
     }
   }
 
   > .day {
     height: 50%;
-    color: transparent;
     padding-left: 2px;
+    border-left: 1px dashed #9c9c9c;
 
-    &.active {
-      border-left: 1px dashed #9c9c9c;
-      color: #9c9c9c;
+    &.hidden {
+      color: transparent;
+      border-left: none;
     }
   }
 }

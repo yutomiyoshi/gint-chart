@@ -32,6 +32,11 @@ export interface CalendarVerticalLine {
    * 月のはじめである
    */
   isMonthStart: boolean;
+
+  /**
+   * アルゴリズムに基づいて表示するかどうか
+   */
+  isDisplayed: boolean;
 }
 
 /**
@@ -96,6 +101,7 @@ export class CalendarDisplayService {
         date: DateHandler.setTimeTo9(currentDate),
         isToday: this.todayService.isToday(currentDate),
         isMonthStart: currentDate.getDate() === 1,
+        isDisplayed: true,
       });
     }
 
