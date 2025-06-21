@@ -26,7 +26,10 @@ export class CalendarPositionService {
    * カレンダーオフセットを手動で設定
    */
   setOffset(offset: number): void {
-    this._calendarOffset.next(offset);
+    // オフセットが変更された場合のみ更新
+    if (this._calendarOffset.value !== offset) {
+      this._calendarOffset.next(offset);
+    }
   }
 
   /**

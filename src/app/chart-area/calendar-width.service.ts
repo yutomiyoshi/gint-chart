@@ -58,6 +58,9 @@ export class CalendarWidthService {
    * カレンダー幅を手動で設定
    */
   private setWidth(width: number): void {
-    this._calendarWidth.next(width);
+    // 幅が変更された場合のみ更新
+    if (this._calendarWidth.value !== width) {
+      this._calendarWidth.next(width);
+    }
   }
 }

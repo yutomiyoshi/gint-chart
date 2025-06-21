@@ -9,6 +9,7 @@ import {
   OnInit,
   OnDestroy,
   AfterViewInit,
+  ChangeDetectorRef,
 } from '@angular/core';
 import {
   statusWidthDefault,
@@ -87,7 +88,8 @@ export class IssueColumnComponent implements OnInit, OnDestroy, AfterViewInit {
     private readonly calendarDisplayService: CalendarDisplayService,
     private readonly calendarRangeService: CalendarRangeService,
     private readonly calendarWidthService: CalendarWidthService,
-    private readonly calendarPositionService: CalendarPositionService
+    private readonly calendarPositionService: CalendarPositionService,
+    private readonly cdr: ChangeDetectorRef
   ) {}
 
   /**
@@ -99,6 +101,13 @@ export class IssueColumnComponent implements OnInit, OnDestroy, AfterViewInit {
       this.calendarDisplayService.calendarVerticalLines$.subscribe(
         (lines: CalendarVerticalLine[]) => {
           this.calendarVerticalLines = lines;
+
+          /**
+           * カレンダーの領域が更新された時に
+           * すぐに描画に更新されないことがあったため
+           * 強制的にChange Detectionを実行
+           */
+          this.cdr.detectChanges();
         }
       )
     );
@@ -194,6 +203,9 @@ export class IssueColumnComponent implements OnInit, OnDestroy, AfterViewInit {
     );
 
     this.calendarRangeService.setRange(newStart, newEnd);
+
+    // 縦線の更新を即座に実行
+    this.calendarDisplayService.recalculateCalendarVerticalLines();
   }
 
   /**
@@ -211,6 +223,9 @@ export class IssueColumnComponent implements OnInit, OnDestroy, AfterViewInit {
     newEnd.setDate(newEnd.getDate() + moveDays);
 
     this.calendarRangeService.setRange(newStart, newEnd);
+
+    // 縦線の更新を即座に実行
+    this.calendarDisplayService.recalculateCalendarVerticalLines();
   }
 
   /**
