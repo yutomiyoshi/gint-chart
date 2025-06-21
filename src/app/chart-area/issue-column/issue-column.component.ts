@@ -8,7 +8,6 @@ import {
   ElementRef,
   OnInit,
   OnDestroy,
-  AfterViewChecked,
   AfterViewInit,
 } from '@angular/core';
 import {
@@ -19,7 +18,6 @@ import {
   MIN_CALENDAR_WIDTH,
   assigneeWidthDefault,
 } from '@src/app/chart-area/issue-column/issue-column-view.default';
-import { DateHandler } from '@src/app/utils/time';
 import { isUndefined } from '@src/app/utils/utils';
 import { Assertion } from '@src/app/utils/assertion';
 import { DateJumpService } from './date-jump.service';
@@ -28,7 +26,7 @@ import {
   CalendarDisplayService,
   CalendarVerticalLine,
 } from '../calendar-vertical-line.service';
-import { CalendarRangeService, CalendarRange } from '../calendar-range.service';
+import { CalendarRangeService } from '../calendar-range.service';
 import { CalendarWidthService } from '../calendar-width.service';
 import { CalendarPositionService } from '../calendar-position.service';
 
@@ -61,8 +59,7 @@ export class IssueColumnComponent implements OnInit, OnDestroy, AfterViewInit {
 
     this.subscription.add(
       this.dateJumpService.jumpRequest$.subscribe((date) => {
-        const { startDate, endDate } = this.calendarRangeService.currentRange;
-        const totalDays = DateHandler.countDateBetween(startDate, endDate);
+        const totalDays = this.calendarRangeService.totalDays;
         const halfRange = Math.floor(totalDays / 2);
 
         const newStart = new Date(date);
@@ -105,9 +102,6 @@ export class IssueColumnComponent implements OnInit, OnDestroy, AfterViewInit {
   /**
    * UI fields
    */
-  @Input() isHiddenDatePattern: boolean[] = [];
-  @Output() isHiddenDatePatternChange = new EventEmitter<boolean[]>();
-
   @Input() isScrollBarActive = false;
 
   get titleStyle(): { [key: string]: string } {
@@ -165,13 +159,11 @@ export class IssueColumnComponent implements OnInit, OnDestroy, AfterViewInit {
   onWheel(event: WheelEvent) {
     event.preventDefault();
     if (event.ctrlKey === true) {
-      // カレンダー領域の幅から1日あたりの幅を計算
-      if (isUndefined(this.calendarRef)) {
-        Assertion.assert('CalendarRef is undefined.', Assertion.no(3));
-        return;
-      }
-
-      if (isUndefined(this.calendarRef.nativeElement)) {
+      // カレンダーにおけるカーソルの相対位置を取得する
+      if (
+        isUndefined(this.calendarRef) ||
+        isUndefined(this.calendarRef.nativeElement)
+      ) {
         Assertion.assert(
           'CalendarRef.nativeElement is undefined.',
           Assertion.no(4)
@@ -180,14 +172,6 @@ export class IssueColumnComponent implements OnInit, OnDestroy, AfterViewInit {
       }
       const calendarWidth = this.calendarWidthService.currentWidth;
       const totalDays = this.calendarRangeService.totalDays;
-
-      if (totalDays <= 0) {
-        Assertion.assert(
-          'TotalDays is less than or equal to 0.',
-          Assertion.no(5)
-        );
-        return;
-      }
 
       // 1日分の幅
       const dayWidth = calendarWidth / totalDays;
