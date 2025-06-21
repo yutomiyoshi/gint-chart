@@ -37,7 +37,51 @@ import { CalendarPositionService } from '../calendar-position.service';
   styleUrl: './issue-column.component.scss',
 })
 export class IssueColumnComponent implements OnInit, OnDestroy, AfterViewInit {
+  /**
+   * スクロールバーの表示状態
+   */
+  @Input() isScrollBarActive = false;
+
+  /**
+   * タイトル幅
+   */
+  @Input() titleWidth: number = titleWidthDefault;
+
+  /**
+   * ステータス幅
+   */
+  @Input() statusWidth: number = statusWidthDefault;
+
+  /**
+   * 担当者幅
+   */
+  @Input() assigneeWidth: number = assigneeWidthDefault;
+
+  /**
+   * タイトル幅変更イベント
+   */
+  @Output() titleWidthChange = new EventEmitter<number>();
+
+  /**
+   * カレンダー要素の参照
+   */
+  @ViewChild('calendar', { static: false })
+  calendarRef!: ElementRef<HTMLDivElement>;
+
+  /**
+   * カレンダーの縦線の位置情報
+   */
+  calendarVerticalLines: CalendarVerticalLine[] = [];
+
+  /**
+   * 非同期処理の購読まとめ
+   */
   private subscription = new Subscription();
+
+  /**
+   * タイトル幅更新用の関数
+   */
+  private updateTitleWidth: ((distance: number) => void) | undefined;
 
   constructor(
     private dateJumpService: DateJumpService,
@@ -47,6 +91,9 @@ export class IssueColumnComponent implements OnInit, OnDestroy, AfterViewInit {
     private calendarPositionService: CalendarPositionService
   ) {}
 
+  /**
+   * コンポーネント初期化時の処理
+   */
   ngOnInit() {
     // カレンダーの縦線の位置情報を購読
     this.subscription.add(
@@ -57,6 +104,7 @@ export class IssueColumnComponent implements OnInit, OnDestroy, AfterViewInit {
       )
     );
 
+    // 日付ジャンプイベントの購読
     this.subscription.add(
       this.dateJumpService.jumpRequest$.subscribe((date) => {
         const totalDays = this.calendarRangeService.totalDays;
@@ -73,12 +121,18 @@ export class IssueColumnComponent implements OnInit, OnDestroy, AfterViewInit {
     );
   }
 
+  /**
+   * コンポーネント破棄時の処理
+   */
   ngOnDestroy() {
     this.subscription.unsubscribe();
     this.calendarWidthService.stopObserving();
     this.calendarPositionService.stopObserving();
   }
 
+  /**
+   * ビュー初期化後の処理
+   */
   ngAfterViewInit() {
     // カレンダー要素の監視を開始
     if (this.calendarRef && this.calendarRef.nativeElement) {
@@ -91,69 +145,7 @@ export class IssueColumnComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   /**
-   * Logic fields
-   */
-
-  /**
-   * カレンダーの縦線の位置情報
-   */
-  calendarVerticalLines: CalendarVerticalLine[] = [];
-
-  /**
-   * UI fields
-   */
-  @Input() isScrollBarActive = false;
-
-  get titleStyle(): { [key: string]: string } {
-    if (this.titleWidth === 0) {
-      return {
-        display: 'none',
-      };
-    }
-    return {
-      width: this.titleWidth + 'px',
-      flex: '0 0 ' + this.titleWidth + 'px',
-    };
-  }
-
-  @Input() titleWidth: number = titleWidthDefault;
-
-  get statusStyle(): { [key: string]: string } {
-    if (this.statusWidth === 0) {
-      return {
-        display: 'none',
-      };
-    }
-    return {
-      width: this.statusWidth + 'px',
-      flex: '0 0 ' + this.statusWidth + 'px',
-    };
-  }
-
-  @Input() statusWidth: number = statusWidthDefault;
-
-  get assigneeStyle(): { [key: string]: string } {
-    if (this.assigneeWidth === 0) {
-      return {
-        display: 'none',
-      };
-    }
-    return {
-      width: this.assigneeWidth + 'px',
-      flex: '0 0 ' + this.assigneeWidth + 'px',
-    };
-  }
-
-  @Input() assigneeWidth: number = assigneeWidthDefault;
-
-  @Output() titleWidthChange = new EventEmitter<number>();
-
-  @ViewChild('calendar', { static: false })
-  calendarRef!: ElementRef<HTMLDivElement>;
-
-  private updateTitleWidth: ((distance: number) => void) | undefined;
-
-  /**
+   * ホイールイベントハンドラー
    * スクロールイベントで日付範囲を親に通知
    */
   onWheel(event: WheelEvent) {
@@ -244,6 +236,9 @@ export class IssueColumnComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
+  /**
+   * タイトルドラッグ開始時のイベントハンドラー
+   */
   onTitleDragStart(_event: CdkDragStart) {
     // 現在のタイトル幅を保存
     const initialTitleWidth = this.titleWidth;
@@ -260,9 +255,57 @@ export class IssueColumnComponent implements OnInit, OnDestroy, AfterViewInit {
     };
   }
 
+  /**
+   * タイトルドラッグ移動時のイベントハンドラー
+   */
   onTitleDragMove(event: CdkDragMove) {
     // ドラッグ量に応じて新しい幅を計算
     if (isUndefined(this.updateTitleWidth)) return;
     this.updateTitleWidth(event.distance.x);
+  }
+
+  /**
+   * タイトルのスタイルを取得
+   */
+  get titleStyle(): { [key: string]: string } {
+    if (this.titleWidth === 0) {
+      return {
+        display: 'none',
+      };
+    }
+    return {
+      width: this.titleWidth + 'px',
+      flex: '0 0 ' + this.titleWidth + 'px',
+    };
+  }
+
+  /**
+   * ステータスのスタイルを取得
+   */
+  get statusStyle(): { [key: string]: string } {
+    if (this.statusWidth === 0) {
+      return {
+        display: 'none',
+      };
+    }
+    return {
+      width: this.statusWidth + 'px',
+      flex: '0 0 ' + this.statusWidth + 'px',
+    };
+  }
+
+  /**
+   * 担当者のスタイルを取得
+   */
+  get assigneeStyle(): { [key: string]: string } {
+    if (this.assigneeWidth === 0) {
+      return {
+        display: 'none',
+      };
+    }
+    return {
+      width: this.assigneeWidth + 'px',
+      flex: '0 0 ' + this.assigneeWidth + 'px',
+    };
   }
 }
