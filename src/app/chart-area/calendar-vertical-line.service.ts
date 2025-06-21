@@ -3,9 +3,9 @@ import { BehaviorSubject, Observable, combineLatest } from 'rxjs';
 import { CalendarRangeService } from './calendar-range.service';
 import { CalendarWidthService } from './calendar-width.service';
 import { CalendarPositionService } from './calendar-position.service';
-import { DateHandler } from '../utils/time';
 import { Assertion } from '../utils/assertion';
 import { TodayService } from '../utils/today.service';
+import { isUndefined } from '../utils/utils';
 
 /**
  * カレンダーの縦線
@@ -72,7 +72,6 @@ export class CalendarDisplayService {
    * 縦線の位置を再計算
    */
   recalculateCalendarVerticalLines(): void {
-    const range = this.calendarRangeService.currentRange;
     const width = this.calendarWidthService.currentWidth;
     const totalDays = this.calendarRangeService.totalDays;
 
@@ -86,23 +85,47 @@ export class CalendarDisplayService {
       return;
     }
 
-    const lines: CalendarVerticalLine[] = [];
     const widthPerDay = width / totalDays;
 
-    // 各日付に対して縦線の位置を計算
-    for (let i = 0; i < totalDays; i++) {
-      const currentDate = new Date(range.startDate);
-      currentDate.setDate(range.startDate.getDate() + i);
+    const widthPerDayLevel = widthPerDayLevelTable.find(
+      (level) => level.min < widthPerDay && widthPerDay <= level.max
+    );
 
-      const left = i * widthPerDay;
+    const totalDaysLevel = totalDaysLevelTable.find(
+      (level) => level.min < totalDays && totalDays <= level.max
+    );
 
-      lines.push({
-        left: Math.round(left),
-        date: DateHandler.setTimeTo9(currentDate),
-        isToday: this.todayService.isToday(currentDate),
-        isMonthStart: currentDate.getDate() === 1,
-        isDisplayed: true,
-      });
+    if (isUndefined(widthPerDayLevel) || isUndefined(totalDaysLevel)) {
+      Assertion.assert('Invalid widthPerDay or totalDays', Assertion.no(3));
+      return;
+    }
+
+    console.log(widthPerDayLevel, totalDaysLevel);
+
+    let lines: CalendarVerticalLine[] = [];
+
+    switch (widthPerDayLevel.level + totalDaysLevel.level) {
+      case 0:
+        lines = this.generateCalendarVerticalLinesDayStep(1, widthPerDay);
+        break;
+      case 1:
+        lines = this.generateCalendarVerticalLinesDayStep(3, widthPerDay);
+        break;
+      case 2:
+        lines = this.generateCalendarVerticalLinesDayStep(5, widthPerDay);
+        break;
+      case 3:
+        lines = this.generateCalendarVerticalLinesWeekStep(widthPerDay);
+        break;
+      case 4:
+        lines = this.generateCalendarVerticalLinesHalfMonthStep(widthPerDay);
+        break;
+      default:
+        Assertion.assert(
+          'Invalid widthPerDay or totalDays level',
+          Assertion.no(5)
+        );
+        return;
     }
 
     this._calendarVerticalLines.next(lines);
@@ -121,24 +144,101 @@ export class CalendarDisplayService {
       this.recalculateCalendarVerticalLines();
     });
   }
+
+  /**
+   * 日付の間隔で縦線を引く
+   * @param step 日付の間隔
+   * @param widthPerDay 一日あたりのHTMLの幅
+   * @returns 縦線の位置
+   */
+  private generateCalendarVerticalLinesDayStep(
+    step: number,
+    widthPerDay: number
+  ): CalendarVerticalLine[] {
+    const lines: CalendarVerticalLine[] = [];
+    const scanner = new Date(this.calendarRangeService.currentRange.startDate);
+    for (let i = 0; i < this.calendarRangeService.totalDays; i++) {
+      const date = new Date(scanner);
+      lines.push({
+        left: Math.round(widthPerDay * i),
+        date,
+        isToday: this.todayService.isToday(date),
+        isMonthStart: date.getDate() === 1,
+        isDisplayed: i % step === 0,
+      });
+      scanner.setDate(scanner.getDate() + 1);
+    }
+    return lines;
+  }
+
+  /**
+   * 週の間隔で縦線を引く
+   * @param widthPerDay 一日あたりのHTMLの幅
+   * @returns 縦線の位置
+   */
+  private generateCalendarVerticalLinesWeekStep(
+    widthPerDay: number
+  ): CalendarVerticalLine[] {
+    const lines: CalendarVerticalLine[] = [];
+    const scanner = new Date(this.calendarRangeService.currentRange.startDate);
+    for (let i = 0; i < this.calendarRangeService.totalDays; i++) {
+      const date = new Date(scanner);
+      lines.push({
+        left: Math.round(widthPerDay * i),
+        date,
+        isToday: this.todayService.isToday(date),
+        isMonthStart: date.getDate() === 1,
+        isDisplayed: i === 0 || date.getDay() === 1,
+      });
+      scanner.setDate(scanner.getDate() + 1);
+    }
+    return lines;
+  }
+
+  /**
+   * 半月の間隔で縦線を引く
+   * @param widthPerDay 一日あたりのHTMLの幅
+   * @returns 縦線の位置
+   */
+  private generateCalendarVerticalLinesHalfMonthStep(
+    widthPerDay: number
+  ): CalendarVerticalLine[] {
+    const lines: CalendarVerticalLine[] = [];
+    const scanner = new Date(this.calendarRangeService.currentRange.startDate);
+    for (let i = 0; i < this.calendarRangeService.totalDays; i++) {
+      const date = new Date(scanner);
+      lines.push({
+        left: Math.round(widthPerDay * i),
+        date,
+        isToday: this.todayService.isToday(date),
+        isMonthStart: date.getDate() === 1,
+        isDisplayed:
+          i === 0 ||
+          date.getDate() === 1 ||
+          (date.getDate() === 16 && date.getMonth() % 2 === 0),
+      });
+      scanner.setDate(scanner.getDate() + 1);
+    }
+    return lines;
+  }
 }
 
 /**
  * 一日あたりのHTMLの幅のレベル
  * (表示する日数の間引きを決定するために使用)
  */
-const widthPerDayLevel = [
-  { min: 0, max: 50 },
-  { min: 50, max: 100 },
-  { min: 100, max: Infinity },
+const widthPerDayLevelTable = [
+  { min: 40, max: Infinity, level: 0 },
+  { min: 20, max: 40, level: 1 },
+  { min: 0, max: 20, level: 2 },
 ];
 
 /**
  * カレンダーの総日数のレベル
  * (表示する日数の間引きを決定するために使用)
  */
-const totalDaysLevel = [
-  { min: 0, max: 30 },
-  { min: 30, max: 60 },
-  { min: 60, max: Infinity },
+const totalDaysLevelTable = [
+  { min: 0, max: 30, level: 0 },
+  { min: 30, max: 60, level: 1 },
+  { min: 60, max: Infinity, level: 2 },
 ];
