@@ -70,11 +70,6 @@ export class IssueColumnComponent
   /**
    * Logic fields
    */
-  @Input() dispStartDate!: Date;
-  @Output() dispStartDateChange = new EventEmitter<Date>();
-
-  @Input() dispEndDate!: Date;
-  @Output() dispEndDateChange = new EventEmitter<Date>();
 
   /**
    * UI fields

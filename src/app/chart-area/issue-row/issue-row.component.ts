@@ -57,15 +57,6 @@ export class IssueRowComponent {
   @Output() startDateChange = new EventEmitter<Date | undefined>();
   @Output() endDateChange = new EventEmitter<Date | undefined>();
 
-  // 日付の表示範囲、カレンダーと同期する
-  @Input() dispStartDate: Date = DateHandler.getTodayOffsetDate(
-    calendarStartDateOffset
-  );
-
-  @Input() dispEndDate: Date = DateHandler.getTodayOffsetDate(
-    calendarEndDateOffset
-  );
-
   /**
    * 終了日のドラッグ中に呼ばれる関数
    * ドラッグ中に終了日を更新する

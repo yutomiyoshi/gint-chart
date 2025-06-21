@@ -35,11 +35,6 @@ export class ChartAreaComponent implements OnInit, AfterViewInit {
    */
   issues: Issue[] = [];
 
-  // 日付の表示範囲、カレンダーとIssueRowで同期する
-  dispStartDate: Date = DateHandler.getTodayOffsetDate(calendarStartDateOffset);
-
-  dispEndDate: Date = DateHandler.getTodayOffsetDate(calendarEndDateOffset);
-
   /**
    * 日付の表示パターン
    * - 日付ごとに隠すかどうかのパターン
