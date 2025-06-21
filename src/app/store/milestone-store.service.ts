@@ -12,7 +12,7 @@ import { convertJsonToMilestone, Milestone } from '../model/milestone.model';
 import { GitLabApiService } from '../git-lab-api/git-lab-api.service';
 import { GitLabConfigStoreService } from './git-lab-config-store.service';
 import { SAMPLE_MILESTONES } from '../model/sample-milestone';
-import { GitLabProject } from '../model/git-lab-config.model';
+import { GitLabProjectConfig } from '../model/git-lab-config.model';
 import { GitLabApiMilestone } from '../git-lab-api/git-lab-milestone.model';
 
 @Injectable({
@@ -69,7 +69,7 @@ export class MilestoneStoreService {
    * @returns Observable<Milestone[]> 取得したmilestones配列を流すObservable
    */
   private fetchAllMilestonesForProject(
-    project: GitLabProject,
+    project: GitLabProjectConfig,
     accessToken: string
   ): Observable<Milestone[]> {
     const urlObj = new URL(project.url);
