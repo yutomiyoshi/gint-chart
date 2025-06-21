@@ -6,12 +6,9 @@
   -->
   <div class="calendar-area">
     <app-issue-column
-      [(dispStartDate)]="dispStartDate"
-      [(dispEndDate)]="dispEndDate"
       [(titleWidth)]="titleWidth"
       [statusWidth]="statusWidth"
       [assigneeWidth]="assigneeWidth"
-      [(isHiddenDatePattern)]="isHiddenDatePattern"
       [isScrollBarActive]="isScrollBarActive"
     ></app-issue-column>
   </div>
@@ -29,12 +26,26 @@
       [assignee]="issue.assignee"
       [(startDate)]="issue.start_date"
       [(endDate)]="issue.end_date"
-      [dispStartDate]="dispStartDate"
-      [dispEndDate]="dispEndDate"
       [titleWidth]="titleWidth"
       [statusWidth]="statusWidth"
       [assigneeWidth]="assigneeWidth"
-      [isHiddenDatePattern]="isHiddenDatePattern"
     ></app-issue-row>
   </div>
+
+  <!-- カレンダーの背景 - スクロール外まで表示 -->
+  <div
+    *ngFor="let line of calendarVerticalLines"
+    class="calendar-day-per-block"
+    [style.left.px]="line.left + calendarOffset"
+    [style.width.px]="dayPerWidth"
+  ></div>
+
+  <!-- カレンダーの縦線 - スクロール外まで表示 -->
+  <div
+    *ngFor="let line of calendarVerticalLines"
+    class="calendar-day-vertical-line"
+    [style.left.px]="line.left + calendarOffset"
+    [style.display]="line.isDisplayed ? 'block' : 'none'"
+    [title]="line.date | date : 'yyyy/MM/dd'"
+  ></div>
 </div>

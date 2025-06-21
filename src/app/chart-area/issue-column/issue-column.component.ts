@@ -8,7 +8,7 @@ import {
   ElementRef,
   OnInit,
   OnDestroy,
-  AfterViewChecked,
+  AfterViewInit,
 } from '@angular/core';
 import {
   statusWidthDefault,
@@ -18,11 +18,17 @@ import {
   MIN_CALENDAR_WIDTH,
   assigneeWidthDefault,
 } from '@src/app/chart-area/issue-column/issue-column-view.default';
-import { DateHandler } from '@src/app/utils/time';
 import { isUndefined } from '@src/app/utils/utils';
 import { Assertion } from '@src/app/utils/assertion';
-import { DateJumpService } from './date-jump.service';
+import { DateJumpService } from '../date-jump.service';
 import { Subscription } from 'rxjs';
+import {
+  CalendarDisplayService,
+  CalendarVerticalLine,
+} from '../calendar-vertical-line.service';
+import { CalendarRangeService } from '../calendar-range.service';
+import { CalendarWidthService } from '../calendar-width.service';
+import { CalendarPositionService } from '../calendar-position.service';
 
 @Component({
   selector: 'app-issue-column',
@@ -30,20 +36,30 @@ import { Subscription } from 'rxjs';
   templateUrl: './issue-column.component.html',
   styleUrl: './issue-column.component.scss',
 })
-export class IssueColumnComponent
-  implements OnInit, OnDestroy, AfterViewChecked
-{
+export class IssueColumnComponent implements OnInit, OnDestroy, AfterViewInit {
   private subscription = new Subscription();
 
-  constructor(private dateJumpService: DateJumpService) {}
+  constructor(
+    private dateJumpService: DateJumpService,
+    private calendarDisplayService: CalendarDisplayService,
+    private calendarRangeService: CalendarRangeService,
+    private calendarWidthService: CalendarWidthService,
+    private calendarPositionService: CalendarPositionService
+  ) {}
 
   ngOnInit() {
+    // カレンダーの縦線の位置情報を購読
+    this.subscription.add(
+      this.calendarDisplayService.calendarVerticalLines$.subscribe(
+        (lines: CalendarVerticalLine[]) => {
+          this.calendarVerticalLines = lines;
+        }
+      )
+    );
+
     this.subscription.add(
       this.dateJumpService.jumpRequest$.subscribe((date) => {
-        const totalDays = DateHandler.countDateBetween(
-          this.dispStartDate,
-          this.dispEndDate
-        );
+        const totalDays = this.calendarRangeService.totalDays;
         const halfRange = Math.floor(totalDays / 2);
 
         const newStart = new Date(date);
@@ -52,36 +68,40 @@ export class IssueColumnComponent
         const newEnd = new Date(date);
         newEnd.setDate(newEnd.getDate() + (totalDays - halfRange - 1));
 
-        this.dispStartDateChange.emit(newStart);
-        this.dispEndDateChange.emit(newEnd);
+        this.calendarRangeService.setRange(newStart, newEnd);
       })
     );
   }
 
   ngOnDestroy() {
     this.subscription.unsubscribe();
+    this.calendarWidthService.stopObserving();
+    this.calendarPositionService.stopObserving();
   }
 
-  ngAfterViewChecked() {
-    this.updateDateRange();
-    this.updateIsHiddenDatePattern();
+  ngAfterViewInit() {
+    // カレンダー要素の監視を開始
+    if (this.calendarRef && this.calendarRef.nativeElement) {
+      this.calendarWidthService.startObserving(this.calendarRef.nativeElement);
+      this.calendarPositionService.startObserving(
+        this.calendarRef.nativeElement
+      );
+      this.calendarDisplayService.startObserving();
+    }
   }
 
   /**
    * Logic fields
    */
-  @Input() dispStartDate!: Date;
-  @Output() dispStartDateChange = new EventEmitter<Date>();
 
-  @Input() dispEndDate!: Date;
-  @Output() dispEndDateChange = new EventEmitter<Date>();
+  /**
+   * カレンダーの縦線の位置情報
+   */
+  calendarVerticalLines: CalendarVerticalLine[] = [];
 
   /**
    * UI fields
    */
-  @Input() isHiddenDatePattern: boolean[] = [];
-  @Output() isHiddenDatePatternChange = new EventEmitter<boolean[]>();
-
   @Input() isScrollBarActive = false;
 
   get titleStyle(): { [key: string]: string } {
@@ -133,53 +153,25 @@ export class IssueColumnComponent
 
   private updateTitleWidth: ((distance: number) => void) | undefined;
 
-  dateRange: Date[] = [];
-
-  /**
-   * dispStartDateとdispEndDateの間の日付配列を返す
-   */
-  private updateDateRange(): void {
-    const dates: Date[] = [];
-    const current = new Date(this.dispStartDate);
-    while (current <= this.dispEndDate) {
-      dates.push(new Date(current));
-      current.setDate(current.getDate() + 1);
-    }
-    this.dateRange = dates;
-  }
-
   /**
    * スクロールイベントで日付範囲を親に通知
    */
   onWheel(event: WheelEvent) {
     event.preventDefault();
     if (event.ctrlKey === true) {
-      // カレンダー領域の幅から1日あたりの幅を計算
-      if (isUndefined(this.calendarRef)) {
-        Assertion.assert('CalendarRef is undefined.', Assertion.no(3));
-        return;
-      }
-
-      if (isUndefined(this.calendarRef.nativeElement)) {
+      // カレンダーにおけるカーソルの相対位置を取得する
+      if (
+        isUndefined(this.calendarRef) ||
+        isUndefined(this.calendarRef.nativeElement)
+      ) {
         Assertion.assert(
           'CalendarRef.nativeElement is undefined.',
           Assertion.no(4)
         );
         return;
       }
-      const calendarWidth = this.calendarRef.nativeElement.offsetWidth;
-      const totalDays = DateHandler.countDateBetween(
-        this.dispStartDate,
-        this.dispEndDate
-      );
-
-      if (totalDays <= 0) {
-        Assertion.assert(
-          'TotalDays is less than or equal to 0.',
-          Assertion.no(5)
-        );
-        return;
-      }
+      const calendarWidth = this.calendarWidthService.currentWidth;
+      const totalDays = this.calendarRangeService.totalDays;
 
       // 1日分の幅
       const dayWidth = calendarWidth / totalDays;
@@ -198,7 +190,9 @@ export class IssueColumnComponent
 
       // カーソル下の日付
       const cursorIndex = Math.floor(offsetX / dayWidth);
-      const cursorDate = new Date(this.dispStartDate);
+      const cursorDate = new Date(
+        this.calendarRangeService.currentRange.startDate
+      );
       cursorDate.setDate(cursorDate.getDate() + cursorIndex);
 
       // 新しい1日分の幅
@@ -233,21 +227,20 @@ export class IssueColumnComponent
         newEnd.setDate(newEnd.getDate() + 1);
       }
 
-      this.dispStartDateChange.emit(newStart);
-      this.dispEndDateChange.emit(newEnd);
+      this.calendarRangeService.setRange(newStart, newEnd);
     } else {
       /**
        * - スクロールダウン: 1日分前にする
        * - スクロールアップ: 1日分後にする
        */
       const moveDays = event.deltaY > 0 ? 1 : -1;
-      const newStart = new Date(this.dispStartDate);
+      const { startDate, endDate } = this.calendarRangeService.currentRange;
+      const newStart = new Date(startDate);
       newStart.setDate(newStart.getDate() + moveDays);
-      const newEnd = new Date(this.dispEndDate);
+      const newEnd = new Date(endDate);
       newEnd.setDate(newEnd.getDate() + moveDays);
 
-      this.dispStartDateChange.emit(newStart);
-      this.dispEndDateChange.emit(newEnd);
+      this.calendarRangeService.setRange(newStart, newEnd);
     }
   }
 
@@ -272,68 +265,4 @@ export class IssueColumnComponent
     if (isUndefined(this.updateTitleWidth)) return;
     this.updateTitleWidth(event.distance.x);
   }
-
-  /**
-   * 日付の配列から、日付ごとに隠すかどうかのパターンを更新する
-   * - 配列の先頭は表示する
-   * - // 今日の日付が含まれる場合は、今日の日付を表示する
-   * - // 次の最初の日付が含まれる場合は、その日付を表示する
-   * - それ以外は、間隔に応じて表示/非表示を切り替える
-   */
-  private updateIsHiddenDatePattern(): void {
-    const pattern =
-      displayPattern.find((p) => this.dateRange.length <= p.maxDatesLength) ||
-      displayPattern[displayPattern.length - 1];
-    const interval = pattern.interval;
-
-    let count = 0;
-
-    const newPattern = this.dateRange.map((_date, index) => {
-      // 配列の先頭は常に表示
-      if (index === 0) {
-        count = 0;
-        return false;
-      }
-
-      // // 今日の日付は表示
-      // if (date.getTime() === today.getTime()) {
-      //   count = 0;
-      //   return false;
-      // }
-
-      // // 次の最初の日付は表示
-      // if (date.getDay() === 1) {
-      //   count = 0;
-      //   return false;
-      // }
-
-      if (count === interval) {
-        count = 0;
-        return false;
-      }
-
-      count++;
-      return true;
-    });
-
-    this.isHiddenDatePattern = newPattern;
-    this.isHiddenDatePatternChange.emit(newPattern);
-  }
 }
-
-/**
- * 日付の配列の長さに応じた隠す日付の間隔
- * (例)表示日数が30日以下のときは、隠さない
- * (例)表示日数が31日以上60日以下のときは、1日おきに隠す
- */
-const displayPattern = [
-  /** 最大日数 */
-  { maxDatesLength: 30, interval: 0 },
-  { maxDatesLength: 60, interval: 1 },
-  { maxDatesLength: 90, interval: 2 },
-  { maxDatesLength: 120, interval: 3 },
-  { maxDatesLength: 150, interval: 4 },
-  { maxDatesLength: 180, interval: 5 },
-  { maxDatesLength: 210, interval: 6 },
-  { maxDatesLength: 240, interval: 7 },
-] as const;

@@ -1,15 +1,18 @@
 @import "@src/app/style/scroll-bar.scss";
 
+$calendar-area-height: 40px;
+
 .chart-area-container {
   display: flex;
   flex-direction: column;
   height: 100%;
   width: 100%;
+  position: relative;
 }
 
 .calendar-area {
-  height: 40px;
-  flex: 0 0 40px;
+  height: $calendar-area-height;
+  flex: 0 0 $calendar-area-height;
   overflow: hidden;
   border-bottom: 2px solid rgb(176, 176, 176);
 }
@@ -20,6 +23,7 @@
   min-width: 0;
   overflow-x: hidden;
   overflow-y: auto;
+  position: relative;
 
   &::-webkit-scrollbar {
     width: $scroll-bar-width;
@@ -34,4 +38,28 @@
     background-color: $scroll-bar-track-color;
     border-radius: $scroll-bar-radius;
   }
+}
+
+.calendar-day-per-block {
+  position: absolute;
+  // カレンダーの縦線
+  // カレンダー日付の文字が書いてあるエリアにはみ出さないように
+  top: $calendar-area-height;
+  bottom: 0;
+
+  // カレンダーの背景はissue-barの背後にあるので、いかなるイベントも発生しない
+  z-index: 0;
+}
+
+.calendar-day-vertical-line {
+  position: absolute;
+  // カレンダーの縦線
+  // カレンダー日付の文字が書いてあるエリアにはみ出さないように
+  top: $calendar-area-height;
+  bottom: 0;
+  width: 1px;
+  background-color: #e0e0e0;
+
+  // カレンダーの縦線はissue-barの全面にあるので、ツールチップイベントに反応する
+  z-index: 2;
 }

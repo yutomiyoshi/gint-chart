@@ -18,6 +18,14 @@ import {
   titleWidthDefault,
 } from '@src/app/chart-area/issue-column/issue-column-view.default';
 import { DateHandler } from '@src/app/utils/time';
+import {
+  CalendarDisplayService,
+  CalendarVerticalLine,
+} from './calendar-vertical-line.service';
+import { CalendarPositionService } from './calendar-position.service';
+import { CalendarRangeService } from './calendar-range.service';
+import { CalendarWidthService } from './calendar-width.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-chart-area',
@@ -35,16 +43,25 @@ export class ChartAreaComponent implements OnInit, AfterViewInit {
    */
   issues: Issue[] = [];
 
-  // 日付の表示範囲、カレンダーとIssueRowで同期する
-  dispStartDate: Date = DateHandler.getTodayOffsetDate(calendarStartDateOffset);
+  private subscription = new Subscription();
 
-  dispEndDate: Date = DateHandler.getTodayOffsetDate(calendarEndDateOffset);
+  /**
+   * カレンダーの縦線
+   */
+  calendarVerticalLines: CalendarVerticalLine[] = [];
 
   /**
    * 日付の表示パターン
    * - 日付ごとに隠すかどうかのパターン
    */
   isHiddenDatePattern: boolean[] = [];
+
+  get dayPerWidth(): number {
+    return (
+      this.calendarWidthService.currentWidth /
+      this.calendarRangeService.totalDays
+    );
+  }
 
   // タイトルの幅
   get titleWidth() {
@@ -82,15 +99,39 @@ export class ChartAreaComponent implements OnInit, AfterViewInit {
   @ViewChild('issueRowArea') issueRowArea!: ElementRef;
   isScrollBarActive = false;
 
-  constructor(private issueStore: IssuesStoreService) {}
+  constructor(
+    private issueStore: IssuesStoreService,
+    private calendarDisplayService: CalendarDisplayService,
+    private calendarPositionService: CalendarPositionService,
+    private calendarRangeService: CalendarRangeService,
+    private calendarWidthService: CalendarWidthService
+  ) {}
+
+  get calendarOffset(): number {
+    return this.calendarPositionService.currentOffset;
+  }
 
   ngOnInit(): void {
-    this.issueStore.issues$.subscribe((issues) => {
-      // TODO: ここでissuesをソートする
-      // TODO: ここでissuesをグループ化する
-      // TODO: ここでissuesをフィルターする
-      this.issues = issues;
-    });
+    this.subscription.add(
+      this.issueStore.issues$.subscribe((issues) => {
+        // TODO: ここでissuesをソートする
+        // TODO: ここでissuesをグループ化する
+        // TODO: ここでissuesをフィルターする
+        this.issues = issues;
+      })
+    );
+
+    // カレンダーの縦線を監視
+    this.subscription.add(
+      this.calendarDisplayService.calendarVerticalLines$.subscribe((lines) => {
+        this.calendarVerticalLines = lines;
+      })
+    );
+
+    this.calendarRangeService.setRange(
+      DateHandler.getTodayOffsetDate(calendarStartDateOffset),
+      DateHandler.getTodayOffsetDate(calendarEndDateOffset)
+    );
   }
 
   ngAfterViewInit(): void {

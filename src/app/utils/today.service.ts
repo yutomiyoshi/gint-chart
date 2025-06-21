@@ -14,4 +14,8 @@ export class TodayService {
   update(): void {
     this.today = DateHandler.getTodayOffsetDate(0);
   }
+
+  isToday(date: Date): boolean {
+    return date.toDateString() === this.today.toDateString();
+  }
 }

@@ -6,12 +6,11 @@ import {
   ElementRef,
   ViewChild,
   HostListener,
+  OnInit,
+  OnDestroy,
 } from '@angular/core';
 import { CdkDragMove } from '@angular/cdk/drag-drop';
-import {
-  calendarEndDateOffset,
-  calendarStartDateOffset,
-} from '@src/app/chart-area/chat-area-view.default';
+import { Subscription } from 'rxjs';
 import {
   assigneeWidthDefault,
   statusWidthDefault,
@@ -26,6 +25,11 @@ import {
   undefinedDuration,
 } from '@src/app/chart-area/issue-row/issue-row-logic.default';
 import { Assertion } from '@src/app/utils/assertion';
+import {
+  CalendarRangeService,
+  CalendarRange,
+} from '@src/app/chart-area/calendar-range.service';
+import { CalendarWidthService } from '../calendar-width.service';
 
 @Component({
   selector: 'app-issue-row',
@@ -33,9 +37,11 @@ import { Assertion } from '@src/app/utils/assertion';
   templateUrl: './issue-row.component.html',
   styleUrl: './issue-row.component.scss',
 })
-export class IssueRowComponent {
+export class IssueRowComponent implements OnInit, OnDestroy {
   constructor(
-    private issueDetailDialogExpansionService: IssueDetailDialogExpansionService
+    private issueDetailDialogExpansionService: IssueDetailDialogExpansionService,
+    private calendarRangeService: CalendarRangeService,
+    private calendarWidthService: CalendarWidthService
   ) {}
 
   @ViewChild('calendarArea') calendarArea!: ElementRef<HTMLDivElement>;
@@ -44,6 +50,23 @@ export class IssueRowComponent {
    * ホバー状態を管理するフラグ
    */
   isHovered = false;
+
+  /**
+   * カレンダー範囲の通知を受け取るためのサブスクリプション
+   */
+  private calendarRangeSubscription: Subscription | undefined;
+
+  /**
+   * コンポーネント初期化時にカレンダー範囲の通知を購読
+   */
+  ngOnInit() {}
+
+  /**
+   * コンポーネント破棄時にサブスクリプションを解除
+   */
+  ngOnDestroy() {
+    this.calendarRangeSubscription?.unsubscribe();
+  }
 
   /**
    * Logic fields
@@ -56,15 +79,6 @@ export class IssueRowComponent {
   @Input() endDate: Date | undefined;
   @Output() startDateChange = new EventEmitter<Date | undefined>();
   @Output() endDateChange = new EventEmitter<Date | undefined>();
-
-  // 日付の表示範囲、カレンダーと同期する
-  @Input() dispStartDate: Date = DateHandler.getTodayOffsetDate(
-    calendarStartDateOffset
-  );
-
-  @Input() dispEndDate: Date = DateHandler.getTodayOffsetDate(
-    calendarEndDateOffset
-  );
 
   /**
    * 終了日のドラッグ中に呼ばれる関数
@@ -81,8 +95,6 @@ export class IssueRowComponent {
   /**
    * UI fields
    */
-
-  @Input() isHiddenDatePattern: boolean[] = [];
 
   get titleStyle(): Record<string, string> {
     if (this.titleWidth === 0) {
@@ -130,12 +142,8 @@ export class IssueRowComponent {
    * バーの位置と幅を計算する
    */
   get barStyle(): Record<string, string | undefined> {
-    return getBarStyle(
-      this.dispStartDate,
-      this.dispEndDate,
-      this.startDate,
-      this.endDate
-    );
+    const { startDate, endDate } = this.calendarRangeService.currentRange;
+    return getBarStyle(startDate, endDate, this.startDate, this.endDate);
   }
 
   /**
@@ -169,11 +177,8 @@ export class IssueRowComponent {
       endDate.setDate(endDate.getDate() + 2);
     }
 
-    const totalDays = DateHandler.countDateBetween(
-      this.dispStartDate,
-      this.dispEndDate
-    );
-    const calendarWidth = this.calendarArea.nativeElement.offsetWidth;
+    const totalDays = this.calendarRangeService.totalDays;
+    const calendarWidth = this.calendarWidthService.currentWidth;
     const daysPerPixel = calendarWidth / totalDays;
 
     this.updateEndDate = (distance: number) => {
@@ -225,13 +230,9 @@ export class IssueRowComponent {
     const endDate = this.endDate;
     const startDate = this.startDate;
 
-    const totalDays = DateHandler.countDateBetween(
-      this.dispStartDate,
-      this.dispEndDate
-    );
-
-    const calendarWidth = this.calendarArea.nativeElement.offsetWidth;
-    const daysPerPixel = calendarWidth / totalDays;
+    const totalDays = this.calendarRangeService.totalDays;
+    const calendarWidth = this.calendarWidthService.currentWidth;
+    const daysPerWidth = calendarWidth / totalDays;
 
     // startDateがundefinedの場合は、endDateのみを移動させる
     if (isUndefined(startDate)) {
@@ -241,7 +242,7 @@ export class IssueRowComponent {
       }
 
       this.updateSchedule = (distance: number) => {
-        const movedDays = Math.round(distance / daysPerPixel);
+        const movedDays = Math.round(distance / daysPerWidth);
         const newEndDate = new Date(endDate);
         newEndDate.setDate(newEndDate.getDate() + movedDays);
         this.endDate = newEndDate;
@@ -250,7 +251,7 @@ export class IssueRowComponent {
     }
 
     this.updateSchedule = (distance: number) => {
-      const movedDays = Math.round(distance / daysPerPixel);
+      const movedDays = Math.round(distance / daysPerWidth);
       const newStartDate = new Date(startDate);
       newStartDate.setDate(newStartDate.getDate() + movedDays);
 
