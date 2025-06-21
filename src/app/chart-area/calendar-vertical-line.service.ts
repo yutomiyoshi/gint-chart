@@ -207,10 +207,7 @@ export class CalendarDisplayService {
         date,
         isToday: this.todayService.isToday(date),
         isMonthStart: date.getDate() === 1,
-        isDisplayed:
-          i === 0 ||
-          date.getDate() === 1 ||
-          (date.getDate() === 16 && date.getMonth() % 2 === 0),
+        isDisplayed: i === 0 || date.getDate() === 1 || date.getDate() === 16,
       });
       scanner.setDate(scanner.getDate() + 1);
     }
