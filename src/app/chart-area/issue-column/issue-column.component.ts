@@ -133,90 +133,11 @@ export class IssueColumnComponent implements OnInit, OnDestroy, AfterViewInit {
    */
   onWheel(event: WheelEvent) {
     event.preventDefault();
+
     if (event.ctrlKey === true) {
-      // カレンダーにおけるカーソルの相対位置を取得する
-      if (
-        isUndefined(this.calendarRef) ||
-        isUndefined(this.calendarRef.nativeElement)
-      ) {
-        Assertion.assert(
-          'CalendarRef.nativeElement is undefined.',
-          Assertion.no(4)
-        );
-        return;
-      }
-      const calendarWidth = this.calendarWidthService.currentWidth;
-      const totalDays = this.calendarRangeService.totalDays;
-
-      // 1日分の幅
-      const dayWidth = calendarWidth / totalDays;
-
-      // カーソルの位置
-      const offsetX = event.clientX - this.calendarRef.nativeElement.offsetLeft;
-
-      /**
-       * 1スクロールに対して2日分拡大縮小する
-       * - スクロールダウン: 2日分拡大
-       * - スクロールアップ: 2日分縮小
-       */
-      const delta = event.deltaY > 0 ? 1 : -1;
-      let newRange = totalDays + delta * 2;
-      if (newRange < MIN_CALENDAR_WIDTH) newRange = MIN_CALENDAR_WIDTH;
-      if (newRange > MAX_CALENDAR_WIDTH) newRange = MAX_CALENDAR_WIDTH;
-
-      // カーソル下の日付
-      const cursorIndex = Math.floor(offsetX / dayWidth);
-      const cursorDate = new Date(
-        this.calendarRangeService.currentRange.startDate
-      );
-      cursorDate.setDate(cursorDate.getDate() + cursorIndex);
-
-      // 新しい1日分の幅
-      const newDayWidth = calendarWidth / newRange;
-
-      // 新しい範囲でカーソル下が何日目か
-      const newCursorIndex = Math.floor(offsetX / newDayWidth);
-
-      // 新しいstartDateを計算
-      const newStart = new Date(cursorDate);
-      newStart.setDate(newStart.getDate() - newCursorIndex);
-      const newEnd = new Date(newStart);
-      newEnd.setDate(newStart.getDate() + newRange - 1);
-      const newCursorDate = new Date(newStart);
-      newCursorDate.setDate(newCursorDate.getDate() + newCursorIndex);
-
-      /**
-       * カーソルの位置が新しいカーソルの位置より前の場合、
-       * 開始日と終了日を1日分前にする
-       */
-      if (cursorDate < newCursorDate) {
-        newStart.setDate(newStart.getDate() - 1);
-        newEnd.setDate(newEnd.getDate() - 1);
-      }
-
-      /**
-       * カーソルの位置が新しいカーソルの位置より後の場合、
-       * 開始日と終了日を1日分後にする
-       */
-      if (cursorDate > newCursorDate) {
-        newStart.setDate(newStart.getDate() + 1);
-        newEnd.setDate(newEnd.getDate() + 1);
-      }
-
-      this.calendarRangeService.setRange(newStart, newEnd);
+      this.handleZoomWheel(event);
     } else {
-      /**
-       * - スクロールダウン: 1日分前にする
-       * - スクロールアップ: 1日分後にする
-       */
-      const moveDays = event.deltaY > 0 ? 1 : -1;
-      const { startDate, endDate } = this.calendarRangeService.currentRange;
-      const newStart = new Date(startDate);
-      newStart.setDate(newStart.getDate() + moveDays);
-      const newEnd = new Date(endDate);
-      newEnd.setDate(newEnd.getDate() + moveDays);
-
-      this.calendarRangeService.setRange(newStart, newEnd);
+      this.handleScrollWheel(event);
     }
   }
 
@@ -246,5 +167,157 @@ export class IssueColumnComponent implements OnInit, OnDestroy, AfterViewInit {
     // ドラッグ量に応じて新しい幅を計算
     if (isUndefined(this.updateTitleWidth)) return;
     this.updateTitleWidth(event.distance.x);
+  }
+
+  /**
+   * ズームホイールイベントの処理
+   * Ctrl + ホイールでカレンダーの表示範囲を拡大縮小する
+   */
+  private handleZoomWheel(event: WheelEvent): void {
+    if (!this.validateCalendarRef()) {
+      return;
+    }
+
+    const { calendarWidth, totalDays, dayWidth, offsetX } =
+      this.getCalendarMetrics(event);
+    const newRange = this.calculateNewRange(totalDays, event.deltaY);
+    const { cursorDate, cursorIndex } = this.getCursorPosition(
+      dayWidth,
+      offsetX
+    );
+    const { newStart, newEnd } = this.calculateNewDateRange(
+      calendarWidth,
+      newRange,
+      offsetX,
+      cursorDate,
+      cursorIndex
+    );
+
+    this.calendarRangeService.setRange(newStart, newEnd);
+  }
+
+  /**
+   * スクロールホイールイベントの処理
+   * ホイールでカレンダーの表示範囲を前後に移動する
+   */
+  private handleScrollWheel(event: WheelEvent): void {
+    const moveDays = event.deltaY > 0 ? 1 : -1;
+    const { startDate, endDate } = this.calendarRangeService.currentRange;
+
+    const newStart = new Date(startDate);
+    newStart.setDate(newStart.getDate() + moveDays);
+
+    const newEnd = new Date(endDate);
+    newEnd.setDate(newEnd.getDate() + moveDays);
+
+    this.calendarRangeService.setRange(newStart, newEnd);
+  }
+
+  /**
+   * カレンダー要素の参照を検証する
+   */
+  private validateCalendarRef(): boolean {
+    if (
+      isUndefined(this.calendarRef) ||
+      isUndefined(this.calendarRef.nativeElement)
+    ) {
+      Assertion.assert(
+        'CalendarRef.nativeElement is undefined.',
+        Assertion.no(4)
+      );
+      return false;
+    }
+    return true;
+  }
+
+  /**
+   * カレンダーの基本メトリクスを取得する
+   */
+  private getCalendarMetrics(event: WheelEvent) {
+    const calendarWidth = this.calendarWidthService.currentWidth;
+    const totalDays = this.calendarRangeService.totalDays;
+    const dayWidth = calendarWidth / totalDays;
+    const offsetX = event.clientX - this.calendarRef.nativeElement.offsetLeft;
+
+    return { calendarWidth, totalDays, dayWidth, offsetX };
+  }
+
+  /**
+   * 新しい表示範囲を計算する
+   */
+  private calculateNewRange(totalDays: number, deltaY: number): number {
+    const delta = deltaY > 0 ? 1 : -1;
+    let newRange = totalDays + delta * 2;
+
+    if (newRange < MIN_CALENDAR_WIDTH) newRange = MIN_CALENDAR_WIDTH;
+    if (newRange > MAX_CALENDAR_WIDTH) newRange = MAX_CALENDAR_WIDTH;
+
+    return newRange;
+  }
+
+  /**
+   * カーソル位置の情報を取得する
+   */
+  private getCursorPosition(dayWidth: number, offsetX: number) {
+    const cursorIndex = Math.floor(offsetX / dayWidth);
+    const cursorDate = new Date(
+      this.calendarRangeService.currentRange.startDate
+    );
+    cursorDate.setDate(cursorDate.getDate() + cursorIndex);
+
+    return { cursorDate, cursorIndex };
+  }
+
+  /**
+   * 新しい日付範囲を計算する
+   */
+  private calculateNewDateRange(
+    calendarWidth: number,
+    newRange: number,
+    offsetX: number,
+    cursorDate: Date,
+    cursorIndex: number
+  ) {
+    const newDayWidth = calendarWidth / newRange;
+    const newCursorIndex = Math.floor(offsetX / newDayWidth);
+
+    // 新しいstartDateを計算
+    const newStart = new Date(cursorDate);
+    newStart.setDate(newStart.getDate() - newCursorIndex);
+
+    const newEnd = new Date(newStart);
+    newEnd.setDate(newStart.getDate() + newRange - 1);
+
+    const newCursorDate = new Date(newStart);
+    newCursorDate.setDate(newCursorDate.getDate() + newCursorIndex);
+
+    // カーソル位置の調整
+    this.adjustCursorPosition(cursorDate, newCursorDate, newStart, newEnd);
+
+    return { newStart, newEnd };
+  }
+
+  /**
+   * カーソル位置を調整する
+   */
+  private adjustCursorPosition(
+    cursorDate: Date,
+    newCursorDate: Date,
+    newStart: Date,
+    newEnd: Date
+  ): void {
+    // カーソルの位置が新しいカーソルの位置より前の場合、
+    // 開始日と終了日を1日分前にする
+    if (cursorDate < newCursorDate) {
+      newStart.setDate(newStart.getDate() - 1);
+      newEnd.setDate(newEnd.getDate() - 1);
+    }
+
+    // カーソルの位置が新しいカーソルの位置より後の場合、
+    // 開始日と終了日を1日分後にする
+    if (cursorDate > newCursorDate) {
+      newStart.setDate(newStart.getDate() + 1);
+      newEnd.setDate(newEnd.getDate() + 1);
+    }
   }
 }
