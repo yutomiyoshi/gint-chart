@@ -5,6 +5,7 @@ import {
   ViewChild,
   ElementRef,
   AfterViewInit,
+  ChangeDetectorRef,
 } from '@angular/core';
 import { IssuesStoreService } from '@src/app/store/issues-store.service';
 import { Issue } from '@src/app/model/issue.model';
@@ -91,7 +92,8 @@ export class ChartAreaComponent implements OnInit, AfterViewInit {
     private readonly calendarDisplayService: CalendarDisplayService,
     private readonly calendarPositionService: CalendarPositionService,
     private readonly calendarRangeService: CalendarRangeService,
-    private readonly calendarWidthService: CalendarWidthService
+    private readonly calendarWidthService: CalendarWidthService,
+    private readonly cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -108,6 +110,13 @@ export class ChartAreaComponent implements OnInit, AfterViewInit {
     this.subscription.add(
       this.calendarDisplayService.calendarVerticalLines$.subscribe((lines) => {
         this.calendarVerticalLines = lines;
+
+        /**
+         * カレンダーの領域が更新された時に
+         * すぐに描画に更新されないことがあったため
+         * 強制的にChange Detectionを実行
+         */
+        this.cdr.detectChanges();
       })
     );
 
