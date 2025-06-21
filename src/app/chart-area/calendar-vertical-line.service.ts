@@ -109,15 +109,12 @@ export class CalendarDisplayService {
         lines = this.generateCalendarVerticalLinesDayStep(1, widthPerDay);
         break;
       case 1:
-        lines = this.generateCalendarVerticalLinesDayStep(3, widthPerDay);
-        break;
-      case 2:
         lines = this.generateCalendarVerticalLinesDayStep(5, widthPerDay);
         break;
-      case 3:
+      case 2:
         lines = this.generateCalendarVerticalLinesWeekStep(widthPerDay);
         break;
-      case 4:
+      case 3:
         lines = this.generateCalendarVerticalLinesHalfMonthStep(widthPerDay);
         break;
       default:
@@ -228,9 +225,8 @@ export class CalendarDisplayService {
  * (表示する日数の間引きを決定するために使用)
  */
 const widthPerDayLevelTable = [
-  { min: 40, max: Infinity, level: 0 },
-  { min: 20, max: 40, level: 1 },
-  { min: 0, max: 20, level: 2 },
+  { min: 20, max: Infinity, level: 0 },
+  { min: 0, max: 20, level: 1 },
 ];
 
 /**
@@ -238,7 +234,7 @@ const widthPerDayLevelTable = [
  * (表示する日数の間引きを決定するために使用)
  */
 const totalDaysLevelTable = [
-  { min: 0, max: 30, level: 0 },
-  { min: 30, max: 60, level: 1 },
-  { min: 60, max: Infinity, level: 2 },
+  { min: 0, max: 60, level: 0 },
+  { min: 60, max: 120, level: 1 },
+  { min: 120, max: Infinity, level: 2 },
 ];
