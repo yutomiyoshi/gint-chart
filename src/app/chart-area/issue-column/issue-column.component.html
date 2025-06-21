@@ -35,12 +35,15 @@
     >
       <div class="issue-column-day" [ngStyle]="getDayStyle(i)">
         <!-- 月の表示 -->
-        <div class="month">
+        <div
+          class="month"
+          [class.active]="dateEach.monthDisplay && isMonthBorderActive"
+        >
           {{ dateEach.date | date : "MM" }}
         </div>
 
         <!-- 日の表示 -->
-        <div class="day">
+        <div class="day" [class.active]="dateEach.dayDisplay">
           {{ dateEach.date | date : "dd" }}
         </div>
       </div>

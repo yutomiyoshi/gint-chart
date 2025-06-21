@@ -70,15 +70,22 @@
     overflow: visible;
     will-change: opacity;
     width: 100%;
+
+    &.active {
+      border-left: 1px dashed #9c9c9c;
+    }
   }
 
   > .day {
     display: flex;
     align-items: center;
-    border-left: 1px dashed #9c9c9c;
     overflow: visible;
     will-change: opacity;
     width: 100%;
+
+    &.active {
+      border-left: 1px dashed #9c9c9c;
+    }
   }
 }
 

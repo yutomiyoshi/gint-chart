@@ -387,11 +387,17 @@ export class IssueRowComponent implements OnInit, OnDestroy {
    * ngForのトラッキング関数
    * 日付をキーとして使用して、不要なDOMの再レンダリングを防ぐ
    */
-  trackByDate(index: number, date: DateDisplay): string {
+  trackByDate(_index: number, date: DateDisplay): string {
     return date.date.toISOString();
   }
 
-  getDayStyle(index: number): {[key: string]: string} {
-    return {width: this.dateData[index].width + 'px'};
-  } 
+  getDayStyle(index: number): { [key: string]: string } {
+    return {
+      width: this.dateData[index].width + 'px',
+      'border-left':
+        this.dateData[index].monthDisplay || this.dateData[index].dayDisplay
+          ? '1px dashed #9c9c9c'
+          : 'none',
+    };
+  }
 }

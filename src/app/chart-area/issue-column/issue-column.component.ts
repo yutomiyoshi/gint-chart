@@ -39,6 +39,7 @@ export class IssueColumnComponent implements OnInit, OnDestroy, AfterViewInit {
   private subscription = new Subscription();
   private resizeObserver: ResizeObserver | undefined;
   public dateData: DateDisplay[] = [];
+  public isMonthBorderActive = false;
 
   constructor(
     private calendarRangeService: CalendarRangeService,
@@ -276,7 +277,7 @@ export class IssueColumnComponent implements OnInit, OnDestroy, AfterViewInit {
     return date.date.toISOString();
   }
 
-  getDayStyle(index: number): {[key: string]: string} {
-    return {width: this.dateData[index].width + 'px'};
-  } 
+  getDayStyle(index: number): { [key: string]: string } {
+    return { width: this.dateData[index].width + 'px' };
+  }
 }
