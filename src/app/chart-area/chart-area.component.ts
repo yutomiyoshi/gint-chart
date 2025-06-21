@@ -25,6 +25,7 @@ import {
 import { CalendarPositionService } from './calendar-position.service';
 import { CalendarRangeService } from './calendar-range.service';
 import { CalendarWidthService } from './calendar-width.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-chart-area',
@@ -41,6 +42,8 @@ export class ChartAreaComponent implements OnInit, AfterViewInit {
    * Logic fields
    */
   issues: Issue[] = [];
+
+  private subscription = new Subscription();
 
   /**
    * カレンダーの縦線
@@ -109,17 +112,26 @@ export class ChartAreaComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
-    this.issueStore.issues$.subscribe((issues) => {
-      // TODO: ここでissuesをソートする
-      // TODO: ここでissuesをグループ化する
-      // TODO: ここでissuesをフィルターする
-      this.issues = issues;
-    });
+    this.subscription.add(
+      this.issueStore.issues$.subscribe((issues) => {
+        // TODO: ここでissuesをソートする
+        // TODO: ここでissuesをグループ化する
+        // TODO: ここでissuesをフィルターする
+        this.issues = issues;
+      })
+    );
 
     // カレンダーの縦線を監視
-    this.calendarDisplayService.calendarVerticalLines$.subscribe((lines) => {
-      this.calendarVerticalLines = lines;
-    });
+    this.subscription.add(
+      this.calendarDisplayService.calendarVerticalLines$.subscribe((lines) => {
+        this.calendarVerticalLines = lines;
+      })
+    );
+
+    this.calendarRangeService.setRange(
+      DateHandler.getTodayOffsetDate(calendarStartDateOffset),
+      DateHandler.getTodayOffsetDate(calendarEndDateOffset)
+    );
   }
 
   ngAfterViewInit(): void {
