@@ -197,7 +197,8 @@ function calculateDayDisplayPattern(
 ): DateDisplay[] {
   const result: DateDisplay[] = [];
   let currentDate = new Date(startDate);
-  let daysSinceLastDisplay = 0;
+  let lastDisplayInterval = 0;
+  let lastDisplayDateInterval = 0;
   result.push({
     date: new Date(startDate),
     width: 0,
@@ -206,25 +207,29 @@ function calculateDayDisplayPattern(
   });
 
   while (currentDate <= endDate) {
-    const isDayDisplay = daysSinceLastDisplay % interval === 0;
+    const isDayDisplay = lastDisplayDateInterval % interval === 0;
     const isMonthDisplay = currentDate.getDate() === 1;
 
     if (isDayDisplay || isMonthDisplay) {
-      result[result.length - 1].width = dayWidth * daysSinceLastDisplay;
+      result[result.length - 1].width = dayWidth * lastDisplayInterval;
       result.push({
         date: new Date(currentDate),
         width: 0,
         dayDisplay: isDayDisplay,
         monthDisplay: isMonthDisplay,
       });
-      daysSinceLastDisplay = 0;
+      lastDisplayInterval = 0;
+      if (isDayDisplay) {
+        lastDisplayDateInterval = 0;
+      }
     }
 
-    daysSinceLastDisplay++;
+    lastDisplayInterval++;
+    lastDisplayDateInterval++;
     currentDate = DateHandler.addDays(currentDate, 1);
   }
 
-  result[result.length - 1].width = dayWidth * daysSinceLastDisplay;
+  result[result.length - 1].width = dayWidth * lastDisplayInterval;
   return result;
 }
 
@@ -243,7 +248,8 @@ function calculateWeekDisplayPattern(
 ): DateDisplay[] {
   const result: DateDisplay[] = [];
   let currentDate = new Date(startDate);
-  let daysSinceLastDisplay = 0;
+  let lastDisplayInterval = 0;
+  let lastDisplayDateInterval = 0;
 
   result.push({
     date: new Date(startDate),
@@ -257,21 +263,25 @@ function calculateWeekDisplayPattern(
     const isMonthDisplay = currentDate.getDate() === 1;
 
     if (isDayDisplay || isMonthDisplay) {
-      result[result.length - 1].width = dayWidth * daysSinceLastDisplay;
+      result[result.length - 1].width = dayWidth * lastDisplayInterval;
       result.push({
         date: new Date(currentDate),
         width: 0,
         dayDisplay: isDayDisplay,
         monthDisplay: isMonthDisplay,
       });
-      daysSinceLastDisplay = 0;
+      lastDisplayInterval = 0;
+      if (isDayDisplay) {
+        lastDisplayDateInterval = 0;
+      }
     }
 
-    daysSinceLastDisplay++;
+    lastDisplayInterval++;
+    lastDisplayDateInterval++;
     currentDate = DateHandler.addDays(currentDate, 1);
   }
 
-  result[result.length - 1].width = dayWidth * daysSinceLastDisplay;
+  result[result.length - 1].width = dayWidth * lastDisplayInterval;
   return result;
 }
 
