@@ -9,6 +9,7 @@ import {
   OnInit,
   OnDestroy,
   AfterViewChecked,
+  AfterViewInit,
 } from '@angular/core';
 import {
   statusWidthDefault,
@@ -23,6 +24,7 @@ import { isUndefined } from '@src/app/utils/utils';
 import { Assertion } from '@src/app/utils/assertion';
 import { DateJumpService } from './date-jump.service';
 import { Subscription } from 'rxjs';
+import { CalendarDisplayService } from '../calendar-vertical-line.service';
 
 @Component({
   selector: 'app-issue-column',
@@ -31,11 +33,14 @@ import { Subscription } from 'rxjs';
   styleUrl: './issue-column.component.scss',
 })
 export class IssueColumnComponent
-  implements OnInit, OnDestroy, AfterViewChecked
+  implements OnInit, OnDestroy, AfterViewChecked, AfterViewInit
 {
   private subscription = new Subscription();
 
-  constructor(private dateJumpService: DateJumpService) {}
+  constructor(
+    private dateJumpService: DateJumpService,
+    private calendarDisplayService: CalendarDisplayService
+  ) {}
 
   ngOnInit() {
     this.subscription.add(
@@ -60,6 +65,16 @@ export class IssueColumnComponent
 
   ngOnDestroy() {
     this.subscription.unsubscribe();
+    this.calendarDisplayService.stopObserving();
+  }
+
+  ngAfterViewInit() {
+    // カレンダー要素の監視を開始
+    if (this.calendarRef && this.calendarRef.nativeElement) {
+      this.calendarDisplayService.startObserving(
+        this.calendarRef.nativeElement
+      );
+    }
   }
 
   ngAfterViewChecked() {
