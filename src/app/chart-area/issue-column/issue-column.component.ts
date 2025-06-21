@@ -29,6 +29,8 @@ import {
   CalendarVerticalLine,
 } from '../calendar-vertical-line.service';
 import { CalendarRangeService, CalendarRange } from '../calendar-range.service';
+import { CalendarWidthService } from '../calendar-width.service';
+import { CalendarPositionService } from '../calendar-position.service';
 
 @Component({
   selector: 'app-issue-column',
@@ -42,7 +44,9 @@ export class IssueColumnComponent implements OnInit, OnDestroy, AfterViewInit {
   constructor(
     private dateJumpService: DateJumpService,
     private calendarDisplayService: CalendarDisplayService,
-    private calendarRangeService: CalendarRangeService
+    private calendarRangeService: CalendarRangeService,
+    private calendarWidthService: CalendarWidthService,
+    private calendarPositionService: CalendarPositionService
   ) {}
 
   ngOnInit() {
@@ -86,15 +90,18 @@ export class IssueColumnComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngOnDestroy() {
     this.subscription.unsubscribe();
-    this.calendarDisplayService.stopObserving();
+    this.calendarWidthService.stopObserving();
+    this.calendarPositionService.stopObserving();
   }
 
   ngAfterViewInit() {
     // カレンダー要素の監視を開始
     if (this.calendarRef && this.calendarRef.nativeElement) {
-      this.calendarDisplayService.startObserving(
+      this.calendarWidthService.startObserving(this.calendarRef.nativeElement);
+      this.calendarPositionService.startObserving(
         this.calendarRef.nativeElement
       );
+      this.calendarDisplayService.startObserving();
     }
   }
 

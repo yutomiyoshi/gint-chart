@@ -105,24 +105,7 @@ export class CalendarDisplayService {
   /**
    * 監視を開始
    */
-  startObserving(element: HTMLElement): void {
-    this.calendarWidthService.startObserving(element);
-    this.calendarPositionService.startObserving(element);
-    this.initializeObservers();
-  }
-
-  /**
-   * 監視を停止
-   */
-  stopObserving(): void {
-    this.calendarWidthService.stopObserving();
-    this.calendarPositionService.stopObserving();
-  }
-
-  /**
-   * オブザーバーを初期化
-   */
-  private initializeObservers(): void {
+  startObserving(): void {
     // カレンダー範囲、幅、位置の変更を監視して縦線を再計算
     combineLatest([
       this.calendarRangeService.calendarRange$,
