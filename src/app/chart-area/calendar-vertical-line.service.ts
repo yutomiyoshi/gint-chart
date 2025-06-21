@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, combineLatest } from 'rxjs';
-import { CalendarRangeService } from './calendar-range.service';
-import { CalendarWidthService } from './calendar-width.service';
-import { CalendarPositionService } from './calendar-position.service';
-import { Assertion } from '../utils/assertion';
-import { TodayService } from '../utils/today.service';
-import { isUndefined } from '../utils/utils';
+import { CalendarRangeService } from '@src/app/chart-area/calendar-range.service';
+import { CalendarWidthService } from '@src/app/chart-area/calendar-width.service';
+import { CalendarPositionService } from '@src/app/chart-area/calendar-position.service';
+import { Assertion } from '@src/app/utils/assertion';
+import { TodayService } from '@src/app/utils/today.service';
+import { isUndefined } from '@src/app/utils/utils';
 
 /**
  * カレンダーの縦線
@@ -55,10 +55,10 @@ export class CalendarDisplayService {
     this._calendarVerticalLines.asObservable();
 
   constructor(
-    private calendarRangeService: CalendarRangeService,
-    private calendarWidthService: CalendarWidthService,
-    private calendarPositionService: CalendarPositionService,
-    private todayService: TodayService
+    private readonly calendarRangeService: CalendarRangeService,
+    private readonly calendarWidthService: CalendarWidthService,
+    private readonly calendarPositionService: CalendarPositionService,
+    private readonly todayService: TodayService
   ) {}
 
   /**

@@ -15,8 +15,8 @@ export class IssueDetailDialogComponent implements OnInit {
   issue: Issue | undefined;
 
   constructor(
-    private issueDetailDialogExpansionService: IssueDetailDialogExpansionService,
-    private issueStore: IssuesStoreService
+    private readonly issueDetailDialogExpansionService: IssueDetailDialogExpansionService,
+    private readonly issueStore: IssuesStoreService
   ) {}
 
   ngOnInit(): void {

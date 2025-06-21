@@ -15,7 +15,7 @@ export class HeaderComponent {
   @Output() isShowStatusChange = new EventEmitter<boolean>();
   @Output() isShowAssigneeChange = new EventEmitter<boolean>();
 
-  constructor(private dateJumpService: DateJumpService) {}
+  constructor(private readonly dateJumpService: DateJumpService) {}
 
   onTitleVisibilityChange() {
     this.isShowTitleChange.emit(this.isShowTitle);

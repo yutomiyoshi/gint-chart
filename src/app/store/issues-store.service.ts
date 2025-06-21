@@ -17,8 +17,8 @@ export class IssuesStoreService {
   public issues$: Observable<Issue[]> = this.issuesSubject.asObservable();
 
   constructor(
-    private gitlabApi: GitLabApiService,
-    private gitlabConfigStore: GitLabConfigStoreService
+    private readonly gitlabApi: GitLabApiService,
+    private readonly gitlabConfigStore: GitLabConfigStoreService
   ) {}
 
   /**

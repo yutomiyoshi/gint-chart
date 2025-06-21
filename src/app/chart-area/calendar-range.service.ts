@@ -1,16 +1,33 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { DateHandler } from '../utils/time';
+import { DateHandler } from '@src/app/utils/time';
+import { DateJumpService } from '@src/app/chart-area/date-jump.service';
 
 export interface CalendarRange {
   startDate: Date;
   endDate: Date;
 }
 
+/**
+ * カレンダーの表示範囲を管理する
+ */
 @Injectable({
   providedIn: 'root',
 })
 export class CalendarRangeService {
+  constructor(private readonly dateJumpService: DateJumpService) {
+    this.dateJumpService.jumpRequest$.subscribe((date) => {
+      const halfRange = Math.floor(this.totalDays / 2);
+      const startDate = new Date(date);
+      startDate.setDate(startDate.getDate() - halfRange);
+
+      const endDate = new Date(date);
+      endDate.setDate(endDate.getDate() + halfRange);
+
+      this.setRange(startDate, endDate);
+    });
+  }
+
   private readonly _calendarRange = new BehaviorSubject<CalendarRange>({
     startDate: DateHandler.setTimeTo9(new Date()),
     endDate: DateHandler.setTimeTo9(new Date()),

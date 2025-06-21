@@ -11,20 +11,20 @@ import { Issue } from '@src/app/model/issue.model';
 import {
   calendarEndDateOffset,
   calendarStartDateOffset,
-} from '@src/app/chart-area/chat-area-view.default';
+} from '@src/app/chart-area/chat-area-view.const';
 import {
   assigneeWidthDefault,
   statusWidthDefault,
   titleWidthDefault,
-} from '@src/app/chart-area/issue-column/issue-column-view.default';
+} from '@src/app/chart-area/issue-column/issue-column-view.const';
 import { DateHandler } from '@src/app/utils/time';
 import {
   CalendarDisplayService,
   CalendarVerticalLine,
-} from './calendar-vertical-line.service';
-import { CalendarPositionService } from './calendar-position.service';
-import { CalendarRangeService } from './calendar-range.service';
-import { CalendarWidthService } from './calendar-width.service';
+} from '@src/app/chart-area/calendar-vertical-line.service';
+import { CalendarPositionService } from '@src/app/chart-area/calendar-position.service';
+import { CalendarRangeService } from '@src/app/chart-area/calendar-range.service';
+import { CalendarWidthService } from '@src/app/chart-area/calendar-width.service';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -34,16 +34,25 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./chart-area.component.scss'],
 })
 export class ChartAreaComponent implements OnInit, AfterViewInit {
+  /**
+   * タイトルの表示状態
+   */
   @Input() isShowTitle = true;
+
+  /**
+   * ステータスの表示状態
+   */
   @Input() isShowStatus = true;
+
+  /**
+   * 担当者の表示状態
+   */
   @Input() isShowAssignee = true;
 
   /**
-   * Logic fields
+   * イシューリスト
    */
   issues: Issue[] = [];
-
-  private subscription = new Subscription();
 
   /**
    * カレンダーの縦線
@@ -51,65 +60,39 @@ export class ChartAreaComponent implements OnInit, AfterViewInit {
   calendarVerticalLines: CalendarVerticalLine[] = [];
 
   /**
-   * 日付の表示パターン
-   * - 日付ごとに隠すかどうかのパターン
+   * スクロールバーの表示状態
    */
-  isHiddenDatePattern: boolean[] = [];
-
-  get dayPerWidth(): number {
-    return (
-      this.calendarWidthService.currentWidth /
-      this.calendarRangeService.totalDays
-    );
-  }
-
-  // タイトルの幅
-  get titleWidth() {
-    return this.isShowTitle ? this._titleWidth : 0;
-  }
-
-  set titleWidth(value: number) {
-    this._titleWidth = value;
-  }
-
-  private _titleWidth: number = titleWidthDefault;
-
-  // ステータスの幅
-  get statusWidth() {
-    return this.isShowStatus ? this._statusWidth : 0;
-  }
-
-  set statusWidth(value: number) {
-    this._statusWidth = value;
-  }
-
-  private _statusWidth: number = statusWidthDefault;
-
-  // 担当者の幅
-  get assigneeWidth() {
-    return this.isShowAssignee ? this._assigneeWidth : 0;
-  }
-
-  set assigneeWidth(value: number) {
-    this._assigneeWidth = value;
-  }
-
-  private _assigneeWidth: number = assigneeWidthDefault;
-
-  @ViewChild('issueRowArea') issueRowArea!: ElementRef;
   isScrollBarActive = false;
 
-  constructor(
-    private issueStore: IssuesStoreService,
-    private calendarDisplayService: CalendarDisplayService,
-    private calendarPositionService: CalendarPositionService,
-    private calendarRangeService: CalendarRangeService,
-    private calendarWidthService: CalendarWidthService
-  ) {}
+  @ViewChild('issueRowArea') issueRowArea!: ElementRef;
 
-  get calendarOffset(): number {
-    return this.calendarPositionService.currentOffset;
-  }
+  /**
+   * 非同期処理の購読まとめ
+   */
+  private subscription = new Subscription();
+
+  /**
+   * タイトルの幅
+   */
+  private _titleWidth: number = titleWidthDefault;
+
+  /**
+   * ステータスの幅
+   */
+  private _statusWidth: number = statusWidthDefault;
+
+  /**
+   * 担当者の幅
+   */
+  private _assigneeWidth: number = assigneeWidthDefault;
+
+  constructor(
+    private readonly issueStore: IssuesStoreService,
+    private readonly calendarDisplayService: CalendarDisplayService,
+    private readonly calendarPositionService: CalendarPositionService,
+    private readonly calendarRangeService: CalendarRangeService,
+    private readonly calendarWidthService: CalendarWidthService
+  ) {}
 
   ngOnInit(): void {
     this.subscription.add(
@@ -146,5 +129,64 @@ export class ChartAreaComponent implements OnInit, AfterViewInit {
     // リサイズイベントの監視
     const resizeObserver = new ResizeObserver(checkScroll);
     resizeObserver.observe(element);
+  }
+
+  /**
+   * 1日あたりの幅を取得
+   */
+  get dayPerWidth(): number {
+    return (
+      this.calendarWidthService.currentWidth /
+      this.calendarRangeService.totalDays
+    );
+  }
+
+  /**
+   * カレンダーのオフセットを取得
+   */
+  get calendarOffset(): number {
+    return this.calendarPositionService.currentOffset;
+  }
+
+  /**
+   * タイトルの幅を取得
+   */
+  get titleWidth() {
+    return this.isShowTitle ? this._titleWidth : 0;
+  }
+
+  /**
+   * タイトルの幅を設定
+   */
+  set titleWidth(value: number) {
+    this._titleWidth = value;
+  }
+
+  /**
+   * ステータスの幅を取得
+   */
+  get statusWidth() {
+    return this.isShowStatus ? this._statusWidth : 0;
+  }
+
+  /**
+   * ステータスの幅を設定
+   */
+  set statusWidth(value: number) {
+    this._statusWidth = value;
+  }
+
+  /**
+   * 担当者の幅を取得
+   */
+  get assigneeWidth() {
+    return this.isShowAssignee ? this._assigneeWidth : 0;
+  }
+
+  /**
+   * 担当者の幅を設定
+   */
+  set assigneeWidth(value: number) {
+    this._assigneeWidth = value;
   }
 }

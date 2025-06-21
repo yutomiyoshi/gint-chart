@@ -1,6 +1,6 @@
 import { DateHandler } from '@src/app/utils/time';
 import { isUndefined } from '@src/app/utils/utils';
-import { undefinedDuration } from '@src/app/chart-area/issue-row/issue-row-logic.default';
+import { undefinedDuration } from '@src/app/chart-area/issue-row/issue-row-logic.const';
 import { Assertion } from '@src/app/utils/assertion';
 
 /**

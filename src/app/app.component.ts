@@ -23,9 +23,9 @@ export class AppComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
 
   constructor(
-    private issueStore: IssuesStoreService,
-    private gitLabConfigStore: GitLabConfigStoreService,
-    private issueDetailDialogExpansionService: IssueDetailDialogExpansionService
+    private readonly issueStore: IssuesStoreService,
+    private readonly gitLabConfigStore: GitLabConfigStoreService,
+    private readonly issueDetailDialogExpansionService: IssueDetailDialogExpansionService
   ) {}
 
   ngOnInit() {
