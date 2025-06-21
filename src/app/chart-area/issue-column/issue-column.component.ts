@@ -50,16 +50,6 @@ export class IssueColumnComponent implements OnInit, OnDestroy, AfterViewInit {
   ) {}
 
   ngOnInit() {
-    // カレンダー範囲の通知を購読
-    this.subscription.add(
-      this.calendarRangeService.calendarRange$.subscribe(
-        (range: CalendarRange) => {
-          this.dispStartDate = range.startDate;
-          this.dispEndDate = range.endDate;
-        }
-      )
-    );
-
     // カレンダーの縦線の位置情報を購読
     this.subscription.add(
       this.calendarDisplayService.calendarVerticalLines$.subscribe(
@@ -71,10 +61,8 @@ export class IssueColumnComponent implements OnInit, OnDestroy, AfterViewInit {
 
     this.subscription.add(
       this.dateJumpService.jumpRequest$.subscribe((date) => {
-        const totalDays = DateHandler.countDateBetween(
-          this.dispStartDate,
-          this.dispEndDate
-        );
+        const { startDate, endDate } = this.calendarRangeService.currentRange;
+        const totalDays = DateHandler.countDateBetween(startDate, endDate);
         const halfRange = Math.floor(totalDays / 2);
 
         const newStart = new Date(date);
@@ -108,16 +96,6 @@ export class IssueColumnComponent implements OnInit, OnDestroy, AfterViewInit {
   /**
    * Logic fields
    */
-
-  /**
-   * 表示用のカレンダー開始日
-   */
-  @Input() dispStartDate: Date = new Date();
-
-  /**
-   * 表示用のカレンダー終了日
-   */
-  @Input() dispEndDate: Date = new Date();
 
   /**
    * カレンダーの縦線の位置情報
@@ -200,11 +178,8 @@ export class IssueColumnComponent implements OnInit, OnDestroy, AfterViewInit {
         );
         return;
       }
-      const calendarWidth = this.calendarRef.nativeElement.offsetWidth;
-      const totalDays = DateHandler.countDateBetween(
-        this.dispStartDate,
-        this.dispEndDate
-      );
+      const calendarWidth = this.calendarWidthService.currentWidth;
+      const totalDays = this.calendarRangeService.totalDays;
 
       if (totalDays <= 0) {
         Assertion.assert(
@@ -231,7 +206,9 @@ export class IssueColumnComponent implements OnInit, OnDestroy, AfterViewInit {
 
       // カーソル下の日付
       const cursorIndex = Math.floor(offsetX / dayWidth);
-      const cursorDate = new Date(this.dispStartDate);
+      const cursorDate = new Date(
+        this.calendarRangeService.currentRange.startDate
+      );
       cursorDate.setDate(cursorDate.getDate() + cursorIndex);
 
       // 新しい1日分の幅
@@ -273,9 +250,10 @@ export class IssueColumnComponent implements OnInit, OnDestroy, AfterViewInit {
        * - スクロールアップ: 1日分後にする
        */
       const moveDays = event.deltaY > 0 ? 1 : -1;
-      const newStart = new Date(this.dispStartDate);
+      const { startDate, endDate } = this.calendarRangeService.currentRange;
+      const newStart = new Date(startDate);
       newStart.setDate(newStart.getDate() + moveDays);
-      const newEnd = new Date(this.dispEndDate);
+      const newEnd = new Date(endDate);
       newEnd.setDate(newEnd.getDate() + moveDays);
 
       this.calendarRangeService.setRange(newStart, newEnd);
