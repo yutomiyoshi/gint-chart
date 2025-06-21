@@ -38,10 +38,10 @@
       [style.left.px]="line.left"
       [title]="line.date | date : 'yyyy/MM/dd'"
     >
-      <div class="month">
+      <div class="month" [class.active]="line.isMonthStart">
         {{ line.date | date : "MM" }}
       </div>
-      <div class="day">
+      <div class="day" [class.active]="line.isToday">
         {{ line.date | date : "dd" }}
       </div>
     </div>
