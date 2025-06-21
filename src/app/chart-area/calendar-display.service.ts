@@ -76,18 +76,19 @@ export class CalendarDisplayService {
      * カレンダーの表示範囲を更新することで、calendarRange$を発火させる
      */
     this.dateJumpService.jumpRequest$.subscribe((date) => {
-      const {startDate, endDate} = this.calendarRangeService.getCalendarRange();
+      const { startDate, endDate } =
+        this.calendarRangeService.getCalendarRange();
       const totalDays = DateHandler.countDateBetween(startDate, endDate);
       const halfRange = Math.floor(totalDays / 2);
 
-        const newStart = new Date(date);
-        newStart.setDate(newStart.getDate() - halfRange);
+      const newStart = new Date(date);
+      newStart.setDate(newStart.getDate() - halfRange);
 
-        const newEnd = new Date(date);
-        newEnd.setDate(newEnd.getDate() + (totalDays - halfRange - 1));
+      const newEnd = new Date(date);
+      newEnd.setDate(newEnd.getDate() + (totalDays - halfRange - 1));
 
-        this.calendarRangeService.setCalendarRange(newStart, newEnd);
-    })
+      this.calendarRangeService.setCalendarRange(newStart, newEnd);
+    });
   }
 }
 
@@ -194,35 +195,37 @@ function calculateDayDisplayPattern(
   dayWidth: number,
   interval: number
 ): DateDisplay[] {
+  const result: DateDisplay[] = [];
+  let currentDate = new Date(startDate);
+  let daysSinceLastDisplay = 0;
+  result.push({
+    date: new Date(startDate),
+    width: 0,
+    dayDisplay: true,
+    monthDisplay: true,
+  });
 
-  /**
-   * このアルゴリズム大変すぎる～～～
-   * 一旦処理の複雑さはおいておいて、愚直に実装するぜ
-   */
-  const dateDisplayFull: DateDisplay[] = [];
-  let currentDate = startDate;
-  let count = 0;
   while (currentDate <= endDate) {
-    dateDisplayFull.push({
-      date: currentDate,
-      width: dayWidth,
-      dayDisplay: count % interval === 0,
-      monthDisplay: currentDate.getDate() === 1,
-    });
-    count++;
+    const isDayDisplay = daysSinceLastDisplay % interval === 0;
+    const isMonthDisplay = currentDate.getDate() === 1;
+
+    if (isDayDisplay || isMonthDisplay) {
+      result[result.length - 1].width = dayWidth * daysSinceLastDisplay;
+      result.push({
+        date: new Date(currentDate),
+        width: 0,
+        dayDisplay: isDayDisplay,
+        monthDisplay: isMonthDisplay,
+      });
+      daysSinceLastDisplay = 0;
+    }
+
+    daysSinceLastDisplay++;
     currentDate = DateHandler.addDays(currentDate, 1);
   }
 
-  const dateDisplay: DateDisplay[] = [];
-  let intervalCount = 0;
-  for (const dateDisplayEach of dateDisplayFull.reverse()) {
-    if (dateDisplayEach.dayDisplay === true || dateDisplayEach.monthDisplay === true) {
-      dateDisplay.push({...dateDisplayEach, width: dayWidth * intervalCount});
-      intervalCount = 0;
-    }
-    intervalCount ++;
-  }
-  return dateDisplay.reverse();
+  result[result.length - 1].width = dayWidth * daysSinceLastDisplay;
+  return result;
 }
 
 /**
@@ -238,28 +241,38 @@ function calculateWeekDisplayPattern(
   endDate: Date,
   dayWidth: number
 ): DateDisplay[] {
-  const dateDisplayFull: DateDisplay[] = [];
-  let currentDate = startDate;
+  const result: DateDisplay[] = [];
+  let currentDate = new Date(startDate);
+  let daysSinceLastDisplay = 0;
+
+  result.push({
+    date: new Date(startDate),
+    width: 0,
+    dayDisplay: true,
+    monthDisplay: true,
+  });
+
   while (currentDate <= endDate) {
-    dateDisplayFull.push({
-      date: currentDate,
-      width: dayWidth,
-      dayDisplay: currentDate.getDay() === 1,
-      monthDisplay: currentDate.getDate() === 1,
-    });
+    const isDayDisplay = currentDate.getDay() === 1; // 月曜日
+    const isMonthDisplay = currentDate.getDate() === 1;
+
+    if (isDayDisplay || isMonthDisplay) {
+      result[result.length - 1].width = dayWidth * daysSinceLastDisplay;
+      result.push({
+        date: new Date(currentDate),
+        width: 0,
+        dayDisplay: isDayDisplay,
+        monthDisplay: isMonthDisplay,
+      });
+      daysSinceLastDisplay = 0;
+    }
+
+    daysSinceLastDisplay++;
     currentDate = DateHandler.addDays(currentDate, 1);
   }
 
-  const dateDisplay: DateDisplay[] = [];
-  let intervalCount = 0;
-  for (const dateDisplayEach of dateDisplayFull.reverse()) {
-    if (dateDisplayEach.dayDisplay === true || dateDisplayEach.monthDisplay === true) {
-      dateDisplay.push({...dateDisplayEach, width: dayWidth * intervalCount});
-      intervalCount = 0;
-    }
-    intervalCount ++;
-  }
-  return dateDisplay.reverse();
+  result[result.length - 1].width = dayWidth * daysSinceLastDisplay;
+  return result;
 }
 
 /**
@@ -274,28 +287,41 @@ function calculateHalfMonthDisplayPattern(
   endDate: Date,
   dayWidth: number
 ): DateDisplay[] {
-  const dateDisplayFull: DateDisplay[] = [];
-  let currentDate = startDate;
+  const result: DateDisplay[] = [];
+  let currentDate = new Date(startDate);
+  let daysSinceLastDisplay = 0;
+
+  result.push({
+    date: new Date(startDate),
+    width: 0,
+    dayDisplay: true,
+    monthDisplay: true,
+  });
+  daysSinceLastDisplay++;
+  currentDate = DateHandler.addDays(currentDate, 1);
+
   while (currentDate <= endDate) {
-    dateDisplayFull.push({
-      date: currentDate,
-      width: dayWidth,
-      dayDisplay: currentDate.getDate() === 1 || currentDate.getDate() === 15,
-      monthDisplay: currentDate.getDate() === 1,
-    });
+    const isDayDisplay =
+      currentDate.getDate() === 1 || currentDate.getDate() === 15;
+    const isMonthDisplay = currentDate.getDate() === 1;
+
+    if (isDayDisplay || isMonthDisplay) {
+      result[result.length - 1].width = dayWidth * daysSinceLastDisplay;
+      result.push({
+        date: new Date(currentDate),
+        width: 0,
+        dayDisplay: isDayDisplay,
+        monthDisplay: isMonthDisplay,
+      });
+      daysSinceLastDisplay = 0;
+    }
+
+    daysSinceLastDisplay++;
     currentDate = DateHandler.addDays(currentDate, 1);
   }
 
-  const dateDisplay: DateDisplay[] = [];
-  let intervalCount = 0;
-  for (const dateDisplayEach of dateDisplayFull.reverse()) {
-    if (dateDisplayEach.dayDisplay === true || dateDisplayEach.monthDisplay === true) {
-      dateDisplay.push({...dateDisplayEach, width: dayWidth * intervalCount});
-      intervalCount = 0;
-    }
-    intervalCount++;
-  }
-  return dateDisplay.reverse();
+  result[result.length - 1].width = dayWidth * daysSinceLastDisplay;
+  return result;
 }
 
 /**
