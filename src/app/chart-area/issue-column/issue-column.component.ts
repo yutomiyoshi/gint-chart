@@ -20,7 +20,7 @@ import {
 } from '@src/app/chart-area/issue-column/issue-column-view.default';
 import { isUndefined } from '@src/app/utils/utils';
 import { Assertion } from '@src/app/utils/assertion';
-import { DateJumpService } from './date-jump.service';
+import { DateJumpService } from '../date-jump.service';
 import { Subscription } from 'rxjs';
 import {
   CalendarDisplayService,

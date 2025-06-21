@@ -1,5 +1,5 @@
 import { Component, Output, EventEmitter, Input } from '@angular/core';
-import { DateJumpService } from '../chart-area/issue-column/date-jump.service';
+import { DateJumpService } from '../chart-area/date-jump.service';
 
 @Component({
   selector: 'app-header',
