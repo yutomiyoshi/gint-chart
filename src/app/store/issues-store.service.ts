@@ -3,10 +3,10 @@ import { BehaviorSubject, Observable, from } from 'rxjs';
 import { mergeMap, map, toArray, tap } from 'rxjs/operators';
 import { GitLabApiService } from '@src/app/git-lab-api/git-lab-api.service';
 import { Issue, convertJsonToIssue } from '@src/app/model/issue.model';
-import { GitLabProject } from '@src/app/model/git-lab-config.model';
 import { GitLabConfigStoreService } from '@src/app/store/git-lab-config-store.service';
 import { SAMPLE_ISSUES } from '@src/app/model/sample-issues';
 import { GitLabApiIssue } from '@src/app/git-lab-api/git-lab-issue.model';
+import { GitLabProjectConfig } from '../model/git-lab-config.model';
 
 @Injectable({
   providedIn: 'root',
@@ -64,7 +64,7 @@ export class IssuesStoreService {
    * @returns Observable<Issue[]> 取得したissues配列を流すObservable
    */
   private fetchAllIssuesForProject(
-    project: GitLabProject,
+    project: GitLabProjectConfig,
     accessToken: string
   ): Observable<Issue[]> {
     const urlObj = new URL(project.url);
