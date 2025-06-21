@@ -91,7 +91,7 @@ export class ChartAreaComponent implements OnInit, AfterViewInit {
     private readonly calendarDisplayService: CalendarDisplayService,
     private readonly calendarPositionService: CalendarPositionService,
     private readonly calendarRangeService: CalendarRangeService,
-    private calendarWidthService: CalendarWidthService
+    private readonly calendarWidthService: CalendarWidthService
   ) {}
 
   ngOnInit(): void {
