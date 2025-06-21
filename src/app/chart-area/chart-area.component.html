@@ -37,10 +37,11 @@
   <!-- カレンダーの縦線 - スクロール外まで表示 -->
   <div
     *ngFor="let line of calendarVerticalLines"
-    class="calendar-vertical-line"
+    class="calendar-day-per-block"
     [class.today]="line.isToday"
     [class.month-start]="line.isMonthStart"
     [style.left.px]="line.left + calendarOffset"
+    [style.width.px]="dayPerWidth"
     [title]="line.date | date : 'yyyy/MM/dd'"
   ></div>
 </div>

@@ -40,25 +40,21 @@ $calendar-area-height: 40px;
   }
 }
 
-.calendar-vertical-line {
+.calendar-day-per-block {
   position: absolute;
   // カレンダーの縦線
   // カレンダー日付のエリアにはみ出さないように
   top: $calendar-area-height;
   bottom: 0;
-  width: 1px;
-  background-color: #e0e0e0;
   border-left: 1px solid #e0e0e0;
   z-index: 1;
 
   &.today {
-    background-color: #ff6b6b;
     border-left-color: #ff6b6b;
     width: 2px;
   }
 
   &.month-start {
-    background-color: #4a90e2;
     border-left-color: #4a90e2;
     width: 2px;
   }

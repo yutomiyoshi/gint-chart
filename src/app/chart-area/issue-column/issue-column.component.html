@@ -32,7 +32,7 @@
     <!-- 日付の縦線 -->
     <div
       *ngFor="let line of calendarVerticalLines"
-      class="calendar-vertical-line"
+      class="calendar-day-per-block"
       [class.today]="line.isToday"
       [class.month-start]="line.isMonthStart"
       [style.left.px]="line.left"

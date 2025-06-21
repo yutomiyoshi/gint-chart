@@ -23,6 +23,8 @@ import {
   CalendarVerticalLine,
 } from './calendar-vertical-line.service';
 import { CalendarPositionService } from './calendar-position.service';
+import { CalendarRangeService } from './calendar-range.service';
+import { CalendarWidthService } from './calendar-width.service';
 
 @Component({
   selector: 'app-chart-area',
@@ -50,6 +52,13 @@ export class ChartAreaComponent implements OnInit, AfterViewInit {
    * - 日付ごとに隠すかどうかのパターン
    */
   isHiddenDatePattern: boolean[] = [];
+
+  get dayPerWidth(): number {
+    return (
+      this.calendarWidthService.currentWidth /
+      this.calendarRangeService.totalDays
+    );
+  }
 
   // タイトルの幅
   get titleWidth() {
@@ -90,7 +99,9 @@ export class ChartAreaComponent implements OnInit, AfterViewInit {
   constructor(
     private issueStore: IssuesStoreService,
     private calendarDisplayService: CalendarDisplayService,
-    private calendarPositionService: CalendarPositionService
+    private calendarPositionService: CalendarPositionService,
+    private calendarRangeService: CalendarRangeService,
+    private calendarWidthService: CalendarWidthService
   ) {}
 
   get calendarOffset(): number {
