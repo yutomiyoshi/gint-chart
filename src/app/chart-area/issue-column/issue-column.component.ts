@@ -17,6 +17,7 @@ import {
   MIN_TITLE_WIDTH,
   MIN_CALENDAR_WIDTH,
   assigneeWidthDefault,
+  MAX_CALENDAR_WIDTH,
 } from '@src/app/chart-area/issue-column/issue-column-view.const';
 import { isUndefined } from '@src/app/utils/utils';
 import { Assertion } from '@src/app/utils/assertion';
@@ -161,6 +162,7 @@ export class IssueColumnComponent implements OnInit, OnDestroy, AfterViewInit {
       const delta = event.deltaY > 0 ? 1 : -1;
       let newRange = totalDays + delta * 2;
       if (newRange < MIN_CALENDAR_WIDTH) newRange = MIN_CALENDAR_WIDTH;
+      if (newRange > MAX_CALENDAR_WIDTH) newRange = MAX_CALENDAR_WIDTH;
 
       // カーソル下の日付
       const cursorIndex = Math.floor(offsetX / dayWidth);
