@@ -12,7 +12,7 @@ import { Subject } from 'rxjs';
 export class DateJumpService {
   private jumpRequestObserver = new Subject<Date>();
 
-  constructor(private todayService: TodayService) {}
+  constructor(private readonly todayService: TodayService) {}
 
   jumpRequest$ = this.jumpRequestObserver.asObservable();
 

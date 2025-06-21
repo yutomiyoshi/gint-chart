@@ -84,10 +84,10 @@ export class IssueColumnComponent implements OnInit, OnDestroy, AfterViewInit {
   private updateTitleWidth: ((distance: number) => void) | undefined;
 
   constructor(
-    private calendarDisplayService: CalendarDisplayService,
-    private calendarRangeService: CalendarRangeService,
-    private calendarWidthService: CalendarWidthService,
-    private calendarPositionService: CalendarPositionService
+    private readonly calendarDisplayService: CalendarDisplayService,
+    private readonly calendarRangeService: CalendarRangeService,
+    private readonly calendarWidthService: CalendarWidthService,
+    private readonly calendarPositionService: CalendarPositionService
   ) {}
 
   /**

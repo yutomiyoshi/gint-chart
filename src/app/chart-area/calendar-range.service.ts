@@ -15,7 +15,7 @@ export interface CalendarRange {
   providedIn: 'root',
 })
 export class CalendarRangeService {
-  constructor(private dateJumpService: DateJumpService) {
+  constructor(private readonly dateJumpService: DateJumpService) {
     this.dateJumpService.jumpRequest$.subscribe((date) => {
       const halfRange = Math.floor(this.totalDays / 2);
       const startDate = new Date(date);

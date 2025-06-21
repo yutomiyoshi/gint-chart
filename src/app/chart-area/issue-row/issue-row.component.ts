@@ -116,9 +116,9 @@ export class IssueRowComponent implements OnDestroy {
   private updateSchedule: ((distance: number) => void) | undefined;
 
   constructor(
-    private issueDetailDialogExpansionService: IssueDetailDialogExpansionService,
-    private calendarRangeService: CalendarRangeService,
-    private calendarWidthService: CalendarWidthService
+    private readonly issueDetailDialogExpansionService: IssueDetailDialogExpansionService,
+    private readonly calendarRangeService: CalendarRangeService,
+    private readonly calendarWidthService: CalendarWidthService
   ) {}
 
   /**

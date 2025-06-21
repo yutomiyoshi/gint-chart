@@ -87,10 +87,10 @@ export class ChartAreaComponent implements OnInit, AfterViewInit {
   private _assigneeWidth: number = assigneeWidthDefault;
 
   constructor(
-    private issueStore: IssuesStoreService,
-    private calendarDisplayService: CalendarDisplayService,
-    private calendarPositionService: CalendarPositionService,
-    private calendarRangeService: CalendarRangeService,
+    private readonly issueStore: IssuesStoreService,
+    private readonly calendarDisplayService: CalendarDisplayService,
+    private readonly calendarPositionService: CalendarPositionService,
+    private readonly calendarRangeService: CalendarRangeService,
     private calendarWidthService: CalendarWidthService
   ) {}
 

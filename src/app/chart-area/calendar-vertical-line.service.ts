@@ -55,10 +55,10 @@ export class CalendarDisplayService {
     this._calendarVerticalLines.asObservable();
 
   constructor(
-    private calendarRangeService: CalendarRangeService,
-    private calendarWidthService: CalendarWidthService,
-    private calendarPositionService: CalendarPositionService,
-    private todayService: TodayService
+    private readonly calendarRangeService: CalendarRangeService,
+    private readonly calendarWidthService: CalendarWidthService,
+    private readonly calendarPositionService: CalendarPositionService,
+    private readonly todayService: TodayService
   ) {}
 
   /**
