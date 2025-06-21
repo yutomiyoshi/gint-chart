@@ -15,7 +15,7 @@ import {
   assigneeWidthDefault,
   statusWidthDefault,
   titleWidthDefault,
-} from '@src/app/chart-area/issue-column/issue-column-view.default';
+} from '@src/app/chart-area/issue-column/issue-column-view.const';
 import { isUndefined } from '@src/app/utils/utils';
 import { DateHandler } from '@src/app/utils/time';
 import { getBarStyle } from '@src/app/chart-area/issue-row/issue-bar-style-handler';
@@ -23,7 +23,7 @@ import { IssueDetailDialogExpansionService } from '@src/app/issue-detail-dialog/
 import {
   newEndDateCreateOffsetDays,
   undefinedDuration,
-} from '@src/app/chart-area/issue-row/issue-row-logic.default';
+} from '@src/app/chart-area/issue-row/issue-row-logic.const';
 import { Assertion } from '@src/app/utils/assertion';
 import {
   CalendarRangeService,

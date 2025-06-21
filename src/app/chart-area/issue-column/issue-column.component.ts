@@ -17,7 +17,7 @@ import {
   MIN_TITLE_WIDTH,
   MIN_CALENDAR_WIDTH,
   assigneeWidthDefault,
-} from '@src/app/chart-area/issue-column/issue-column-view.default';
+} from '@src/app/chart-area/issue-column/issue-column-view.const';
 import { isUndefined } from '@src/app/utils/utils';
 import { Assertion } from '@src/app/utils/assertion';
 import { DateJumpService } from '../date-jump.service';
