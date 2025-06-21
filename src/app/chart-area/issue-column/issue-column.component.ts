@@ -25,6 +25,7 @@ import { Assertion } from '@src/app/utils/assertion';
 import { DateJumpService } from './date-jump.service';
 import { Subscription } from 'rxjs';
 import { CalendarDisplayService } from '../calendar-vertical-line.service';
+import { CalendarRangeService, CalendarRange } from '../calendar-range.service';
 
 @Component({
   selector: 'app-issue-column',
@@ -39,10 +40,21 @@ export class IssueColumnComponent
 
   constructor(
     private dateJumpService: DateJumpService,
-    private calendarDisplayService: CalendarDisplayService
+    private calendarDisplayService: CalendarDisplayService,
+    private calendarRangeService: CalendarRangeService
   ) {}
 
   ngOnInit() {
+    // カレンダー範囲の通知を購読
+    this.subscription.add(
+      this.calendarRangeService.calendarRange$.subscribe(
+        (range: CalendarRange) => {
+          this.dispStartDate = range.startDate;
+          this.dispEndDate = range.endDate;
+        }
+      )
+    );
+
     this.subscription.add(
       this.dateJumpService.jumpRequest$.subscribe((date) => {
         const totalDays = DateHandler.countDateBetween(
@@ -57,8 +69,7 @@ export class IssueColumnComponent
         const newEnd = new Date(date);
         newEnd.setDate(newEnd.getDate() + (totalDays - halfRange - 1));
 
-        this.dispStartDateChange.emit(newStart);
-        this.dispEndDateChange.emit(newEnd);
+        this.calendarRangeService.setRange(newStart, newEnd);
       })
     );
   }
@@ -85,6 +96,16 @@ export class IssueColumnComponent
   /**
    * Logic fields
    */
+
+  /**
+   * 表示用のカレンダー開始日
+   */
+  @Input() dispStartDate: Date = new Date();
+
+  /**
+   * 表示用のカレンダー終了日
+   */
+  @Input() dispEndDate: Date = new Date();
 
   /**
    * UI fields
@@ -243,8 +264,7 @@ export class IssueColumnComponent
         newEnd.setDate(newEnd.getDate() + 1);
       }
 
-      this.dispStartDateChange.emit(newStart);
-      this.dispEndDateChange.emit(newEnd);
+      this.calendarRangeService.setRange(newStart, newEnd);
     } else {
       /**
        * - スクロールダウン: 1日分前にする
@@ -256,8 +276,7 @@ export class IssueColumnComponent
       const newEnd = new Date(this.dispEndDate);
       newEnd.setDate(newEnd.getDate() + moveDays);
 
-      this.dispStartDateChange.emit(newStart);
-      this.dispEndDateChange.emit(newEnd);
+      this.calendarRangeService.setRange(newStart, newEnd);
     }
   }
 
