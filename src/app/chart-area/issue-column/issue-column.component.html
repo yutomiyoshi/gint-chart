@@ -37,7 +37,14 @@
       [class.month-start]="line.isMonthStart"
       [style.left.px]="line.left"
       [title]="line.date | date : 'yyyy/MM/dd'"
-    ></div>
+    >
+      <div class="month">
+        {{ line.date | date : "MM" }}
+      </div>
+      <div class="day">
+        {{ line.date | date : "dd" }}
+      </div>
+    </div>
   </div>
 
   <!--

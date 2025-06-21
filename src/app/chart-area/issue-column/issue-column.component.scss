@@ -99,18 +99,17 @@
   position: absolute;
   top: 0;
   bottom: 0;
-  width: 1px;
-  background-color: #9c9c9c;
-  border-left: 1px dashed #9c9c9c;
-  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  transform: translateX(-50%);
 
-  &.today {
-    background-color: #ff6b6b;
-    border-left: 1px solid #ff6b6b;
+  > .month {
+    height: 50%;
   }
 
-  &.month-start {
-    background-color: #4ecdc4;
-    border-left: 1px solid #4ecdc4;
+  > .day {
+    height: 50%;
   }
 }
