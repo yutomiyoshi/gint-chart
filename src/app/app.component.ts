@@ -7,6 +7,7 @@ import { isUndefined } from '@src/app/utils/utils';
 import { DIALOG_ANIMATION_DURATION } from '@src/app/app-view.default';
 import { Assertion } from '@src/app/utils/assertion';
 import { MilestoneStoreService } from '@src/app/store/milestone-store.service';
+import { ProjectStoreService } from '@src/app/store/project-store.service';
 
 @Component({
   selector: 'app-root',
@@ -26,6 +27,7 @@ export class AppComponent implements OnInit, OnDestroy {
   constructor(
     private readonly issueStore: IssuesStoreService,
     private readonly milestoneStore: MilestoneStoreService,
+    private readonly projectStore: ProjectStoreService,
     private readonly gitLabConfigStore: GitLabConfigStoreService,
     private readonly issueDetailDialogExpansionService: IssueDetailDialogExpansionService
   ) {}
@@ -62,9 +64,10 @@ export class AppComponent implements OnInit, OnDestroy {
           // TODO miyoshi: 並行して実行したときに、取得できないことはないか、要確認。必要があればシーケンスにした方がいい。
           const issueSync$ = this.issueStore.syncAllIssues();
           const milestoneSync$ = this.milestoneStore.syncAllMilestones();
+          const projectSync$ = this.projectStore.syncAllProjects();
 
           // 両方の同期が完了するまで待機
-          forkJoin([issueSync$, milestoneSync$])
+          forkJoin([issueSync$, milestoneSync$, projectSync$])
             .pipe(takeUntil(this.destroy$))
             .subscribe({
               error: (error) => {
@@ -76,7 +79,6 @@ export class AppComponent implements OnInit, OnDestroy {
               },
               next: () => {
                 this.loadingOverlay = false;
-                console.log(this.milestoneStore.getMilestones());
               },
             });
         },
