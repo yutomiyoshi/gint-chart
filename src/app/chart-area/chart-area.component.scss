@@ -1,15 +1,18 @@
 @import "@src/app/style/scroll-bar.scss";
 
+$calendar-area-height: 40px;
+
 .chart-area-container {
   display: flex;
   flex-direction: column;
   height: 100%;
   width: 100%;
+  position: relative;
 }
 
 .calendar-area {
-  height: 40px;
-  flex: 0 0 40px;
+  height: $calendar-area-height;
+  flex: 0 0 $calendar-area-height;
   overflow: hidden;
   border-bottom: 2px solid rgb(176, 176, 176);
 }
@@ -39,11 +42,14 @@
 
 .calendar-vertical-line {
   position: absolute;
-  top: 0;
+  // カレンダーの縦線
+  // カレンダー日付のエリアにはみ出さないように
+  top: $calendar-area-height;
   bottom: 0;
   width: 1px;
   background-color: #e0e0e0;
   border-left: 1px solid #e0e0e0;
+  z-index: 1;
 
   &.today {
     background-color: #ff6b6b;
