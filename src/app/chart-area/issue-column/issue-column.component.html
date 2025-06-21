@@ -1,6 +1,11 @@
 <div class="issue-column-row">
   <!-- Title -->
-  <div class="issue-column-title-space" [ngStyle]="titleStyle">
+  <div
+    class="issue-column-title-space"
+    [style.width.px]="titleWidth === 0 ? 0 : titleWidth"
+    [style.flex]="titleWidth === 0 ? '0 0 0px' : '0 0 ' + titleWidth + 'px'"
+    [style.display]="titleWidth === 0 ? 'none' : 'flex'"
+  >
     Title
 
     <!-- 
@@ -16,10 +21,24 @@
   </div>
 
   <!-- Status -->
-  <div class="issue-column-status-space" [ngStyle]="statusStyle">Status</div>
+  <div
+    class="issue-column-status-space"
+    [style.width.px]="statusWidth === 0 ? 0 : statusWidth"
+    [style.flex]="statusWidth === 0 ? '0 0 0px' : '0 0 ' + statusWidth + 'px'"
+    [style.display]="statusWidth === 0 ? 'none' : 'flex'"
+  >
+    Status
+  </div>
 
   <!-- Assignee -->
-  <div class="issue-column-assignee-space" [ngStyle]="assigneeStyle">
+  <div
+    class="issue-column-assignee-space"
+    [style.width.px]="assigneeWidth === 0 ? 0 : assigneeWidth"
+    [style.flex]="
+      assigneeWidth === 0 ? '0 0 0px' : '0 0 ' + assigneeWidth + 'px'
+    "
+    [style.display]="assigneeWidth === 0 ? 'none' : 'flex'"
+  >
     Assignee
   </div>
 

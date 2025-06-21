@@ -247,49 +247,4 @@ export class IssueColumnComponent implements OnInit, OnDestroy, AfterViewInit {
     if (isUndefined(this.updateTitleWidth)) return;
     this.updateTitleWidth(event.distance.x);
   }
-
-  /**
-   * タイトルのスタイルを取得
-   */
-  get titleStyle(): { [key: string]: string } {
-    if (this.titleWidth === 0) {
-      return {
-        display: 'none',
-      };
-    }
-    return {
-      width: this.titleWidth + 'px',
-      flex: '0 0 ' + this.titleWidth + 'px',
-    };
-  }
-
-  /**
-   * ステータスのスタイルを取得
-   */
-  get statusStyle(): { [key: string]: string } {
-    if (this.statusWidth === 0) {
-      return {
-        display: 'none',
-      };
-    }
-    return {
-      width: this.statusWidth + 'px',
-      flex: '0 0 ' + this.statusWidth + 'px',
-    };
-  }
-
-  /**
-   * 担当者のスタイルを取得
-   */
-  get assigneeStyle(): { [key: string]: string } {
-    if (this.assigneeWidth === 0) {
-      return {
-        display: 'none',
-      };
-    }
-    return {
-      width: this.assigneeWidth + 'px',
-      flex: '0 0 ' + this.assigneeWidth + 'px',
-    };
-  }
 }
