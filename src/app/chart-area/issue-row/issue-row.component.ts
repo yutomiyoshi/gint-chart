@@ -6,8 +6,11 @@ import {
   ElementRef,
   ViewChild,
   HostListener,
+  OnInit,
+  OnDestroy,
 } from '@angular/core';
 import { CdkDragMove } from '@angular/cdk/drag-drop';
+import { Subscription } from 'rxjs';
 import {
   calendarEndDateOffset,
   calendarStartDateOffset,
@@ -26,6 +29,10 @@ import {
   undefinedDuration,
 } from '@src/app/chart-area/issue-row/issue-row-logic.default';
 import { Assertion } from '@src/app/utils/assertion';
+import {
+  CalendarRangeService,
+  CalendarRange,
+} from '@src/app/chart-area/calendar-range.service';
 
 @Component({
   selector: 'app-issue-row',
@@ -33,9 +40,10 @@ import { Assertion } from '@src/app/utils/assertion';
   templateUrl: './issue-row.component.html',
   styleUrl: './issue-row.component.scss',
 })
-export class IssueRowComponent {
+export class IssueRowComponent implements OnInit, OnDestroy {
   constructor(
-    private issueDetailDialogExpansionService: IssueDetailDialogExpansionService
+    private issueDetailDialogExpansionService: IssueDetailDialogExpansionService,
+    private calendarRangeService: CalendarRangeService
   ) {}
 
   @ViewChild('calendarArea') calendarArea!: ElementRef<HTMLDivElement>;
@@ -44,6 +52,41 @@ export class IssueRowComponent {
    * ホバー状態を管理するフラグ
    */
   isHovered = false;
+
+  /**
+   * カレンダー範囲の通知を受け取るためのサブスクリプション
+   */
+  private calendarRangeSubscription: Subscription | undefined;
+
+  /**
+   * コンポーネント初期化時にカレンダー範囲の通知を購読
+   */
+  ngOnInit() {
+    this.calendarRangeSubscription =
+      this.calendarRangeService.calendarRange$.subscribe(
+        (range: CalendarRange) => {
+          this.dispStartDate = range.startDate;
+          this.dispEndDate = range.endDate;
+        }
+      );
+  }
+
+  /**
+   * コンポーネント破棄時にサブスクリプションを解除
+   */
+  ngOnDestroy() {
+    this.calendarRangeSubscription?.unsubscribe();
+  }
+
+  /**
+   * 表示用のカレンダー開始日
+   */
+  dispStartDate: Date = new Date();
+
+  /**
+   * 表示用のカレンダー終了日
+   */
+  dispEndDate: Date = new Date();
 
   /**
    * Logic fields
