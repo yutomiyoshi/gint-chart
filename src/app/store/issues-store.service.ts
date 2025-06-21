@@ -6,7 +6,6 @@ import { Issue, convertJsonToIssue } from '@src/app/model/issue.model';
 import { GitLabProject } from '@src/app/model/git-lab-config.model';
 import { GitLabConfigStoreService } from '@src/app/store/git-lab-config-store.service';
 import { SAMPLE_ISSUES } from '@src/app/model/sample-issues';
-import { environment } from '@src/environments/environment';
 import { GitLabApiIssue } from '@src/app/git-lab-api/git-lab-issue.model';
 
 @Injectable({
@@ -26,7 +25,7 @@ export class IssuesStoreService {
    * @returns Observable<Issue[]> 取得・反映後のissues配列を流すObservable
    */
   syncAllIssues(): Observable<Issue[]> {
-    if (environment.debugMode) {
+    if (true) {
       // デバッグモード時はサンプルデータを返す
       this.issuesSubject.next(SAMPLE_ISSUES);
       return from([SAMPLE_ISSUES]);
