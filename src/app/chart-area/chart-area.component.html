@@ -44,8 +44,6 @@
   <div
     *ngFor="let line of calendarVerticalLines"
     class="calendar-day-vertical-line"
-    [class.today]="line.isToday"
-    [class.month-start]="line.isMonthStart"
     [style.left.px]="line.left + calendarOffset"
     [style.display]="line.isDisplayed ? 'block' : 'none'"
     [title]="line.date | date : 'yyyy/MM/dd'"
