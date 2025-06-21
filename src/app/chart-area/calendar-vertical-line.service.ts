@@ -54,9 +54,7 @@ export class CalendarDisplayService {
     private calendarWidthService: CalendarWidthService,
     private calendarPositionService: CalendarPositionService,
     private todayService: TodayService
-  ) {
-    this._initializeObservers();
-  }
+  ) {}
 
   /**
    * 現在の縦線の位置を取得
@@ -111,6 +109,7 @@ export class CalendarDisplayService {
   startObserving(element: HTMLElement): void {
     this.calendarWidthService.startObserving(element);
     this.calendarPositionService.startObserving(element);
+    this.initializeObservers();
   }
 
   /**
@@ -124,7 +123,7 @@ export class CalendarDisplayService {
   /**
    * オブザーバーを初期化
    */
-  private _initializeObservers(): void {
+  private initializeObservers(): void {
     // カレンダー範囲、幅、位置の変更を監視して縦線を再計算
     combineLatest([
       this.calendarRangeService.calendarRange$,
