@@ -103,22 +103,6 @@ export class IssueColumnComponent implements OnInit, OnDestroy, AfterViewInit {
         }
       )
     );
-
-    // 日付ジャンプイベントの購読
-    this.subscription.add(
-      this.dateJumpService.jumpRequest$.subscribe((date) => {
-        const totalDays = this.calendarRangeService.totalDays;
-        const halfRange = Math.floor(totalDays / 2);
-
-        const newStart = new Date(date);
-        newStart.setDate(newStart.getDate() - halfRange);
-
-        const newEnd = new Date(date);
-        newEnd.setDate(newEnd.getDate() + (totalDays - halfRange - 1));
-
-        this.calendarRangeService.setRange(newStart, newEnd);
-      })
-    );
   }
 
   /**
