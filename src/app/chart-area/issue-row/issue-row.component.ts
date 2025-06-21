@@ -71,6 +71,8 @@ export class IssueRowComponent implements OnInit, OnDestroy {
    */
   isHovered = false;
 
+  isMonthBorderActive = false;
+
   /**
    * Logic fields
    */
@@ -398,6 +400,11 @@ export class IssueRowComponent implements OnInit, OnDestroy {
         this.dateData[index].monthDisplay || this.dateData[index].dayDisplay
           ? '1px dashed #9c9c9c'
           : 'none',
+      'font-color':
+        (this.dateData[index].monthDisplay && this.isMonthBorderActive) ||
+        this.dateData[index].dayDisplay
+          ? 'black'
+          : 'transparent',
     };
   }
 }

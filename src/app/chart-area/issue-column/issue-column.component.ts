@@ -278,6 +278,18 @@ export class IssueColumnComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   getDayStyle(index: number): { [key: string]: string } {
-    return { width: this.dateData[index].width + 'px' };
+    return {
+      width: this.dateData[index].width + 'px',
+      'border-left':
+        (this.dateData[index].monthDisplay && this.isMonthBorderActive) ||
+        this.dateData[index].dayDisplay
+          ? '1px dashed #9c9c9c'
+          : 'none',
+      'font-color':
+        (this.dateData[index].monthDisplay && this.isMonthBorderActive) ||
+        this.dateData[index].dayDisplay
+          ? 'black'
+          : 'transparent',
+    };
   }
 }
