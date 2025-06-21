@@ -31,14 +31,16 @@
   <div class="issue-column-calendar" #calendar (wheel)="onWheel($event)">
     <!-- 日付の縦線 -->
     <div
-      *ngFor="let line of calendarVerticalLines"
+      *ngFor="let line of calendarVerticalLines; index as i"
       class="calendar-day-per-block"
       [style.left.px]="line.left"
       [style.display]="line.isDisplayed ? 'block' : 'none'"
       [title]="line.date | date : 'yyyy/MM/dd'"
     >
-      <div class="month" [class.hidden]="!line.isMonthStart">
-        {{ line.date | date : "MM" }}
+      <div class="month" [class.hidden]="!line.isMonthStart && i !== 0">
+        {{
+          i === 0 ? (line.date | date : "MM-yyyy") : (line.date | date : "MM")
+        }}
       </div>
       <div class="day">
         {{ line.date | date : "dd" }}
