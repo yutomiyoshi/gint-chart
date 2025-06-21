@@ -21,10 +21,10 @@ import { DateHandler } from '@src/app/utils/time';
 import {
   CalendarDisplayService,
   CalendarVerticalLine,
-} from './calendar-vertical-line.service';
-import { CalendarPositionService } from './calendar-position.service';
-import { CalendarRangeService } from './calendar-range.service';
-import { CalendarWidthService } from './calendar-width.service';
+} from '@src/app/chart-area/calendar-vertical-line.service';
+import { CalendarPositionService } from '@src/app/chart-area/calendar-position.service';
+import { CalendarRangeService } from '@src/app/chart-area/calendar-range.service';
+import { CalendarWidthService } from '@src/app/chart-area/calendar-width.service';
 import { Subscription } from 'rxjs';
 
 @Component({

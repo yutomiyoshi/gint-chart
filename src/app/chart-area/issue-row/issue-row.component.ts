@@ -24,7 +24,7 @@ import {
 } from '@src/app/chart-area/issue-row/issue-row-logic.const';
 import { Assertion } from '@src/app/utils/assertion';
 import { CalendarRangeService } from '@src/app/chart-area/calendar-range.service';
-import { CalendarWidthService } from '../calendar-width.service';
+import { CalendarWidthService } from '@src/app/chart-area/calendar-width.service';
 
 @Component({
   selector: 'app-issue-row',

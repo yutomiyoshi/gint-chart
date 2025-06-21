@@ -20,15 +20,14 @@ import {
 } from '@src/app/chart-area/issue-column/issue-column-view.const';
 import { isUndefined } from '@src/app/utils/utils';
 import { Assertion } from '@src/app/utils/assertion';
-import { DateJumpService } from '../date-jump.service';
 import { Subscription } from 'rxjs';
 import {
   CalendarDisplayService,
   CalendarVerticalLine,
-} from '../calendar-vertical-line.service';
-import { CalendarRangeService } from '../calendar-range.service';
-import { CalendarWidthService } from '../calendar-width.service';
-import { CalendarPositionService } from '../calendar-position.service';
+} from '@src/app/chart-area/calendar-vertical-line.service';
+import { CalendarRangeService } from '@src/app/chart-area/calendar-range.service';
+import { CalendarWidthService } from '@src/app/chart-area/calendar-width.service';
+import { CalendarPositionService } from '@src/app/chart-area/calendar-position.service';
 
 @Component({
   selector: 'app-issue-column',
@@ -84,7 +83,6 @@ export class IssueColumnComponent implements OnInit, OnDestroy, AfterViewInit {
   private updateTitleWidth: ((distance: number) => void) | undefined;
 
   constructor(
-    private dateJumpService: DateJumpService,
     private calendarDisplayService: CalendarDisplayService,
     private calendarRangeService: CalendarRangeService,
     private calendarWidthService: CalendarWidthService,
