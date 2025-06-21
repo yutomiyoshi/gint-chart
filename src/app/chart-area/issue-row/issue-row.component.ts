@@ -6,7 +6,6 @@ import {
   ElementRef,
   ViewChild,
   HostListener,
-  OnInit,
   OnDestroy,
 } from '@angular/core';
 import { CdkDragMove } from '@angular/cdk/drag-drop';
@@ -17,7 +16,6 @@ import {
   titleWidthDefault,
 } from '@src/app/chart-area/issue-column/issue-column-view.const';
 import { isUndefined } from '@src/app/utils/utils';
-import { DateHandler } from '@src/app/utils/time';
 import { getBarStyle } from '@src/app/chart-area/issue-row/issue-bar-style-handler';
 import { IssueDetailDialogExpansionService } from '@src/app/issue-detail-dialog/issue-detail-dialog-expansion.service';
 import {
@@ -25,10 +23,7 @@ import {
   undefinedDuration,
 } from '@src/app/chart-area/issue-row/issue-row-logic.const';
 import { Assertion } from '@src/app/utils/assertion';
-import {
-  CalendarRangeService,
-  CalendarRange,
-} from '@src/app/chart-area/calendar-range.service';
+import { CalendarRangeService } from '@src/app/chart-area/calendar-range.service';
 import { CalendarWidthService } from '../calendar-width.service';
 
 @Component({
@@ -37,13 +32,65 @@ import { CalendarWidthService } from '../calendar-width.service';
   templateUrl: './issue-row.component.html',
   styleUrl: './issue-row.component.scss',
 })
-export class IssueRowComponent implements OnInit, OnDestroy {
-  constructor(
-    private issueDetailDialogExpansionService: IssueDetailDialogExpansionService,
-    private calendarRangeService: CalendarRangeService,
-    private calendarWidthService: CalendarWidthService
-  ) {}
+export class IssueRowComponent implements OnDestroy {
+  /**
+   * イシューID
+   */
+  @Input() id = 0;
 
+  /**
+   * イシュータイトル
+   */
+  @Input() title = 'dummy title';
+
+  /**
+   * イシューステータス
+   */
+  @Input() state = 'dummy state';
+
+  /**
+   * 担当者
+   */
+  @Input() assignee: string | undefined;
+
+  /**
+   * 開始日
+   */
+  @Input() startDate: Date | undefined;
+
+  /**
+   * 終了日
+   */
+  @Input() endDate: Date | undefined;
+
+  /**
+   * 開始日変更イベント
+   */
+  @Output() startDateChange = new EventEmitter<Date | undefined>();
+
+  /**
+   * 終了日変更イベント
+   */
+  @Output() endDateChange = new EventEmitter<Date | undefined>();
+
+  /**
+   * タイトル幅
+   */
+  @Input() titleWidth: number = titleWidthDefault;
+
+  /**
+   * ステータス幅
+   */
+  @Input() statusWidth: number = statusWidthDefault;
+
+  /**
+   * 担当者幅
+   */
+  @Input() assigneeWidth: number = assigneeWidthDefault;
+
+  /**
+   * カレンダーエリアの参照
+   */
   @ViewChild('calendarArea') calendarArea!: ElementRef<HTMLDivElement>;
 
   /**
@@ -57,30 +104,6 @@ export class IssueRowComponent implements OnInit, OnDestroy {
   private calendarRangeSubscription: Subscription | undefined;
 
   /**
-   * コンポーネント初期化時にカレンダー範囲の通知を購読
-   */
-  ngOnInit() {}
-
-  /**
-   * コンポーネント破棄時にサブスクリプションを解除
-   */
-  ngOnDestroy() {
-    this.calendarRangeSubscription?.unsubscribe();
-  }
-
-  /**
-   * Logic fields
-   */
-  @Input() id = 0;
-  @Input() title = 'dummy title';
-  @Input() state = 'dummy state';
-  @Input() assignee: string | undefined;
-  @Input() startDate: Date | undefined;
-  @Input() endDate: Date | undefined;
-  @Output() startDateChange = new EventEmitter<Date | undefined>();
-  @Output() endDateChange = new EventEmitter<Date | undefined>();
-
-  /**
    * 終了日のドラッグ中に呼ばれる関数
    * ドラッグ中に終了日を更新する
    */
@@ -92,65 +115,17 @@ export class IssueRowComponent implements OnInit, OnDestroy {
    */
   private updateSchedule: ((distance: number) => void) | undefined;
 
-  /**
-   * UI fields
-   */
-
-  get titleStyle(): Record<string, string> {
-    if (this.titleWidth === 0) {
-      return {
-        display: 'none',
-      };
-    }
-    return {
-      width: this.titleWidth + 'px',
-      flex: '0 0 ' + this.titleWidth + 'px',
-    };
-  }
-
-  get statusStyle(): Record<string, string> {
-    if (this.statusWidth === 0) {
-      return {
-        display: 'none',
-      };
-    }
-    return {
-      width: this.statusWidth + 'px',
-      flex: '0 0 ' + this.statusWidth + 'px',
-    };
-  }
-
-  get assigneeStyle(): Record<string, string> {
-    if (this.assigneeWidth === 0) {
-      return {
-        display: 'none',
-      };
-    }
-    return {
-      width: this.assigneeWidth + 'px',
-      flex: '0 0 ' + this.assigneeWidth + 'px',
-    };
-  }
-
-  @Input() titleWidth: number = titleWidthDefault;
-
-  @Input() statusWidth: number = statusWidthDefault;
-
-  @Input() assigneeWidth: number = assigneeWidthDefault;
+  constructor(
+    private issueDetailDialogExpansionService: IssueDetailDialogExpansionService,
+    private calendarRangeService: CalendarRangeService,
+    private calendarWidthService: CalendarWidthService
+  ) {}
 
   /**
-   * バーの位置と幅を計算する
+   * コンポーネント破棄時にサブスクリプションを解除
    */
-  get barStyle(): Record<string, string | undefined> {
-    const { startDate, endDate } = this.calendarRangeService.currentRange;
-    return getBarStyle(startDate, endDate, this.startDate, this.endDate);
-  }
-
-  /**
-   * 開始日と終了日が未設定の場合は、終了日作成ボタンを表示する
-   */
-  get showEndDateCreateButton(): boolean {
-    return isUndefined(this.startDate) && isUndefined(this.endDate);
+  ngOnDestroy() {
+    this.calendarRangeSubscription?.unsubscribe();
   }
 
   /**
@@ -371,5 +346,71 @@ export class IssueRowComponent implements OnInit, OnDestroy {
   @HostListener('mouseleave')
   onMouseLeave() {
     this.isHovered = false;
+  }
+
+  /**
+   * タイトルのスタイルを取得
+   */
+  get titleStyle(): Record<string, string> {
+    if (this.titleWidth === 0) {
+      return {
+        display: 'none',
+      };
+    }
+    return {
+      width: this.titleWidth + 'px',
+      flex: '0 0 ' + this.titleWidth + 'px',
+    };
+  }
+
+  /**
+   * ステータスのスタイルを取得
+   */
+  get statusStyle(): Record<string, string> {
+    if (this.statusWidth === 0) {
+      return {
+        display: 'none',
+      };
+    }
+    return {
+      width: this.statusWidth + 'px',
+      flex: '0 0 ' + this.statusWidth + 'px',
+    };
+  }
+
+  /**
+   * 担当者のスタイルを取得
+   */
+  get assigneeStyle(): Record<string, string> {
+    if (this.assigneeWidth === 0) {
+      return {
+        display: 'none',
+      };
+    }
+    return {
+      width: this.assigneeWidth + 'px',
+      flex: '0 0 ' + this.assigneeWidth + 'px',
+    };
+  }
+
+  /**
+   * バーの位置と幅を計算する
+   */
+  get barStyle(): Record<string, string | undefined> {
+    const { startDate: displayStartDate, endDate: displayEndDate } =
+      this.calendarRangeService.currentRange;
+    return getBarStyle(
+      displayStartDate,
+      displayEndDate,
+      this.startDate,
+      this.endDate
+    );
+  }
+
+  /**
+   * 開始日と終了日が未設定の場合は、終了日作成ボタンを表示する
+   */
+  get showEndDateCreateButton(): boolean {
+    return isUndefined(this.startDate) && isUndefined(this.endDate);
   }
 }
