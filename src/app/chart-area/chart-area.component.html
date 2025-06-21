@@ -19,6 +19,18 @@
   -- issue一つに1行割り当てて、リスト展開する
   -->
   <div class="issue-row-area" #issueRowArea>
+    <!-- カレンダーの縦線 -->
+    <div class="calendar-vertical-lines">
+      <div
+        *ngFor="let line of calendarVerticalLines"
+        class="calendar-vertical-line"
+        [class.today]="line.isToday"
+        [class.month-start]="line.isMonthStart"
+        [style.left.px]="line.left"
+        [title]="line.date | date : 'yyyy/MM/dd'"
+      ></div>
+    </div>
+
     <app-issue-row
       *ngFor="let issue of issues"
       [id]="issue.id"

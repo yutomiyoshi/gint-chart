@@ -18,6 +18,10 @@ import {
   titleWidthDefault,
 } from '@src/app/chart-area/issue-column/issue-column-view.default';
 import { DateHandler } from '@src/app/utils/time';
+import {
+  CalendarDisplayService,
+  CalendarVerticalLine,
+} from './calendar-vertical-line.service';
 
 @Component({
   selector: 'app-chart-area',
@@ -34,6 +38,11 @@ export class ChartAreaComponent implements OnInit, AfterViewInit {
    * Logic fields
    */
   issues: Issue[] = [];
+
+  /**
+   * カレンダーの縦線
+   */
+  calendarVerticalLines: CalendarVerticalLine[] = [];
 
   /**
    * 日付の表示パターン
@@ -77,7 +86,10 @@ export class ChartAreaComponent implements OnInit, AfterViewInit {
   @ViewChild('issueRowArea') issueRowArea!: ElementRef;
   isScrollBarActive = false;
 
-  constructor(private issueStore: IssuesStoreService) {}
+  constructor(
+    private issueStore: IssuesStoreService,
+    private calendarDisplayService: CalendarDisplayService
+  ) {}
 
   ngOnInit(): void {
     this.issueStore.issues$.subscribe((issues) => {
@@ -85,6 +97,11 @@ export class ChartAreaComponent implements OnInit, AfterViewInit {
       // TODO: ここでissuesをグループ化する
       // TODO: ここでissuesをフィルターする
       this.issues = issues;
+    });
+
+    // カレンダーの縦線を監視
+    this.calendarDisplayService.calendarVerticalLines$.subscribe((lines) => {
+      this.calendarVerticalLines = lines;
     });
   }
 
