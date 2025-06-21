@@ -100,8 +100,6 @@ export class CalendarDisplayService {
       return;
     }
 
-    console.log(widthPerDayLevel, totalDaysLevel);
-
     let lines: CalendarVerticalLine[] = [];
 
     switch (widthPerDayLevel.level + totalDaysLevel.level) {
