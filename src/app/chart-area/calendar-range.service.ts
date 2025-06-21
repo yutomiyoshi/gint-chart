@@ -16,6 +16,8 @@ export class CalendarRangeService {
     endDate: DateHandler.setTimeTo9(new Date()),
   });
 
+  private _totalDays: number = 1;
+
   public readonly calendarRange$: Observable<CalendarRange> =
     this._calendarRange.asObservable();
 
@@ -27,13 +29,21 @@ export class CalendarRangeService {
   }
 
   /**
+   * 範囲内の日数を取得
+   */
+  get totalDays(): number {
+    return this._totalDays;
+  }
+
+  /**
    * カレンダー範囲を設定
    */
   setRange(startDate: Date, endDate: Date): void {
     this._calendarRange.next({
-      startDate: DateHandler.setTimeTo9(startDate),
-      endDate: DateHandler.setTimeTo9(endDate),
+      startDate: startDate,
+      endDate: endDate,
     });
+    this._totalDays = DateHandler.countDateBetween(startDate, endDate);
   }
 
   /**
@@ -41,10 +51,15 @@ export class CalendarRangeService {
    */
   setStartDate(startDate: Date): void {
     const currentRange = this._calendarRange.value;
+
     this._calendarRange.next({
       ...currentRange,
-      startDate: DateHandler.setTimeTo9(startDate),
+      startDate: startDate,
     });
+    this._totalDays = DateHandler.countDateBetween(
+      startDate,
+      currentRange.endDate
+    );
   }
 
   /**
@@ -52,20 +67,24 @@ export class CalendarRangeService {
    */
   setEndDate(endDate: Date): void {
     const currentRange = this._calendarRange.value;
+
     this._calendarRange.next({
       ...currentRange,
-      endDate: DateHandler.setTimeTo9(endDate),
+      endDate: endDate,
     });
+    this._totalDays = DateHandler.countDateBetween(
+      currentRange.startDate,
+      endDate
+    );
   }
 
   /**
    * 指定された日数分の範囲を設定
    */
   setRangeByDays(startDate: Date, days: number): void {
-    const normalizedStartDate = DateHandler.setTimeTo9(startDate);
-    const endDate = new Date(normalizedStartDate);
-    endDate.setDate(normalizedStartDate.getDate() + days - 1);
-    this.setRange(normalizedStartDate, endDate);
+    const endDate = new Date(startDate);
+    endDate.setDate(startDate.getDate() + days - 1);
+    this.setRange(startDate, endDate);
   }
 
   /**
@@ -88,19 +107,10 @@ export class CalendarRangeService {
   }
 
   /**
-   * 範囲内の日数を取得
-   */
-  getDaysInRange(): number {
-    const { startDate, endDate } = this._calendarRange.value;
-    return DateHandler.countDateBetween(startDate, endDate);
-  }
-
-  /**
    * 指定された日付が範囲内かどうかをチェック
    */
   isDateInRange(date: Date): boolean {
     const { startDate, endDate } = this._calendarRange.value;
-    const normalizedDate = DateHandler.setTimeTo9(date);
-    return normalizedDate >= startDate && normalizedDate <= endDate;
+    return date >= startDate && date <= endDate;
   }
 }
