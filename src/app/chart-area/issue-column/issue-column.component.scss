@@ -1,10 +1,13 @@
 @import "@src/app/style/scroll-bar.scss";
 
+$issue-row-height: 100%;
+
 .issue-column-row {
   display: flex;
   align-items: center;
-  height: 40px;
+  height: $issue-row-height;
 }
+
 .issue-column-title-space {
   display: flex;
   flex-direction: row;
@@ -27,6 +30,7 @@
     cursor: col-resize;
   }
 }
+
 .issue-column-status-space {
   display: flex;
   flex-direction: row;
@@ -36,6 +40,7 @@
   padding-left: 6px;
   border-right: 1px solid gray;
 }
+
 .issue-column-assignee-space {
   display: flex;
   flex-direction: row;
@@ -45,45 +50,13 @@
   padding-left: 6px;
   border-right: 1px solid gray;
 }
+
 .issue-column-calendar {
   display: flex;
   flex-direction: row;
   flex: 1 1 auto;
   height: 100%;
   position: relative;
-}
-.issue-column-day {
-  flex: 1 1 auto;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-
-  > .month {
-    flex: 1 1 auto;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-
-    &.hidden {
-      color: transparent;
-    }
-  }
-
-  > .day {
-    flex: 1 1 auto;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    border-left: 1px dashed #9c9c9c;
-
-    &.hidden {
-      color: transparent;
-      border-left: none;
-    }
-  }
 }
 
 .issue-column-scroll-bar {
