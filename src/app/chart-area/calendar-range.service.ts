@@ -16,6 +16,15 @@ export class CalendarRangeService {
     endDate: DateHandler.setTimeTo9(new Date()),
   });
 
+  /**
+   * ATTENTION:
+   * - 総日数の計算では意外とインスタンス化が多いため、
+   * - カレンダーの範囲の決定とともに総日数も算出し、いつでも参照できるようにする。
+   * - 総日数の管理を怠ると、カレンダーの範囲と総日数が泣き別れて、ロジックが破綻する可能性がある。
+   *
+   * RULE:
+   * 基本的にはsetRange()を使用して、直接的に_calendarRangeや_totalDaysを更新しないこと。
+   */
   private _totalDays: number = 1;
 
   public readonly calendarRange$: Observable<CalendarRange> =
@@ -51,15 +60,7 @@ export class CalendarRangeService {
    */
   setStartDate(startDate: Date): void {
     const currentRange = this._calendarRange.value;
-
-    this._calendarRange.next({
-      ...currentRange,
-      startDate: startDate,
-    });
-    this._totalDays = DateHandler.countDateBetween(
-      startDate,
-      currentRange.endDate
-    );
+    this.setRange(startDate, currentRange.endDate);
   }
 
   /**
@@ -67,33 +68,19 @@ export class CalendarRangeService {
    */
   setEndDate(endDate: Date): void {
     const currentRange = this._calendarRange.value;
-
-    this._calendarRange.next({
-      ...currentRange,
-      endDate: endDate,
-    });
-    this._totalDays = DateHandler.countDateBetween(
-      currentRange.startDate,
-      endDate
-    );
-  }
-
-  /**
-   * 指定された日数分の範囲を設定
-   */
-  setRangeByDays(startDate: Date, days: number): void {
-    const endDate = new Date(startDate);
-    endDate.setDate(startDate.getDate() + days - 1);
-    this.setRange(startDate, endDate);
+    this.setRange(currentRange.startDate, endDate);
   }
 
   /**
    * 今月の範囲を設定
    */
   setCurrentMonth(): void {
-    const now = DateHandler.setTimeTo9(new Date());
-    const startDate = new Date(now.getFullYear(), now.getMonth(), 1);
-    const endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+    const startDate = DateHandler.setTimeTo9(new Date());
+    startDate.setDate(1);
+
+    const endDate = DateHandler.setTimeTo9(new Date());
+    endDate.setDate(0);
+
     this.setRange(startDate, endDate);
   }
 
@@ -101,8 +88,8 @@ export class CalendarRangeService {
    * 指定された月の範囲を設定
    */
   setMonth(year: number, month: number): void {
-    const startDate = new Date(year, month - 1, 1);
-    const endDate = new Date(year, month, 0);
+    const startDate = DateHandler.setTimeTo9(new Date(year, month - 1, 1));
+    const endDate = DateHandler.setTimeTo9(new Date(year, month, 0));
     this.setRange(startDate, endDate);
   }
 
@@ -111,6 +98,6 @@ export class CalendarRangeService {
    */
   isDateInRange(date: Date): boolean {
     const { startDate, endDate } = this._calendarRange.value;
-    return date >= startDate && date <= endDate;
+    return startDate <= date && date <= endDate;
   }
 }
