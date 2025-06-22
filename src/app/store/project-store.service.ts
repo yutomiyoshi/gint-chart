@@ -6,7 +6,7 @@ import { GitLabApiService } from '@src/app/git-lab-api/git-lab-api.service';
 import { Project, convertJsonToProject } from '@src/app/model/project.model';
 import { GitLabConfigStoreService } from '@src/app/store/git-lab-config-store.service';
 import { SAMPLE_PROJECTS } from '@src/app/model/sample-project';
-import { GitLabProjectConfig } from '@src/app/model/git-lab-config.model';
+import { isDebug } from '../debug';
 
 @Injectable({
   providedIn: 'root',
@@ -24,21 +24,21 @@ export class ProjectStoreService {
    * configにある全プロジェクトの全projectsをAPIから取得し、ストアに反映する
    */
   syncAllProjects(): Observable<Project[]> {
-    if (true) {
+    if (isDebug) {
       this.projectsSubject.next(SAMPLE_PROJECTS);
       return from([SAMPLE_PROJECTS]);
     }
     const config = this.gitlabConfigStore.getConfig();
-    const projects = config.projects || [];
+    const projectIds = config.projectId || [];
     const accessToken = config.accessToken || '';
-    if (projects.length === 0) {
+    if (projectIds.length === 0) {
       this.projectsSubject.next([]);
       return from([[]]);
     }
 
-    return from(projects).pipe(
-      mergeMap((project) =>
-        this.fetchAllProjectsForProject(project, accessToken)
+    return from(projectIds).pipe(
+      mergeMap((projectId) =>
+        this.fetchAllProjectsForProject(projectId, config.url, accessToken)
       ),
       toArray(),
       map((projectsArr) => projectsArr.flat()),
@@ -61,14 +61,15 @@ export class ProjectStoreService {
    * @returns Observable<Project[]> 取得したprojects配列を流すObservable
    */
   private fetchAllProjectsForProject(
-    project: GitLabProjectConfig,
+    projectId: number,
+    url: string,
     accessToken: string
   ): Observable<Project[]> {
-    const urlObj = new URL(project.url);
+    const urlObj = new URL(url);
     const host = urlObj.href;
     return this.gitlabApi.fetch<GitLabProject, Project>(
       host,
-      String(project.projectId),
+      String(projectId),
       accessToken,
       '',
       convertJsonToProject

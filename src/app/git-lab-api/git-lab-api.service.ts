@@ -152,5 +152,72 @@ export class GitLabApiService {
       return throwError(() => error);
     }
   }
-  // ここにGitLab APIリクエスト用のメソッドを追加していきます
+
+  /**
+   * GitLab APIにPUTリクエストを送信します。
+   *
+   * @template T APIから返る生データの型
+   * @template S 変換後のアプリ用データ型
+   * @param host GitLabホストURL
+   * @param projectId プロジェクトID
+   * @param accessToken アクセストークン
+   * @param endpoint プロジェクト配下のAPIエンドポイント（例: 'issues/1'）
+   * @param body 送信するJSONデータ
+   * @param mapFn APIのレスポンスTをアプリ用型Sに変換する関数
+   * @returns Observable<S> 変換後データを流すObservable
+   */
+  public put<T, S>(
+    host: string,
+    projectId: string,
+    accessToken: string,
+    endpoint: string,
+    body: any,
+    mapFn: (data: T) => S
+  ): Observable<S> {
+    return defer(() => {
+      // パラメータの検証
+      if (host === '' || projectId === '' || accessToken === '') {
+        Assertion.assert(
+          'GitLab project information is not configured',
+          Assertion.no(12)
+        );
+        return throwError(
+          () => new Error('GitLab project information is not configured')
+        );
+      }
+
+      // URLの構築
+      const url = `${host}/api/v4/projects/${encodeURIComponent(
+        projectId
+      )}/${endpoint}`;
+
+      // リクエストオプションの作成
+      const options: RequestInit = {
+        method: 'PUT',
+        headers: {
+          'Private-Token': accessToken,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(body),
+      };
+
+      // fetchリクエストの実行
+      return from(fetch(url, options)).pipe(
+        map((response) => {
+          if (!response.ok) {
+            throw new Error(
+              `GitLab API request failed: ${response.status} ${response.statusText}`
+            );
+          }
+          return response;
+        }),
+        mergeMap((response) => from(response.json() as Promise<T>)),
+        map((data) => mapFn(data)),
+        catchError((error) => {
+          console.error('GitLab API error:', error);
+          return throwError(() => error);
+        })
+      );
+    });
+  }
 }

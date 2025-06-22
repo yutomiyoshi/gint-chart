@@ -31,6 +31,9 @@ import { Subscription } from 'rxjs';
 import { Project } from '../model/project.model';
 import { Milestone } from '../model/milestone.model';
 import { Issue } from '../model/issue.model';
+import { IssuesUpdateService } from '@src/app/update/issues-update.service';
+import { Assertion } from '../utils/assertion';
+import { isDebug } from '../debug';
 
 /**
  * チャート行のアイテムを表現するインターフェース
@@ -129,6 +132,7 @@ export class ChartAreaComponent implements OnInit, AfterViewInit {
     private readonly calendarPositionService: CalendarPositionService,
     private readonly calendarRangeService: CalendarRangeService,
     private readonly calendarWidthService: CalendarWidthService,
+    private readonly issuesUpdateService: IssuesUpdateService,
     private readonly cdr: ChangeDetectorRef
   ) {}
 
@@ -338,5 +342,50 @@ export class ChartAreaComponent implements OnInit, AfterViewInit {
    */
   set assigneeWidth(value: number) {
     this._assigneeWidth = value;
+  }
+
+  /**
+   * issueの開始日変更時の処理
+   */
+  onIssueStartDateChange(issue: Issue, newStartDate: Date | undefined): void {
+    issue.start_date = newStartDate;
+    // サーバーに更新を送信
+    if (isDebug) {
+      return;
+    }
+    this.updateIssueOnServer(issue);
+  }
+
+  /**
+   * issueの終了日変更時の処理
+   */
+  onIssueEndDateChange(issue: Issue, newEndDate: Date | undefined): void {
+    issue.end_date = newEndDate;
+    // サーバーに更新を送信
+    if (isDebug) {
+      return;
+    }
+    this.updateIssueOnServer(issue);
+  }
+
+  /**
+   * サーバーにissueの更新を送信する
+   */
+  private updateIssueOnServer(issue: Issue): void {
+    this.issuesUpdateService
+      .updateIssueDates(issue, issue.start_date, issue.end_date)
+      .subscribe({
+        next: (updatedIssue) => {
+          // 更新されたissueで古いissueを置き換える
+          Object.assign(issue, updatedIssue);
+        },
+        error: (error) => {
+          // エラーが発生した場合は、元の値に戻すか、ユーザーに通知
+          Assertion.assert(
+            `Failed to update issue on server: ${error}`,
+            Assertion.no(21)
+          );
+        },
+      });
   }
 }

@@ -7,10 +7,16 @@ const endDatePattern = /\$\$end-date:(\d{4}-\d{2}-\d{2})\$\$/;
 
 export interface Issue {
   /**
-   * id
+   * id（グローバルID）
    * @type {number}
    */
   id: number;
+
+  /**
+   * iid（内部ID、プロジェクト内での連番）
+   * @type {number}
+   */
+  iid: number;
 
   /**
    * project_id
@@ -72,6 +78,7 @@ export function convertJsonToIssue(apiIssue: GitLabApiIssue): Issue | null {
   // 必須フィールドのバリデーション
   if (
     typeof apiIssue.id !== 'number' ||
+    typeof apiIssue.iid !== 'number' ||
     typeof apiIssue.project_id !== 'number' ||
     typeof apiIssue.title !== 'string' ||
     typeof apiIssue.state !== 'string' ||
@@ -121,6 +128,7 @@ export function convertJsonToIssue(apiIssue: GitLabApiIssue): Issue | null {
 
   return {
     id: apiIssue.id,
+    iid: apiIssue.iid,
     project_id: apiIssue.project_id,
     milestone_id,
     title: apiIssue.title,

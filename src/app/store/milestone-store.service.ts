@@ -12,8 +12,8 @@ import { convertJsonToMilestone, Milestone } from '../model/milestone.model';
 import { GitLabApiService } from '../git-lab-api/git-lab-api.service';
 import { GitLabConfigStoreService } from './git-lab-config-store.service';
 import { SAMPLE_MILESTONES } from '../model/sample-milestone';
-import { GitLabProjectConfig } from '../model/git-lab-config.model';
 import { GitLabApiMilestone } from '../git-lab-api/git-lab-milestone.model';
+import { isDebug } from '../debug';
 
 @Injectable({
   providedIn: 'root',
@@ -33,20 +33,20 @@ export class MilestoneStoreService {
    * @returns Observable<Milestone[]> 取得・反映後のmilestones配列を流すObservable
    */
   syncAllMilestones(): Observable<Milestone[]> {
-    if (true) {
+    if (isDebug) {
       this.milestonesSubject.next(SAMPLE_MILESTONES);
       return from([SAMPLE_MILESTONES]);
     }
     const config = this.gitlabConfigStore.getConfig();
-    const projects = config.projects || [];
+    const projectIds = config.projectId || [];
     const accessToken = config.accessToken || '';
-    if (projects.length === 0) {
+    if (projectIds.length === 0) {
       this.milestonesSubject.next([]);
       return from([[]]);
     }
-    return from(projects).pipe(
-      mergeMap((project) =>
-        this.fetchAllMilestonesForProject(project, accessToken)
+    return from(projectIds).pipe(
+      mergeMap((projectId) =>
+        this.fetchAllMilestonesForProject(projectId, config.url, accessToken)
       ),
       toArray(),
       map((milestonesArr) => milestonesArr.flat()),
@@ -64,19 +64,21 @@ export class MilestoneStoreService {
   /**
    * 指定されたプロジェクトの全milestonesをGitLab APIから取得します。
    *
-   * @param project GitLabプロジェクト情報
+   * @param projectId プロジェクトID
+   * @param url GitLabホストURL
    * @param accessToken アクセストークン
    * @returns Observable<Milestone[]> 取得したmilestones配列を流すObservable
    */
   private fetchAllMilestonesForProject(
-    project: GitLabProjectConfig,
+    projectId: number,
+    url: string,
     accessToken: string
   ): Observable<Milestone[]> {
-    const urlObj = new URL(project.url);
+    const urlObj = new URL(url);
     const host = urlObj.href;
     return this.gitlabApi.fetch<GitLabApiMilestone, Milestone>(
       host,
-      String(project.projectId),
+      String(projectId),
       accessToken,
       'milestones',
       convertJsonToMilestone
