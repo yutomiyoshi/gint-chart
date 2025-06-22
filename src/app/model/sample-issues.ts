@@ -3,6 +3,7 @@ import { Issue } from '@src/app/model/issue.model';
 export const SAMPLE_ISSUES: Issue[] = [
   {
     id: 1,
+    iid: 1,
     project_id: 144,
     milestone_id: 6,
     title: 'サンプルIssue 1',
@@ -15,6 +16,7 @@ export const SAMPLE_ISSUES: Issue[] = [
   },
   {
     id: 2,
+    iid: 2,
     project_id: 145,
     milestone_id: 43,
     title: 'サンプルIssue 2',
@@ -28,6 +30,7 @@ export const SAMPLE_ISSUES: Issue[] = [
   // 3件目以降を自動生成
   {
     id: 3,
+    iid: 3,
     project_id: 144,
     milestone_id: 6,
     title: 'リファクタリング検討',
@@ -40,6 +43,7 @@ export const SAMPLE_ISSUES: Issue[] = [
   },
   {
     id: 4,
+    iid: 4,
     project_id: 144,
     milestone_id: 6,
     title: 'ドキュメント整備',
@@ -52,6 +56,7 @@ export const SAMPLE_ISSUES: Issue[] = [
   },
   {
     id: 5,
+    iid: 5,
     project_id: 144,
     milestone_id: 6,
     title: 'CI/CDパイプライン修正',
@@ -64,6 +69,7 @@ export const SAMPLE_ISSUES: Issue[] = [
   },
   {
     id: 6,
+    iid: 6,
     project_id: 144,
     milestone_id: 6,
     title: 'バグ修正：ログイン画面',
@@ -76,6 +82,7 @@ export const SAMPLE_ISSUES: Issue[] = [
   },
   {
     id: 7,
+    iid: 7,
     project_id: 144,
     milestone_id: 7,
     title: '新機能追加：ダークモード',
@@ -88,6 +95,7 @@ export const SAMPLE_ISSUES: Issue[] = [
   },
   {
     id: 8,
+    iid: 8,
     project_id: 144,
     milestone_id: 7,
     title: 'パフォーマンス改善',
@@ -100,6 +108,7 @@ export const SAMPLE_ISSUES: Issue[] = [
   },
   {
     id: 9,
+    iid: 9,
     project_id: 144,
     milestone_id: 7,
     title: 'テストケース追加',
@@ -112,6 +121,7 @@ export const SAMPLE_ISSUES: Issue[] = [
   },
   {
     id: 10,
+    iid: 10,
     project_id: 144,
     milestone_id: 44,
     title: 'セキュリティレビュー',
@@ -127,6 +137,7 @@ export const SAMPLE_ISSUES: Issue[] = [
     const idx = i + 11;
     return {
       id: idx,
+      iid: idx,
       project_id: 145,
       milestone_id: [6, 7, 43, 44, 46, 48][idx % 6],
       title: `サンプルIssue ${idx}`,
