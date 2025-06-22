@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { ToastInfo } from '../utils/toast.service';
+import { ToastService } from '../utils/toast.service';
 
 @Component({
   selector: 'app-toast',
@@ -8,5 +8,13 @@ import { ToastInfo } from '../utils/toast.service';
   styleUrl: './toast.component.scss',
 })
 export class ToastComponent {
-  @Input() info: ToastInfo = { isShow: false };
+  constructor(private readonly toastService: ToastService) {}
+
+  get id(): number {
+    return this.toastService.id;
+  }
+
+  get message(): string {
+    return this.toastService.message;
+  }
 }

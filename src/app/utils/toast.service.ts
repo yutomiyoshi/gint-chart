@@ -1,28 +1,57 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
+import { isUndefined } from './utils';
+import { Assertion } from './assertion';
 
 export type ToastType = 'success' | 'error' | 'info' | 'warning';
-
-export type ToastInfo =
-  | {
-      isShow: true;
-      id: number;
-      message: string;
-      type: ToastType;
-    }
-  | {
-      isShow: false;
-    };
 
 @Injectable({
   providedIn: 'root',
 })
 export class ToastService {
-  private _info = new BehaviorSubject<ToastInfo>({
-    isShow: false,
-  });
+  private _info = new BehaviorSubject<boolean>(false);
+
+  /**
+   * これらの変数はトーストに表示するもの
+   */
+  private _id: number | undefined = undefined;
+  private _message: string | undefined = undefined;
+  private _type: ToastType | undefined = undefined;
 
   readonly info$ = this._info.asObservable();
+
+  get id(): number {
+    if (isUndefined(this._id)) {
+      Assertion.assert(
+        'ToastService is called before id is set',
+        Assertion.no(16)
+      );
+      return -1;
+    }
+    return this._id;
+  }
+
+  get message(): string {
+    if (isUndefined(this._message)) {
+      Assertion.assert(
+        'ToastService is called before message is set',
+        Assertion.no(16)
+      );
+      return '';
+    }
+    return this._message;
+  }
+
+  get type(): ToastType {
+    if (isUndefined(this._type)) {
+      Assertion.assert(
+        'ToastService is called before type is set',
+        Assertion.no(16)
+      );
+      return 'info';
+    }
+    return this._type;
+  }
 
   /**
    * トーストを表示する
@@ -34,17 +63,14 @@ export class ToastService {
    * @param duration トーストの表示時間（ミリ秒）
    */
   show(id: number, message: string, type: ToastType, duration: number): void {
-    this._info.next({
-      isShow: true,
-      id,
-      message,
-      type,
-    });
+    this._id = id;
+    this._message = message;
+    this._type = type;
+
+    this._info.next(true);
 
     setTimeout(() => {
-      this._info.next({
-        isShow: false,
-      });
+      this._info.next(false);
     }, duration);
   }
 }
