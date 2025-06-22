@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { isUndefined } from './utils';
 import { Assertion } from './assertion';
+import { OneResourceSemaphore } from './semaphore';
 
 export type ToastType = 'success' | 'error' | 'info' | 'warning';
 
@@ -10,6 +11,8 @@ export type ToastType = 'success' | 'error' | 'info' | 'warning';
 })
 export class ToastService {
   private _isShow$ = new BehaviorSubject<boolean>(false);
+
+  private _semaphore = new OneResourceSemaphore();
 
   /**
    * これらの変数はトーストに表示するもの
