@@ -4,7 +4,7 @@ export const SAMPLE_ISSUES: Issue[] = [
   {
     id: 1,
     project_id: 144,
-    milestone_id: null,
+    milestone_id: 6,
     title: 'サンプルIssue 1',
     description: 'これはデバッグ用のサンプルIssueです。',
     start_date: undefined,
@@ -16,7 +16,7 @@ export const SAMPLE_ISSUES: Issue[] = [
   {
     id: 2,
     project_id: 145,
-    milestone_id: null,
+    milestone_id: 43,
     title: 'サンプルIssue 2',
     description: '2件目のサンプルIssueです。',
     start_date: undefined,
@@ -28,8 +28,8 @@ export const SAMPLE_ISSUES: Issue[] = [
   // 3件目以降を自動生成
   {
     id: 3,
-    project_id: 146,
-    milestone_id: 1,
+    project_id: 144,
+    milestone_id: 6,
     title: 'リファクタリング検討',
     description: 'コードのリファクタリングを検討する。',
     start_date: new Date('2025-06-18'),
@@ -40,8 +40,8 @@ export const SAMPLE_ISSUES: Issue[] = [
   },
   {
     id: 4,
-    project_id: 147,
-    milestone_id: 2,
+    project_id: 144,
+    milestone_id: 6,
     title: 'ドキュメント整備',
     description: 'APIドキュメントを最新化する。',
     start_date: undefined,
@@ -52,8 +52,8 @@ export const SAMPLE_ISSUES: Issue[] = [
   },
   {
     id: 5,
-    project_id: 148,
-    milestone_id: null,
+    project_id: 144,
+    milestone_id: 6,
     title: 'CI/CDパイプライン修正',
     description: 'CI/CDのジョブを見直す。',
     start_date: new Date('2025-06-19'),
@@ -64,8 +64,8 @@ export const SAMPLE_ISSUES: Issue[] = [
   },
   {
     id: 6,
-    project_id: 149,
-    milestone_id: null,
+    project_id: 144,
+    milestone_id: 6,
     title: 'バグ修正：ログイン画面',
     description: 'ログイン画面で発生するバグの修正。',
     start_date: undefined,
@@ -76,8 +76,8 @@ export const SAMPLE_ISSUES: Issue[] = [
   },
   {
     id: 7,
-    project_id: 150,
-    milestone_id: 3,
+    project_id: 144,
+    milestone_id: 7,
     title: '新機能追加：ダークモード',
     description: 'ダークモードのUIを追加する。',
     start_date: new Date('2025-06-15'),
@@ -88,8 +88,8 @@ export const SAMPLE_ISSUES: Issue[] = [
   },
   {
     id: 8,
-    project_id: 151,
-    milestone_id: null,
+    project_id: 144,
+    milestone_id: 7,
     title: 'パフォーマンス改善',
     description: 'レスポンス速度を改善する。',
     start_date: undefined,
@@ -100,8 +100,8 @@ export const SAMPLE_ISSUES: Issue[] = [
   },
   {
     id: 9,
-    project_id: 152,
-    milestone_id: null,
+    project_id: 144,
+    milestone_id: 7,
     title: 'テストケース追加',
     description: 'ユニットテストを追加。',
     start_date: new Date('2025-06-17'),
@@ -112,8 +112,8 @@ export const SAMPLE_ISSUES: Issue[] = [
   },
   {
     id: 10,
-    project_id: 153,
-    milestone_id: 4,
+    project_id: 144,
+    milestone_id: 44,
     title: 'セキュリティレビュー',
     description: 'コードのセキュリティレビューを実施。',
     start_date: undefined,
@@ -127,8 +127,8 @@ export const SAMPLE_ISSUES: Issue[] = [
     const idx = i + 11;
     return {
       id: idx,
-      project_id: 200 + (idx % 10),
-      milestone_id: idx % 5 === 0 ? idx % 3 : null,
+      project_id: 145,
+      milestone_id: [6, 7, 43, 44, 46, 48][idx % 6],
       title: `サンプルIssue ${idx}`,
       description: `自動生成されたサンプルIssueです（No.${idx}）。`,
       start_date:

@@ -37,8 +37,8 @@
     <!-- Start DateもEndDateも未設定の場合は、EndDate定義ボタンを表示 -->
     <button
       class="end-date-create-button"
-      [class.active]="isHovered"
       *ngIf="showEndDateCreateButton"
+      [class.active]="isHovered"
       (click)="onEndDateCreateClick()"
     ></button>
 
@@ -51,9 +51,9 @@
       -->
       <div
         class="start-date-handle"
-        [class.active]="isHovered"
         cdkDrag
         cdkDragLockAxis="x"
+        [class.active]="isHovered"
         (cdkDragStarted)="onStartDateDragStart()"
         (cdkDragMoved)="onStartDateDragMoved($event)"
         (cdkDragEnded)="onStartDateDragEnd()"
@@ -67,9 +67,9 @@
       -->
       <div
         class="end-date-handle"
-        [class.active]="isHovered"
         cdkDrag
         cdkDragLockAxis="x"
+        [class.active]="isHovered"
         (cdkDragStarted)="onEndDateDragStart()"
         (cdkDragMoved)="onEndDateDragMoved($event)"
         (cdkDragEnded)="onEndDateDragEnd()"

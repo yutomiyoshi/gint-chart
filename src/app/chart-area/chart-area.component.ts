@@ -7,8 +7,9 @@ import {
   AfterViewInit,
   ChangeDetectorRef,
 } from '@angular/core';
-import { IssuesStoreService } from '@src/app/store/issues-store.service';
-import { Issue } from '@src/app/model/issue.model';
+import { DatePipe } from '@angular/common';
+import { ProjectTreeStoreService } from '@src/app/store/project-tree-store.service';
+import { ProjectTree } from '@src/app/model/project-tree.model';
 import {
   calendarEndDateOffset,
   calendarStartDateOffset,
@@ -27,12 +28,37 @@ import { CalendarPositionService } from '@src/app/chart-area/calendar-position.s
 import { CalendarRangeService } from '@src/app/chart-area/calendar-range.service';
 import { CalendarWidthService } from '@src/app/chart-area/calendar-width.service';
 import { Subscription } from 'rxjs';
+import { Project } from '../model/project.model';
+import { Milestone } from '../model/milestone.model';
+import { Issue } from '../model/issue.model';
+
+/**
+ * チャート行のアイテムを表現するインターフェース
+ */
+export type ChartRowItem =
+  | {
+      type: 'project';
+      data: Project;
+      isCollapsed: boolean;
+    }
+  | {
+      type: 'milestone';
+      data: Milestone;
+      isCollapsed: boolean;
+      parentId: string;
+    }
+  | {
+      type: 'issue';
+      data: Issue;
+      parentId: string;
+    };
 
 @Component({
   selector: 'app-chart-area',
   standalone: false,
   templateUrl: './chart-area.component.html',
   styleUrls: ['./chart-area.component.scss'],
+  providers: [DatePipe],
 })
 export class ChartAreaComponent implements OnInit, AfterViewInit {
   /**
@@ -51,9 +77,19 @@ export class ChartAreaComponent implements OnInit, AfterViewInit {
   @Input() isShowAssignee = true;
 
   /**
-   * イシューリスト
+   * プロジェクトツリー
    */
-  issues: Issue[] = [];
+  projectTrees: ProjectTree[] = [];
+
+  /**
+   * チャート行のアイテム（プロジェクト、マイルストーン、イシューを階層的に配置）
+   */
+  chartRowItems: ChartRowItem[] = [];
+
+  /**
+   * 折り畳み状態を管理するMap
+   */
+  private collapsedStates = new Map<string, boolean>();
 
   /**
    * カレンダーの縦線
@@ -88,7 +124,7 @@ export class ChartAreaComponent implements OnInit, AfterViewInit {
   private _assigneeWidth: number = assigneeWidthDefault;
 
   constructor(
-    private readonly issueStore: IssuesStoreService,
+    private readonly projectTreeStore: ProjectTreeStoreService,
     private readonly calendarDisplayService: CalendarDisplayService,
     private readonly calendarPositionService: CalendarPositionService,
     private readonly calendarRangeService: CalendarRangeService,
@@ -98,11 +134,9 @@ export class ChartAreaComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.subscription.add(
-      this.issueStore.issues$.subscribe((issues) => {
-        // TODO: ここでissuesをソートする
-        // TODO: ここでissuesをグループ化する
-        // TODO: ここでissuesをフィルターする
-        this.issues = issues;
+      this.projectTreeStore.projectTree$.subscribe((projectTrees) => {
+        this.projectTrees = projectTrees;
+        this.buildChartRowItems();
       })
     );
 
@@ -124,6 +158,113 @@ export class ChartAreaComponent implements OnInit, AfterViewInit {
       DateHandler.getTodayOffsetDate(calendarStartDateOffset),
       DateHandler.getTodayOffsetDate(calendarEndDateOffset)
     );
+  }
+
+  /**
+   * プロジェクトツリーからチャート行アイテムを構築
+   */
+  private buildChartRowItems(): void {
+    this.chartRowItems = [];
+
+    this.projectTrees.forEach((projectTree) => {
+      const projectId = `project-${projectTree.project.id}`;
+      const isProjectCollapsed = this.collapsedStates.get(projectId) || false;
+
+      // プロジェクト行を追加
+      this.chartRowItems.push({
+        type: 'project',
+        data: projectTree.project,
+        isCollapsed: isProjectCollapsed,
+      });
+
+      // プロジェクトが折り畳まれていない場合のみ、マイルストーンとイシューを表示
+      if (!isProjectCollapsed) {
+        projectTree.milestones.forEach((milestoneTree) => {
+          const milestoneId = `milestone-${milestoneTree.milestone.id}`;
+          const isMilestoneCollapsed =
+            this.collapsedStates.get(milestoneId) || false;
+
+          // マイルストーン行を追加
+          this.chartRowItems.push({
+            type: 'milestone',
+            data: milestoneTree.milestone,
+            isCollapsed: isMilestoneCollapsed,
+            parentId: projectId,
+          });
+
+          // マイルストーンが折り畳まれていない場合のみ、イシューを表示
+          if (!isMilestoneCollapsed) {
+            milestoneTree.issues.forEach((issue) => {
+              this.chartRowItems.push({
+                type: 'issue',
+                data: issue,
+                parentId: milestoneId,
+              });
+            });
+          }
+        });
+      }
+    });
+  }
+
+  /**
+   * 折り畳みボタンのクリックイベントハンドラー
+   */
+  onToggleCollapse(item: ChartRowItem): void {
+    if (item.type === 'project') {
+      const projectId = `project-${item.data.id}`;
+      const currentState = this.collapsedStates.get(projectId) || false;
+      this.collapsedStates.set(projectId, !currentState);
+    } else if (item.type === 'milestone') {
+      const milestoneId = `milestone-${item.data.id}`;
+      const currentState = this.collapsedStates.get(milestoneId) || false;
+      this.collapsedStates.set(milestoneId, !currentState);
+    }
+
+    // チャート行アイテムを再構築
+    this.buildChartRowItems();
+  }
+
+  /**
+   * アイテムが折り畳まれているかどうかを判定
+   */
+  isItemCollapsed(item: ChartRowItem): boolean {
+    if (item.type === 'project') {
+      const projectId = `project-${item.data.id}`;
+      return this.collapsedStates.get(projectId) || false;
+    } else if (item.type === 'milestone') {
+      const milestoneId = `milestone-${item.data.id}`;
+      return this.collapsedStates.get(milestoneId) || false;
+    }
+    return false;
+  }
+
+  /**
+   * アイテムの子要素数を取得
+   */
+  getChildCount(item: ChartRowItem): number {
+    if (item.type === 'project') {
+      const projectTree = this.projectTrees.find(
+        (pt) => pt.project.id === item.data.id
+      );
+      if (projectTree) {
+        return projectTree.milestones.length;
+      }
+    } else if (item.type === 'milestone') {
+      const projectTree = this.projectTrees.find(
+        (pt) =>
+          pt.project.id === parseInt(item.parentId.replace('project-', ''))
+      );
+      if (projectTree) {
+        const milestoneTree = projectTree.milestones.find(
+          (mt) => mt.milestone.id === item.data.id
+        );
+        if (milestoneTree) {
+          return milestoneTree.issues.length;
+        }
+      }
+    }
+    return 0;
   }
 
   ngAfterViewInit(): void {

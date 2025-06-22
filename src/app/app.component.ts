@@ -8,6 +8,7 @@ import { DIALOG_ANIMATION_DURATION } from '@src/app/app-view.default';
 import { Assertion } from '@src/app/utils/assertion';
 import { MilestoneStoreService } from '@src/app/store/milestone-store.service';
 import { ProjectStoreService } from '@src/app/store/project-store.service';
+import { ProjectTreeStoreService } from '@src/app/store/project-tree-store.service';
 
 @Component({
   selector: 'app-root',
@@ -29,7 +30,8 @@ export class AppComponent implements OnInit, OnDestroy {
     private readonly milestoneStore: MilestoneStoreService,
     private readonly projectStore: ProjectStoreService,
     private readonly gitLabConfigStore: GitLabConfigStoreService,
-    private readonly issueDetailDialogExpansionService: IssueDetailDialogExpansionService
+    private readonly issueDetailDialogExpansionService: IssueDetailDialogExpansionService,
+    private readonly projectTreeStore: ProjectTreeStoreService
   ) {}
 
   ngOnInit() {
@@ -60,19 +62,14 @@ export class AppComponent implements OnInit, OnDestroy {
           this.loadingOverlay = false;
         },
         next: () => {
-          // issueとマイルストーンの同期を並行して実行
-          // TODO miyoshi: 並行して実行したときに、取得できないことはないか、要確認。必要があればシーケンスにした方がいい。
-          const issueSync$ = this.issueStore.syncAllIssues();
-          const milestoneSync$ = this.milestoneStore.syncAllMilestones();
-          const projectSync$ = this.projectStore.syncAllProjects();
-
-          // 両方の同期が完了するまで待機
-          forkJoin([issueSync$, milestoneSync$, projectSync$])
+          // ProjectTreeStoreServiceを使用してプロジェクト、マイルストーン、イシューを同期
+          this.projectTreeStore
+            .syncProjectMilestoneIssues()
             .pipe(takeUntil(this.destroy$))
             .subscribe({
               error: (error) => {
                 Assertion.assert(
-                  'Failed to sync data: ' + error,
+                  'Failed to sync project tree data: ' + error,
                   Assertion.no(2)
                 );
                 this.loadingOverlay = false;

@@ -1,6 +1,7 @@
-@import "@src/app/style/scroll-bar.scss";
+@import "@src/app/design/scroll-bar.scss";
 
 $calendar-area-height: 40px;
+$issue-row-margin-left: 5px;
 
 .chart-area-container {
   display: flex;
@@ -40,6 +41,98 @@ $calendar-area-height: 40px;
   }
 }
 
+.chart-row {
+  position: relative;
+  z-index: 1;
+}
+
+.project-row {
+  background-color: #f8f9fa;
+  border-bottom: 2px solid #dee2e6;
+  padding: 6px calc($issue-row-margin-left + 16px);
+  font-weight: bold;
+  font-size: 16px;
+  z-index: 3;
+  position: relative;
+  border-bottom-left-radius: 2px;
+  border-bottom-right-radius: 2px;
+
+  .project-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .project-info {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .project-title {
+    color: #495057;
+    font-size: 1.2rem;
+    font-weight: bold;
+  }
+
+  .project-description {
+    color: #6c757d;
+    font-size: 0.8rem;
+    font-weight: normal;
+    margin-top: 2px;
+  }
+}
+
+.milestone-row {
+  background-color: #e9ecef;
+  border-bottom: 1px solid #ced4da;
+  padding: 3px 16px;
+  font-weight: 600;
+  font-size: 14px;
+  z-index: 3;
+  position: relative;
+  border-bottom-left-radius: 2px;
+  margin-left: $issue-row-margin-left;
+
+  .milestone-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .milestone-info {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+  }
+
+  .milestone-title {
+    color: #495057;
+    font-size: 1.2rem;
+    font-weight: bold;
+  }
+
+  .milestone-state {
+    color: #6c757d;
+    font-size: 0.8rem;
+    font-weight: normal;
+    margin-left: auto;
+    background-color: #f8f9fa;
+    padding: 2px 6px;
+    border-radius: 4px;
+  }
+
+  .milestone-due-date {
+    color: #6c757d;
+    font-size: 0.8rem;
+    font-weight: normal;
+    margin-top: 2px;
+  }
+}
+
+.issue-row {
+  // 既存のissue-rowスタイルはそのまま
+}
+
 .calendar-day-per-block {
   position: absolute;
   // カレンダーの縦線
@@ -62,4 +155,17 @@ $calendar-area-height: 40px;
 
   // カレンダーの縦線はissue-barの全面にあるので、ツールチップイベントに反応する
   z-index: 2;
+}
+
+.toggle-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.child-count {
+  font-size: 12px;
+  font-weight: 500;
+  color: #6c757d;
+  min-width: 24px;
 }

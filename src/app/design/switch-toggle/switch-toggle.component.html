@@ -1,0 +1,19 @@
+<button
+  class="switch-toggle"
+  role="switch"
+  [class.active]="checked"
+  [disabled]="disabled"
+  [attr.aria-checked]="checked"
+  [style.width.px]="width"
+  [style.height.px]="height"
+  [style.background-color]="checked ? activeColor : inactiveColor"
+  [style.border-radius]="borderRadius"
+  (click)="onToggle()"
+>
+  <span
+    class="switch-thumb"
+    [style.width.px]="thumbSize"
+    [style.height.px]="thumbSize"
+    [style.transform]="thumbTranslateX"
+  ></span>
+</button>
