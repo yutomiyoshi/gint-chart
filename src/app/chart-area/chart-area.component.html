@@ -28,12 +28,28 @@
     >
       <!-- プロジェクト行 -->
       <div *ngIf="item.type === 'project'" class="project-header">
+        <button
+          class="collapse-button"
+          [class.collapsed]="item.isCollapsed"
+          (click)="onToggleCollapse(item)"
+          [title]="item.isCollapsed ? '展開' : '折り畳み'"
+        >
+          <span class="collapse-icon">▶</span>
+        </button>
         <div class="project-title">{{ item.data.name }}</div>
         <div class="project-description">{{ item.data.description }}</div>
       </div>
 
       <!-- マイルストーン行 -->
       <div *ngIf="item.type === 'milestone'" class="milestone-header">
+        <button
+          class="collapse-button"
+          [class.collapsed]="item.isCollapsed"
+          (click)="onToggleCollapse(item)"
+          [title]="item.isCollapsed ? '展開' : '折り畳み'"
+        >
+          <span class="collapse-icon">▶</span>
+        </button>
         <div class="milestone-title">{{ item.data.title }}</div>
         <div class="milestone-state">{{ item.data.state }}</div>
         <div class="milestone-due-date" *ngIf="item.data.due_date">

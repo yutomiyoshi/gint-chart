@@ -54,6 +54,12 @@ $calendar-area-height: 40px;
   z-index: 3;
   position: relative;
 
+  .project-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
   .project-title {
     color: #495057;
     margin-bottom: 4px;
@@ -74,6 +80,12 @@ $calendar-area-height: 40px;
   font-size: 14px;
   z-index: 3;
   position: relative;
+
+  .milestone-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
 
   .milestone-title {
     color: #495057;
@@ -120,4 +132,37 @@ $calendar-area-height: 40px;
 
   // カレンダーの縦線はissue-barの全面にあるので、ツールチップイベントに反応する
   z-index: 2;
+}
+
+.collapse-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+  }
+
+  &:focus {
+    outline: 2px solid #007bff;
+    outline-offset: 2px;
+  }
+
+  .collapse-icon {
+    font-size: 12px;
+    transition: transform 0.2s;
+    color: #495057;
+  }
+
+  &.collapsed .collapse-icon {
+    transform: rotate(-90deg);
+  }
 }

@@ -35,6 +35,8 @@ import { Subscription } from 'rxjs';
 export interface ChartRowItem {
   type: 'project' | 'milestone' | 'issue';
   data: any;
+  isCollapsed?: boolean; // 折り畳み状態
+  parentId?: string; // 親のID（プロジェクトIDまたはマイルストーンID）
 }
 
 @Component({
@@ -69,6 +71,11 @@ export class ChartAreaComponent implements OnInit, AfterViewInit {
    * チャート行のアイテム（プロジェクト、マイルストーン、イシューを階層的に配置）
    */
   chartRowItems: ChartRowItem[] = [];
+
+  /**
+   * 折り畳み状態を管理するMap
+   */
+  private collapsedStates = new Map<string, boolean>();
 
   /**
    * カレンダーの縦線
@@ -146,28 +153,62 @@ export class ChartAreaComponent implements OnInit, AfterViewInit {
     this.chartRowItems = [];
 
     this.projectTrees.forEach((projectTree) => {
+      const projectId = `project-${projectTree.project.id}`;
+      const isProjectCollapsed = this.collapsedStates.get(projectId) || false;
+
       // プロジェクト行を追加
       this.chartRowItems.push({
         type: 'project',
         data: projectTree.project,
+        isCollapsed: isProjectCollapsed,
       });
 
-      // マイルストーン行を追加
-      projectTree.milestones.forEach((milestoneTree) => {
-        this.chartRowItems.push({
-          type: 'milestone',
-          data: milestoneTree.milestone,
-        });
+      // プロジェクトが折り畳まれていない場合のみ、マイルストーンとイシューを表示
+      if (!isProjectCollapsed) {
+        projectTree.milestones.forEach((milestoneTree) => {
+          const milestoneId = `milestone-${milestoneTree.milestone.id}`;
+          const isMilestoneCollapsed =
+            this.collapsedStates.get(milestoneId) || false;
 
-        // イシュー行を追加
-        milestoneTree.issues.forEach((issue) => {
+          // マイルストーン行を追加
           this.chartRowItems.push({
-            type: 'issue',
-            data: issue,
+            type: 'milestone',
+            data: milestoneTree.milestone,
+            isCollapsed: isMilestoneCollapsed,
+            parentId: projectId,
           });
+
+          // マイルストーンが折り畳まれていない場合のみ、イシューを表示
+          if (!isMilestoneCollapsed) {
+            milestoneTree.issues.forEach((issue) => {
+              this.chartRowItems.push({
+                type: 'issue',
+                data: issue,
+                parentId: milestoneId,
+              });
+            });
+          }
         });
-      });
+      }
     });
+  }
+
+  /**
+   * 折り畳みボタンのクリックイベントハンドラー
+   */
+  onToggleCollapse(item: ChartRowItem): void {
+    if (item.type === 'project') {
+      const projectId = `project-${item.data.id}`;
+      const currentState = this.collapsedStates.get(projectId) || false;
+      this.collapsedStates.set(projectId, !currentState);
+    } else if (item.type === 'milestone') {
+      const milestoneId = `milestone-${item.data.id}`;
+      const currentState = this.collapsedStates.get(milestoneId) || false;
+      this.collapsedStates.set(milestoneId, !currentState);
+    }
+
+    // チャート行アイテムを再構築
+    this.buildChartRowItems();
   }
 
   ngAfterViewInit(): void {
