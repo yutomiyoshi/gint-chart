@@ -87,7 +87,7 @@ export class ToastService {
      * - まだトーストがないときはすみやかに表示する
      * - すでにトーストが表示されているときは、待機する
      */
-    this._semaphore.request(showAction);
+    this._semaphore.request(showAction).subscribe();
   }
 
   /**
