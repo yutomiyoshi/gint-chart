@@ -71,6 +71,9 @@ export class ToastService {
 
     setTimeout(() => {
       this._info.next(false);
+      this._id = undefined;
+      this._message = undefined;
+      this._type = undefined;
     }, duration);
   }
 }
