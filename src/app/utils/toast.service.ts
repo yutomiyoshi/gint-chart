@@ -17,6 +17,12 @@ export class ToastService {
   private _id: number | undefined = undefined;
   private _message: string | undefined = undefined;
   private _type: ToastType | undefined = undefined;
+  private _duration: number | undefined = undefined;
+
+  /**
+   * タイマー管理
+   */
+  private _timeoutId: number | undefined = undefined;
 
   readonly info$ = this._info.asObservable();
 
@@ -66,14 +72,50 @@ export class ToastService {
     this._id = id;
     this._message = message;
     this._type = type;
+    this._duration = duration;
 
     this._info.next(true);
+    this.startDurationTimer();
+  }
 
-    setTimeout(() => {
-      this._info.next(false);
-      this._id = undefined;
-      this._message = undefined;
-      this._type = undefined;
-    }, duration);
+  /**
+   * タイマーを開始
+   */
+  startDurationTimer(): void {
+    if (isUndefined(this._duration)) {
+      Assertion.assert(
+        'ToastService is called before duration is set',
+        Assertion.no(22)
+      );
+      return;
+    }
+
+    this.clearDurationTimer();
+
+    this._timeoutId = window.setTimeout(() => {
+      this.hide();
+    }, this._duration);
+  }
+
+  /**
+   * タイマーをクリア
+   */
+  clearDurationTimer(): void {
+    if (this._timeoutId !== undefined) {
+      clearTimeout(this._timeoutId);
+      this._timeoutId = undefined;
+    }
+  }
+
+  /**
+   * トーストを非表示にする
+   */
+  private hide(): void {
+    this._info.next(false);
+    this._id = undefined;
+    this._message = undefined;
+    this._type = undefined;
+    this._duration = undefined;
+    this.clearDurationTimer();
   }
 }
