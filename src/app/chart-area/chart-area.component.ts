@@ -33,6 +33,7 @@ import { Milestone } from '../model/milestone.model';
 import { Issue } from '../model/issue.model';
 import { IssuesUpdateService } from '@src/app/update/issues-update.service';
 import { Assertion } from '../utils/assertion';
+import { isDebug } from '../debug';
 
 /**
  * チャート行のアイテムを表現するインターフェース
@@ -349,6 +350,9 @@ export class ChartAreaComponent implements OnInit, AfterViewInit {
   onIssueStartDateChange(issue: Issue, newStartDate: Date | undefined): void {
     issue.start_date = newStartDate;
     // サーバーに更新を送信
+    if (isDebug) {
+      return;
+    }
     this.updateIssueOnServer(issue);
   }
 
@@ -358,6 +362,9 @@ export class ChartAreaComponent implements OnInit, AfterViewInit {
   onIssueEndDateChange(issue: Issue, newEndDate: Date | undefined): void {
     issue.end_date = newEndDate;
     // サーバーに更新を送信
+    if (isDebug) {
+      return;
+    }
     this.updateIssueOnServer(issue);
   }
 

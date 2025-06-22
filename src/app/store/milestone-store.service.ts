@@ -13,6 +13,7 @@ import { GitLabApiService } from '../git-lab-api/git-lab-api.service';
 import { GitLabConfigStoreService } from './git-lab-config-store.service';
 import { SAMPLE_MILESTONES } from '../model/sample-milestone';
 import { GitLabApiMilestone } from '../git-lab-api/git-lab-milestone.model';
+import { isDebug } from '../debug';
 
 @Injectable({
   providedIn: 'root',
@@ -32,7 +33,7 @@ export class MilestoneStoreService {
    * @returns Observable<Milestone[]> 取得・反映後のmilestones配列を流すObservable
    */
   syncAllMilestones(): Observable<Milestone[]> {
-    if (true) {
+    if (isDebug) {
       this.milestonesSubject.next(SAMPLE_MILESTONES);
       return from([SAMPLE_MILESTONES]);
     }

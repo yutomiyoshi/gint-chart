@@ -6,6 +6,7 @@ import { GitLabApiService } from '@src/app/git-lab-api/git-lab-api.service';
 import { Project, convertJsonToProject } from '@src/app/model/project.model';
 import { GitLabConfigStoreService } from '@src/app/store/git-lab-config-store.service';
 import { SAMPLE_PROJECTS } from '@src/app/model/sample-project';
+import { isDebug } from '../debug';
 
 @Injectable({
   providedIn: 'root',
@@ -23,7 +24,7 @@ export class ProjectStoreService {
    * configにある全プロジェクトの全projectsをAPIから取得し、ストアに反映する
    */
   syncAllProjects(): Observable<Project[]> {
-    if (true) {
+    if (isDebug) {
       this.projectsSubject.next(SAMPLE_PROJECTS);
       return from([SAMPLE_PROJECTS]);
     }
