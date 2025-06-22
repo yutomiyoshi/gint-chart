@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { ToastService } from '../utils/toast.service';
+import { ToastService, ToastType } from '../utils/toast.service';
 
 @Component({
   selector: 'app-toast',
@@ -16,5 +16,13 @@ export class ToastComponent {
 
   get message(): string {
     return this.toastService.message;
+  }
+
+  get type(): ToastType {
+    return this.toastService.type;
+  }
+
+  hide(): void {
+    this.toastService.hide();
   }
 }
