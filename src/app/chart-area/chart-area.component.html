@@ -29,15 +29,12 @@
       <!-- プロジェクト行 -->
       <div *ngIf="item.type === 'project'" class="project-header">
         <div class="toggle-wrapper">
-          <button
-            class="switch-toggle"
-            [class.active]="!isItemCollapsed(item)"
-            (click)="onToggleCollapse(item)"
-            [title]="isItemCollapsed(item) ? '展開' : '折り畳み'"
+          <app-switch-toggle
+            [checked]="!isItemCollapsed(item)"
+            (checkedChange)="onToggleCollapse(item)"
             [disabled]="getChildCount(item) === 0"
-          >
-            <span class="switch-thumb"></span>
-          </button>
+            [title]="isItemCollapsed(item) ? '展開' : '折り畳み'"
+          ></app-switch-toggle>
           <span class="child-count" *ngIf="getChildCount(item) > 0"
             >({{ getChildCount(item) }})</span
           >
@@ -49,15 +46,12 @@
       <!-- マイルストーン行 -->
       <div *ngIf="item.type === 'milestone'" class="milestone-header">
         <div class="toggle-wrapper">
-          <button
-            class="switch-toggle"
-            [class.active]="!isItemCollapsed(item)"
-            (click)="onToggleCollapse(item)"
-            [title]="isItemCollapsed(item) ? '展開' : '折り畳み'"
+          <app-switch-toggle
+            [checked]="!isItemCollapsed(item)"
+            (checkedChange)="onToggleCollapse(item)"
             [disabled]="getChildCount(item) === 0"
-          >
-            <span class="switch-thumb"></span>
-          </button>
+            [title]="isItemCollapsed(item) ? '展開' : '折り畳み'"
+          ></app-switch-toggle>
           <span class="child-count" *ngIf="getChildCount(item) > 0"
             >({{ getChildCount(item) }})</span
           >
