@@ -40,6 +40,64 @@ $calendar-area-height: 40px;
   }
 }
 
+.chart-row {
+  position: relative;
+  z-index: 1;
+}
+
+.project-row {
+  background-color: #f8f9fa;
+  border-bottom: 2px solid #dee2e6;
+  padding: 12px 16px;
+  font-weight: bold;
+  font-size: 16px;
+  z-index: 3;
+  position: relative;
+
+  .project-title {
+    color: #495057;
+    margin-bottom: 4px;
+  }
+
+  .project-description {
+    color: #6c757d;
+    font-size: 14px;
+    font-weight: normal;
+  }
+}
+
+.milestone-row {
+  background-color: #e9ecef;
+  border-bottom: 1px solid #ced4da;
+  padding: 8px 16px;
+  font-weight: 600;
+  font-size: 14px;
+  z-index: 3;
+  position: relative;
+
+  .milestone-title {
+    color: #495057;
+    margin-bottom: 2px;
+  }
+
+  .milestone-state {
+    color: #6c757d;
+    font-size: 12px;
+    font-weight: normal;
+    margin-right: 8px;
+  }
+
+  .milestone-due-date {
+    color: #6c757d;
+    font-size: 12px;
+    font-weight: normal;
+  }
+}
+
+.issue-row {
+  // 既存のissue-rowスタイルはそのまま
+}
+
 .calendar-day-per-block {
   position: absolute;
   // カレンダーの縦線

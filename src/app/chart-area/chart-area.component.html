@@ -14,22 +14,47 @@
   </div>
 
   <!--
-  ** Issue Row Area
-  -- issue一つに1行割り当てて、リスト展開する
+  ** Chart Row Area
+  -- プロジェクト、マイルストーン、イシューを階層的に表示
   -->
   <div class="issue-row-area" #issueRowArea>
-    <app-issue-row
-      *ngFor="let issue of issues"
-      [id]="issue.id"
-      [title]="issue.title"
-      [state]="issue.state"
-      [assignee]="issue.assignee"
-      [(startDate)]="issue.start_date"
-      [(endDate)]="issue.end_date"
-      [titleWidth]="titleWidth"
-      [statusWidth]="statusWidth"
-      [assigneeWidth]="assigneeWidth"
-    ></app-issue-row>
+    <!-- プロジェクト行 -->
+    <div
+      *ngFor="let item of chartRowItems; let i = index"
+      class="chart-row"
+      [class.project-row]="item.type === 'project'"
+      [class.milestone-row]="item.type === 'milestone'"
+      [class.issue-row]="item.type === 'issue'"
+    >
+      <!-- プロジェクト行 -->
+      <div *ngIf="item.type === 'project'" class="project-header">
+        <div class="project-title">{{ item.data.name }}</div>
+        <div class="project-description">{{ item.data.description }}</div>
+      </div>
+
+      <!-- マイルストーン行 -->
+      <div *ngIf="item.type === 'milestone'" class="milestone-header">
+        <div class="milestone-title">{{ item.data.title }}</div>
+        <div class="milestone-state">{{ item.data.state }}</div>
+        <div class="milestone-due-date" *ngIf="item.data.due_date">
+          {{ item.data.due_date | date }}
+        </div>
+      </div>
+
+      <!-- イシュー行 -->
+      <app-issue-row
+        *ngIf="item.type === 'issue'"
+        [id]="item.data.id"
+        [title]="item.data.title"
+        [state]="item.data.state"
+        [assignee]="item.data.assignee"
+        [(startDate)]="item.data.start_date"
+        [(endDate)]="item.data.end_date"
+        [titleWidth]="titleWidth"
+        [statusWidth]="statusWidth"
+        [assigneeWidth]="assigneeWidth"
+      ></app-issue-row>
+    </div>
   </div>
 
   <!-- カレンダーの背景 - スクロール外まで表示 -->

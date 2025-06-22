@@ -7,8 +7,9 @@ import {
   AfterViewInit,
   ChangeDetectorRef,
 } from '@angular/core';
-import { IssuesStoreService } from '@src/app/store/issues-store.service';
-import { Issue } from '@src/app/model/issue.model';
+import { DatePipe } from '@angular/common';
+import { ProjectTreeStoreService } from '@src/app/store/project-tree-store.service';
+import { ProjectTree } from '@src/app/model/project-tree.model';
 import {
   calendarEndDateOffset,
   calendarStartDateOffset,
@@ -28,11 +29,20 @@ import { CalendarRangeService } from '@src/app/chart-area/calendar-range.service
 import { CalendarWidthService } from '@src/app/chart-area/calendar-width.service';
 import { Subscription } from 'rxjs';
 
+/**
+ * チャート行のアイテムを表現するインターフェース
+ */
+export interface ChartRowItem {
+  type: 'project' | 'milestone' | 'issue';
+  data: any;
+}
+
 @Component({
   selector: 'app-chart-area',
   standalone: false,
   templateUrl: './chart-area.component.html',
   styleUrls: ['./chart-area.component.scss'],
+  providers: [DatePipe],
 })
 export class ChartAreaComponent implements OnInit, AfterViewInit {
   /**
@@ -51,9 +61,14 @@ export class ChartAreaComponent implements OnInit, AfterViewInit {
   @Input() isShowAssignee = true;
 
   /**
-   * イシューリスト
+   * プロジェクトツリー
    */
-  issues: Issue[] = [];
+  projectTrees: ProjectTree[] = [];
+
+  /**
+   * チャート行のアイテム（プロジェクト、マイルストーン、イシューを階層的に配置）
+   */
+  chartRowItems: ChartRowItem[] = [];
 
   /**
    * カレンダーの縦線
@@ -88,7 +103,7 @@ export class ChartAreaComponent implements OnInit, AfterViewInit {
   private _assigneeWidth: number = assigneeWidthDefault;
 
   constructor(
-    private readonly issueStore: IssuesStoreService,
+    private readonly projectTreeStore: ProjectTreeStoreService,
     private readonly calendarDisplayService: CalendarDisplayService,
     private readonly calendarPositionService: CalendarPositionService,
     private readonly calendarRangeService: CalendarRangeService,
@@ -98,11 +113,9 @@ export class ChartAreaComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.subscription.add(
-      this.issueStore.issues$.subscribe((issues) => {
-        // TODO: ここでissuesをソートする
-        // TODO: ここでissuesをグループ化する
-        // TODO: ここでissuesをフィルターする
-        this.issues = issues;
+      this.projectTreeStore.projectTree$.subscribe((projectTrees) => {
+        this.projectTrees = projectTrees;
+        this.buildChartRowItems();
       })
     );
 
@@ -124,6 +137,37 @@ export class ChartAreaComponent implements OnInit, AfterViewInit {
       DateHandler.getTodayOffsetDate(calendarStartDateOffset),
       DateHandler.getTodayOffsetDate(calendarEndDateOffset)
     );
+  }
+
+  /**
+   * プロジェクトツリーからチャート行アイテムを構築
+   */
+  private buildChartRowItems(): void {
+    this.chartRowItems = [];
+
+    this.projectTrees.forEach((projectTree) => {
+      // プロジェクト行を追加
+      this.chartRowItems.push({
+        type: 'project',
+        data: projectTree.project,
+      });
+
+      // マイルストーン行を追加
+      projectTree.milestones.forEach((milestoneTree) => {
+        this.chartRowItems.push({
+          type: 'milestone',
+          data: milestoneTree.milestone,
+        });
+
+        // イシュー行を追加
+        milestoneTree.issues.forEach((issue) => {
+          this.chartRowItems.push({
+            type: 'issue',
+            data: issue,
+          });
+        });
+      });
+    });
   }
 
   ngAfterViewInit(): void {
