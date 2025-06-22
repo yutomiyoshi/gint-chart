@@ -6,10 +6,10 @@
   -->
   <div class="calendar-area">
     <app-issue-column
-      [(titleWidth)]="titleWidth"
       [statusWidth]="statusWidth"
       [assigneeWidth]="assigneeWidth"
       [isScrollBarActive]="isScrollBarActive"
+      [(titleWidth)]="titleWidth"
     ></app-issue-column>
   </div>
 
@@ -31,9 +31,9 @@
         <div class="toggle-wrapper">
           <app-switch-toggle
             [checked]="!isItemCollapsed(item)"
-            (checkedChange)="onToggleCollapse(item)"
             [disabled]="getChildCount(item) === 0"
             [title]="isItemCollapsed(item) ? '展開' : '折り畳み'"
+            (checkedChange)="onToggleCollapse(item)"
           ></app-switch-toggle>
           <span class="child-count" *ngIf="getChildCount(item) > 0"
             >({{ getChildCount(item) }})</span
@@ -50,9 +50,9 @@
         <div class="toggle-wrapper">
           <app-switch-toggle
             [checked]="!isItemCollapsed(item)"
-            (checkedChange)="onToggleCollapse(item)"
             [disabled]="getChildCount(item) === 0"
             [title]="isItemCollapsed(item) ? '展開' : '折り畳み'"
+            (checkedChange)="onToggleCollapse(item)"
           ></app-switch-toggle>
           <span class="child-count" *ngIf="getChildCount(item) > 0"
             >({{ getChildCount(item) }})</span
@@ -74,11 +74,11 @@
         [title]="item.data.title"
         [state]="item.data.state"
         [assignee]="item.data.assignee"
-        [(startDate)]="item.data.start_date"
-        [(endDate)]="item.data.end_date"
         [titleWidth]="titleWidth"
         [statusWidth]="statusWidth"
         [assigneeWidth]="assigneeWidth"
+        [(startDate)]="item.data.start_date"
+        [(endDate)]="item.data.end_date"
       ></app-issue-row>
     </div>
   </div>

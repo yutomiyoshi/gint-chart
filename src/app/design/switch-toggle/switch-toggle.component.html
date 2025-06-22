@@ -1,14 +1,14 @@
 <button
   class="switch-toggle"
+  role="switch"
   [class.active]="checked"
-  (click)="onToggle()"
   [disabled]="disabled"
   [attr.aria-checked]="checked"
-  role="switch"
   [style.width.px]="width"
   [style.height.px]="height"
   [style.background-color]="checked ? activeColor : inactiveColor"
   [style.border-radius]="borderRadius"
+  (click)="onToggle()"
 >
   <span
     class="switch-thumb"
