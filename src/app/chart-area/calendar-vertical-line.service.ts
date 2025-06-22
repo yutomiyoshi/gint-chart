@@ -37,6 +37,16 @@ export interface CalendarVerticalLine {
    * アルゴリズムに基づいて表示するかどうか
    */
   isDisplayed: boolean;
+
+  /**
+   * 土曜日
+   */
+  isSaturday: boolean;
+
+  /**
+   * 日曜日
+   */
+  isSunday: boolean;
 }
 
 /**
@@ -160,6 +170,8 @@ export class CalendarDisplayService {
         isToday: this.todayService.isToday(date),
         isMonthStart: date.getDate() === 1,
         isDisplayed: i % step === 0,
+        isSaturday: date.getDay() === 6,
+        isSunday: date.getDay() === 0,
       });
       scanner.setDate(scanner.getDate() + 1);
     }
@@ -184,6 +196,8 @@ export class CalendarDisplayService {
         isToday: this.todayService.isToday(date),
         isMonthStart: date.getDate() === 1,
         isDisplayed: i === 0 || date.getDay() === 1,
+        isSaturday: date.getDay() === 6,
+        isSunday: date.getDay() === 0,
       });
       scanner.setDate(scanner.getDate() + 1);
     }
@@ -208,6 +222,8 @@ export class CalendarDisplayService {
         isToday: this.todayService.isToday(date),
         isMonthStart: date.getDate() === 1,
         isDisplayed: i === 0 || date.getDate() === 1 || date.getDate() === 16,
+        isSaturday: date.getDay() === 6,
+        isSunday: date.getDay() === 0,
       });
       scanner.setDate(scanner.getDate() + 1);
     }
