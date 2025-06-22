@@ -72,13 +72,22 @@ export class ToastService {
    * @param duration トーストの表示時間（ミリ秒）
    */
   show(id: number, message: string, type: ToastType, duration: number): void {
-    this._id = id;
-    this._message = message;
-    this._type = type;
-    this._duration = duration;
+    const showAction = () => {
+      this._id = id;
+      this._message = message;
+      this._type = type;
+      this._duration = duration;
 
-    this._isShow$.next(true);
-    this.startDurationTimer();
+      this._isShow$.next(true);
+      this.startDurationTimer();
+    };
+
+    /**
+     * セマフォを使用して、同時に表示できるトーストの最大数を超えないようにする
+     * - まだトーストがないときはすみやかに表示する
+     * - すでにトーストが表示されているときは、待機する
+     */
+    this._semaphore.request(showAction);
   }
 
   /**
@@ -120,5 +129,7 @@ export class ToastService {
     this._type = undefined;
     this._duration = undefined;
     this.clearDurationTimer();
+
+    this._semaphore.release();
   }
 }
