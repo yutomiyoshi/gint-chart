@@ -58,11 +58,13 @@
             >({{ getChildCount(item) }})</span
           >
         </div>
-        <div class="milestone-title">{{ item.data.title }}</div>
-        <div class="milestone-state">{{ item.data.state }}</div>
-        <div class="milestone-due-date" *ngIf="item.data.due_date">
-          {{ item.data.due_date | date }}
+        <div class="milestone-info">
+          <div class="milestone-title">{{ item.data.title }}</div>
+          <div class="milestone-due-date" *ngIf="item.data.due_date">
+            {{ item.data.due_date | date : "yyyy/MM/dd" }}
+          </div>
         </div>
+        <div class="milestone-state">{{ item.data.state }}</div>
       </div>
 
       <!-- イシュー行 -->
