@@ -62,9 +62,9 @@ export class AppComponent implements OnInit, OnDestroy {
           this.loadingOverlay = false;
         },
         next: () => {
-          // ProjectTreeStoreServiceを使用して全データを同期
+          // ProjectTreeStoreServiceを使用してプロジェクト、マイルストーン、イシューを同期
           this.projectTreeStore
-            .syncAllData()
+            .syncProjectMilestoneIssues()
             .pipe(takeUntil(this.destroy$))
             .subscribe({
               error: (error) => {

@@ -51,9 +51,9 @@ export class ProjectTreeStoreService {
   }
 
   /**
-   * 全データを同期してツリー構造を更新
+   * プロジェクト、マイルストーン、イシューの全データを同期してツリー構造を更新
    */
-  syncAllData(): Observable<ProjectTree[]> {
+  syncProjectMilestoneIssues(): Observable<ProjectTree[]> {
     return combineLatest([
       this.projectStore.syncAllProjects(),
       this.milestoneStore.syncAllMilestones(),
