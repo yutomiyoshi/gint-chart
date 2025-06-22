@@ -2,7 +2,7 @@ import { Observable, Subscriber } from 'rxjs';
 import { isUndefined } from './utils';
 
 /**
- *
+ * 1つの資源を管理するセマフォ
  */
 export class OneResourceSemaphore {
   /**
