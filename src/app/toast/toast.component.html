@@ -6,6 +6,9 @@
   (mouseenter)="onMouseEnter()"
   (mouseleave)="onMouseLeave()"
 >
+  <!-- 日時 -->
+  <div class="date">{{ getFormattedDate() }}</div>
+
   <!-- アイコン -->
   <div class="icon">
     <span class="icon-text">{{ getIconClass() }}</span>

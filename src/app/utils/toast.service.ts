@@ -22,6 +22,9 @@ export class ToastService {
   private _type: ToastType | undefined = undefined;
   private _duration: number | undefined = undefined;
 
+  // トーストの表示指示が出た時間（実際に表示が出た時間とは違う）
+  private _date: Date | undefined = undefined;
+
   /**
    * タイマー管理
    */
@@ -62,6 +65,17 @@ export class ToastService {
     return this._type;
   }
 
+  get date(): Date {
+    if (isUndefined(this._date)) {
+      Assertion.assert(
+        'ToastService is called before date is set',
+        Assertion.no(26)
+      );
+      return new Date();
+    }
+    return this._date;
+  }
+
   /**
    * トーストを表示する
    * トーストは、durationミリ秒後に自動的に非表示になる。
@@ -72,11 +86,13 @@ export class ToastService {
    * @param duration トーストの表示時間（ミリ秒）
    */
   show(id: number, message: string, type: ToastType, duration: number): void {
+    const now = new Date();
     const showAction = () => {
       this._id = id;
       this._message = message;
       this._type = type;
       this._duration = duration;
+      this._date = now;
 
       this._isShow$.next(true);
       this.startDurationTimer();
@@ -128,6 +144,7 @@ export class ToastService {
     this._message = undefined;
     this._type = undefined;
     this._duration = undefined;
+    this._date = undefined;
     this.clearDurationTimer();
 
     this._semaphore.release();
