@@ -24,7 +24,7 @@ export class ToastService {
     if (isUndefined(this._id)) {
       Assertion.assert(
         'ToastService is called before id is set',
-        Assertion.no(16)
+        Assertion.no(23)
       );
       return -1;
     }
@@ -35,7 +35,7 @@ export class ToastService {
     if (isUndefined(this._message)) {
       Assertion.assert(
         'ToastService is called before message is set',
-        Assertion.no(16)
+        Assertion.no(24)
       );
       return '';
     }
@@ -46,7 +46,7 @@ export class ToastService {
     if (isUndefined(this._type)) {
       Assertion.assert(
         'ToastService is called before type is set',
-        Assertion.no(16)
+        Assertion.no(25)
       );
       return 'info';
     }
