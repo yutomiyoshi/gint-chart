@@ -25,6 +25,15 @@
   </div>
 </div>
 
+<!--
+** Toast
+- 通信成否などを右下に表示するポップアップのこと
+ -->
+<div class="toast-container" *ngIf="isShowToast">
+  <app-toast></app-toast>
+</div>
+
+<!-- 以下、メインコンテンツ -->
 <!-- Header -->
 <div class="header">
   <app-header

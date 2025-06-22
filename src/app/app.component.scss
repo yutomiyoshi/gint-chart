@@ -67,6 +67,28 @@ $dialog-animation-duration: 0.3s;
   -webkit-backdrop-filter: blur(4px);
 }
 
+$toast-width: 300px;
+$toast-height: 100px;
+$toast-bottom: 10px;
+$toast-right: 10px;
+$toast-border-radius: 10px;
+$toast-padding: 10px;
+$toast-box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+$toast-opacity: 0.8;
+
+.toast-container {
+  position: fixed;
+  bottom: $toast-bottom;
+  right: $toast-right;
+  z-index: 9999;
+  width: $toast-width;
+  height: $toast-height;
+  border-radius: $toast-border-radius;
+  padding: $toast-padding;
+  box-shadow: $toast-box-shadow;
+  opacity: $toast-opacity;
+}
+
 $header-height: 40px;
 
 .header {

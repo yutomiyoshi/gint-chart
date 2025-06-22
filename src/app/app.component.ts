@@ -9,6 +9,8 @@ import { Assertion } from '@src/app/utils/assertion';
 import { MilestoneStoreService } from '@src/app/store/milestone-store.service';
 import { ProjectStoreService } from '@src/app/store/project-store.service';
 import { ProjectTreeStoreService } from '@src/app/store/project-tree-store.service';
+import { ToastService } from './utils/toast.service';
+import { isDebug } from './debug';
 
 @Component({
   selector: 'app-root',
@@ -25,13 +27,19 @@ export class AppComponent implements OnInit, OnDestroy {
   isDialogClosing = false;
   private destroy$ = new Subject<void>();
 
+  /**
+   * トーストの表示情報
+   */
+  isShowToast = false;
+
   constructor(
     private readonly issueStore: IssuesStoreService,
     private readonly milestoneStore: MilestoneStoreService,
     private readonly projectStore: ProjectStoreService,
     private readonly gitLabConfigStore: GitLabConfigStoreService,
     private readonly issueDetailDialogExpansionService: IssueDetailDialogExpansionService,
-    private readonly projectTreeStore: ProjectTreeStoreService
+    private readonly projectTreeStore: ProjectTreeStoreService,
+    private readonly toastService: ToastService
   ) {}
 
   ngOnInit() {
@@ -80,6 +88,18 @@ export class AppComponent implements OnInit, OnDestroy {
             });
         },
       });
+
+    this.toastService.info$.pipe(takeUntil(this.destroy$)).subscribe({
+      next: (isShow: boolean) => {
+        this.isShowToast = isShow;
+      },
+    });
+
+    if (isDebug) {
+      setInterval(() => {
+        this.toastService.show(1, 'This is Debuging Mode.', 'success', 1000);
+      }, 2000);
+    }
   }
 
   ngOnDestroy() {
