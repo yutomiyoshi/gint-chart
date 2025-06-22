@@ -97,7 +97,12 @@ export class AppComponent implements OnInit, OnDestroy {
 
     if (isDebug) {
       setInterval(() => {
-        this.toastService.show(1, 'This is Debuging Mode.', 'success', 1000);
+        this.toastService.show(
+          1,
+          'This is Debuging Mode. Your fetch and update of issues is executed without GitLab Server, showing just dummy-data. So, it is waste of time to compare with GitLab Home Page and this page.',
+          'success',
+          1000
+        );
       }, 2000);
     }
   }

@@ -74,7 +74,6 @@ $toast-right: 10px;
 $toast-border-radius: 10px;
 $toast-padding: 10px;
 $toast-box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
-$toast-opacity: 0.8;
 
 .toast-container {
   position: fixed;
@@ -86,7 +85,6 @@ $toast-opacity: 0.8;
   border-radius: $toast-border-radius;
   padding: $toast-padding;
   box-shadow: $toast-box-shadow;
-  opacity: $toast-opacity;
 }
 
 $header-height: 40px;
