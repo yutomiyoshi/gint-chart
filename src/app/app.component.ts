@@ -63,9 +63,11 @@ export class AppComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         error: (error) => {
-          Assertion.assert(
-            'Failed to load GitLab config: ' + error,
-            Assertion.no(1)
+          this.toastService.show(
+            Assertion.no(32),
+            `Failed to load GitLab config. error: ${error}`,
+            'error',
+            5000
           );
           this.loadingOverlay = false;
         },
@@ -76,9 +78,11 @@ export class AppComponent implements OnInit, OnDestroy {
             .pipe(takeUntil(this.destroy$))
             .subscribe({
               error: (error) => {
-                Assertion.assert(
-                  'Failed to sync project tree data: ' + error,
-                  Assertion.no(2)
+                this.toastService.show(
+                  Assertion.no(31),
+                  `Failed to sync project, milestone, and issue. error: ${error}`,
+                  'error',
+                  5000
                 );
                 this.loadingOverlay = false;
               },
