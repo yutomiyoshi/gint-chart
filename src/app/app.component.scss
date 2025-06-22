@@ -68,23 +68,15 @@ $dialog-animation-duration: 0.3s;
 }
 
 $toast-width: 300px;
-$toast-height: 100px;
-$toast-bottom: 10px;
-$toast-right: 10px;
-$toast-border-radius: 10px;
-$toast-padding: 10px;
-$toast-box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+$toast-bottom: 40px;
+$toast-right: 40px;
 
 .toast-container {
   position: fixed;
   bottom: $toast-bottom;
   right: $toast-right;
-  z-index: 9999;
   width: $toast-width;
-  height: $toast-height;
-  border-radius: $toast-border-radius;
-  padding: $toast-padding;
-  box-shadow: $toast-box-shadow;
+  z-index: 9999;
 }
 
 $header-height: 40px;

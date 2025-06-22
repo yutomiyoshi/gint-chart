@@ -1,0 +1,22 @@
+<div class="toast-container" [style.background-color]="backGroundColor">
+  <!-- アイコン -->
+  <div class="icon">
+    <span class="icon-text">{{ getIconClass() }}</span>
+  </div>
+
+  <!-- タイプ（題名） -->
+  <div class="type">{{ type | titlecase }}</div>
+
+  <!-- 閉じるボタン -->
+  <button
+    class="close-button"
+    (click)="hide()"
+    type="button"
+    aria-label="閉じる"
+  >
+    <span class="close-icon">×</span>
+  </button>
+
+  <!-- メッセージ -->
+  <div class="message">{{ message }}</div>
+</div>

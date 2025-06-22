@@ -101,9 +101,9 @@ export class AppComponent implements OnInit, OnDestroy {
           1,
           'This is Debuging Mode. Your fetch and update of issues is executed without GitLab Server, showing just dummy-data. So, it is waste of time to compare with GitLab Home Page and this page.',
           'success',
-          1000
+          10000
         );
-      }, 2000);
+      }, 10001);
     }
   }
 
