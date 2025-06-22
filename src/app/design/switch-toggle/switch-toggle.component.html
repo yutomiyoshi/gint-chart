@@ -5,6 +5,15 @@
   [disabled]="disabled"
   [attr.aria-checked]="checked"
   role="switch"
+  [style.width.px]="width"
+  [style.height.px]="height"
+  [style.background-color]="checked ? activeColor : inactiveColor"
+  [style.border-radius]="borderRadius"
 >
-  <span class="switch-thumb"></span>
+  <span
+    class="switch-thumb"
+    [style.width.px]="thumbSize"
+    [style.height.px]="thumbSize"
+    [style.transform]="thumbTranslateX"
+  ></span>
 </button>

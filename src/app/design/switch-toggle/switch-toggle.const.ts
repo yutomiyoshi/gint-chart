@@ -1,0 +1,6 @@
+export const SWITCH_TOGGLE_WIDTH = 40;
+export const SWITCH_TOGGLE_HEIGHT = 22;
+export const SWITCH_TOGGLE_THUMB_MARGIN = 4;
+export const SWITCH_TOGGLE_THUMB_OFFSET = 2;
+export const SWITCH_TOGGLE_ACTIVE_COLOR = '#2196f3';
+export const SWITCH_TOGGLE_INACTIVE_COLOR = '#e0e0e0';
