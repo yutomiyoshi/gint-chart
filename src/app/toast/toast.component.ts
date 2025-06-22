@@ -92,4 +92,12 @@ export class ToastComponent {
   hide(): void {
     this.toastService.hide();
   }
+
+  onMouseEnter(): void {
+    this.toastService.clearDurationTimer();
+  }
+
+  onMouseLeave(): void {
+    this.toastService.startDurationTimer();
+  }
 }
