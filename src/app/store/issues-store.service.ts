@@ -6,7 +6,6 @@ import { Issue, convertJsonToIssue } from '@src/app/model/issue.model';
 import { GitLabConfigStoreService } from '@src/app/store/git-lab-config-store.service';
 import { SAMPLE_ISSUES } from '@src/app/model/sample-issues';
 import { GitLabApiIssue } from '@src/app/git-lab-api/git-lab-issue.model';
-import { GitLabProjectConfig } from '../model/git-lab-config.model';
 
 @Injectable({
   providedIn: 'root',
@@ -31,17 +30,17 @@ export class IssuesStoreService {
       return from([SAMPLE_ISSUES]);
     }
     const config = this.gitlabConfigStore.getConfig();
-    const projects = config.projects || [];
+    const projectIds = config.projectId || [];
     const accessToken = config.accessToken || '';
-    if (projects.length === 0) {
+    if (projectIds.length === 0) {
       this.issuesSubject.next([]);
       return from([[]]);
     }
 
     // 各プロジェクトごとに全ページのissuesを取得
-    return from(projects).pipe(
-      mergeMap((project) =>
-        this.fetchAllIssuesForProject(project, accessToken)
+    return from(projectIds).pipe(
+      mergeMap((projectId) =>
+        this.fetchAllIssuesForProject(projectId, config.url, accessToken)
       ),
       toArray(), // [[Issue], [Issue], ...] の配列に
       map((issuesArr) => issuesArr.flat()), // 1次元配列に
@@ -64,14 +63,15 @@ export class IssuesStoreService {
    * @returns Observable<Issue[]> 取得したissues配列を流すObservable
    */
   private fetchAllIssuesForProject(
-    project: GitLabProjectConfig,
+    projectId: number,
+    url: string,
     accessToken: string
   ): Observable<Issue[]> {
-    const urlObj = new URL(project.url);
+    const urlObj = new URL(url);
     const host = urlObj.href;
     return this.gitlabApi.fetch<GitLabApiIssue, Issue>(
       host,
-      String(project.projectId),
+      String(projectId),
       accessToken,
       'issues',
       convertJsonToIssue
