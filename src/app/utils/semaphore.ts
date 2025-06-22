@@ -60,6 +60,7 @@ export class OneResourceSemaphore {
       return;
     }
     this.subscriber.next();
+    this.subscriber.complete();
     this.isUsed = false;
 
     if (this._queue.length > 0) {
