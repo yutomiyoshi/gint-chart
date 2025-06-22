@@ -31,6 +31,15 @@ const TOAST_STYLE_MAP: Record<ToastType, ToastStyle> = {
   },
 };
 
+const defaultIcon = 'ℹ';
+
+const TOAST_ICON_MAP: Record<ToastType, string> = {
+  success: '✓',
+  error: '✕',
+  info: 'ℹ',
+  warning: '⚠',
+};
+
 @Component({
   selector: 'app-toast',
   standalone: false,
@@ -68,13 +77,7 @@ export class ToastComponent {
   }
 
   getIconClass(): string {
-    const iconMap: Record<ToastType, string> = {
-      success: '✓',
-      error: '✕',
-      info: 'ℹ',
-      warning: '⚠',
-    };
-    return iconMap[this.type] || 'ℹ';
+    return TOAST_ICON_MAP[this.type] || defaultIcon;
   }
 
   private getToastStyle(): ToastStyle {
