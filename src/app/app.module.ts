@@ -10,6 +10,7 @@ import { IssueRowComponent } from '@src/app/chart-area/issue-row/issue-row.compo
 import { IssueColumnComponent } from '@src/app/chart-area/issue-column/issue-column.component';
 import { IssueDetailDialogComponent } from '@src/app/issue-detail-dialog/issue-detail-dialog.component';
 import { SwitchToggleComponent } from './design/switch-toggle/switch-toggle.component';
+import { ToastComponent } from './toast/toast.component';
 
 @NgModule({
   declarations: [
@@ -19,6 +20,7 @@ import { SwitchToggleComponent } from './design/switch-toggle/switch-toggle.comp
     IssueRowComponent,
     IssueColumnComponent,
     IssueDetailDialogComponent,
+    ToastComponent,
   ],
   imports: [
     BrowserModule,

@@ -34,6 +34,7 @@ import { Issue } from '../model/issue.model';
 import { IssuesUpdateService } from '@src/app/update/issues-update.service';
 import { Assertion } from '../utils/assertion';
 import { isDebug } from '../debug';
+import { ToastService } from '../utils/toast.service';
 
 /**
  * チャート行のアイテムを表現するインターフェース
@@ -133,6 +134,7 @@ export class ChartAreaComponent implements OnInit, AfterViewInit {
     private readonly calendarRangeService: CalendarRangeService,
     private readonly calendarWidthService: CalendarWidthService,
     private readonly issuesUpdateService: IssuesUpdateService,
+    private readonly toastService: ToastService,
     private readonly cdr: ChangeDetectorRef
   ) {}
 
@@ -378,12 +380,19 @@ export class ChartAreaComponent implements OnInit, AfterViewInit {
         next: (updatedIssue) => {
           // 更新されたissueで古いissueを置き換える
           Object.assign(issue, updatedIssue);
+          this.toastService.show(
+            Assertion.no(27),
+            `Issue ${issue.iid} updated`,
+            'success',
+            3000
+          );
         },
         error: (error) => {
-          // エラーが発生した場合は、元の値に戻すか、ユーザーに通知
-          Assertion.assert(
+          this.toastService.show(
+            Assertion.no(21),
             `Failed to update issue on server: ${error}`,
-            Assertion.no(21)
+            'error',
+            5000
           );
         },
       });

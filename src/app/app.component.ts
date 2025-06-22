@@ -9,6 +9,8 @@ import { Assertion } from '@src/app/utils/assertion';
 import { MilestoneStoreService } from '@src/app/store/milestone-store.service';
 import { ProjectStoreService } from '@src/app/store/project-store.service';
 import { ProjectTreeStoreService } from '@src/app/store/project-tree-store.service';
+import { ToastService } from './utils/toast.service';
+import { isDebug } from './debug';
 
 @Component({
   selector: 'app-root',
@@ -25,13 +27,19 @@ export class AppComponent implements OnInit, OnDestroy {
   isDialogClosing = false;
   private destroy$ = new Subject<void>();
 
+  /**
+   * トーストの表示情報
+   */
+  isShowToast = false;
+
   constructor(
     private readonly issueStore: IssuesStoreService,
     private readonly milestoneStore: MilestoneStoreService,
     private readonly projectStore: ProjectStoreService,
     private readonly gitLabConfigStore: GitLabConfigStoreService,
     private readonly issueDetailDialogExpansionService: IssueDetailDialogExpansionService,
-    private readonly projectTreeStore: ProjectTreeStoreService
+    private readonly projectTreeStore: ProjectTreeStoreService,
+    private readonly toastService: ToastService
   ) {}
 
   ngOnInit() {
@@ -55,9 +63,11 @@ export class AppComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         error: (error) => {
-          Assertion.assert(
-            'Failed to load GitLab config: ' + error,
-            Assertion.no(1)
+          this.toastService.show(
+            Assertion.no(32),
+            `Failed to load GitLab config. error: ${error}`,
+            'error',
+            5000
           );
           this.loadingOverlay = false;
         },
@@ -68,9 +78,11 @@ export class AppComponent implements OnInit, OnDestroy {
             .pipe(takeUntil(this.destroy$))
             .subscribe({
               error: (error) => {
-                Assertion.assert(
-                  'Failed to sync project tree data: ' + error,
-                  Assertion.no(2)
+                this.toastService.show(
+                  Assertion.no(31),
+                  `Failed to sync project, milestone, and issue. error: ${error}`,
+                  'error',
+                  5000
                 );
                 this.loadingOverlay = false;
               },
@@ -80,6 +92,50 @@ export class AppComponent implements OnInit, OnDestroy {
             });
         },
       });
+
+    this.toastService.isShow$.pipe(takeUntil(this.destroy$)).subscribe({
+      next: (isShow: boolean) => {
+        this.isShowToast = isShow;
+      },
+    });
+
+    // if (isDebug) {
+    //   setInterval(() => {
+    //     this.toastService.show(
+    //       1,
+    //       'This is Debuging Mode. Your fetch and update of issues is executed without GitLab Server, showing just dummy-data. So, it is waste of time to compare with GitLab Home Page and this page.',
+    //       'success',
+    //       1000
+    //     );
+    //   }, 2000);
+
+    //   setInterval(() => {
+    //     this.toastService.show(
+    //       1,
+    //       "It's a dummy Text. Just looking. Good buy. Ohtani-san, 25th-homerun!",
+    //       'error',
+    //       1000
+    //     );
+    //   }, 4000);
+
+    //   setInterval(() => {
+    //     this.toastService.show(
+    //       1,
+    //       "It's a dummy Text. Just looking. Good buy. Ohtani-san, 25th-homerun!",
+    //       'info',
+    //       1000
+    //     );
+    //   }, 5000);
+
+    //   setInterval(() => {
+    //     this.toastService.show(
+    //       1,
+    //       "It's a dummy Text. Just looking. Good buy. Ohtani-san, 25th-homerun!",
+    //       'warning',
+    //       1000
+    //     );
+    //   }, 8000);
+    // }
   }
 
   ngOnDestroy() {
