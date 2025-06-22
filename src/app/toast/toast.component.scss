@@ -46,13 +46,16 @@
   > .type {
     grid-column: 2;
     grid-row: 1;
-    font-weight: 500;
+    font-weight: bold;
     font-size: 13px;
     line-height: 1.2;
     color: inherit;
     margin: 0;
     text-transform: capitalize;
     opacity: 0.9;
+    display: flex;
+    align-items: center;
+    height: 24px;
   }
 
   // 閉じるボタン
