@@ -9,7 +9,7 @@ export type ToastType = 'success' | 'error' | 'info' | 'warning';
   providedIn: 'root',
 })
 export class ToastService {
-  private _info = new BehaviorSubject<boolean>(false);
+  private _isShow$ = new BehaviorSubject<boolean>(false);
 
   /**
    * これらの変数はトーストに表示するもの
@@ -24,7 +24,7 @@ export class ToastService {
    */
   private _timeoutId: number | undefined = undefined;
 
-  readonly info$ = this._info.asObservable();
+  readonly isShow$ = this._isShow$.asObservable();
 
   get id(): number {
     if (isUndefined(this._id)) {
@@ -74,7 +74,7 @@ export class ToastService {
     this._type = type;
     this._duration = duration;
 
-    this._info.next(true);
+    this._isShow$.next(true);
     this.startDurationTimer();
   }
 
@@ -111,7 +111,7 @@ export class ToastService {
    * トーストを非表示にする
    */
   hide(): void {
-    this._info.next(false);
+    this._isShow$.next(false);
     this._id = undefined;
     this._message = undefined;
     this._type = undefined;

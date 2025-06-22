@@ -89,7 +89,7 @@ export class AppComponent implements OnInit, OnDestroy {
         },
       });
 
-    this.toastService.info$.pipe(takeUntil(this.destroy$)).subscribe({
+    this.toastService.isShow$.pipe(takeUntil(this.destroy$)).subscribe({
       next: (isShow: boolean) => {
         this.isShowToast = isShow;
       },
