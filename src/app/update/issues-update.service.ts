@@ -5,6 +5,7 @@ import { GitLabConfigStoreService } from '@src/app/store/git-lab-config-store.se
 import { Issue, convertJsonToIssue } from '@src/app/model/issue.model';
 import { GitLabApiIssue } from '@src/app/git-lab-api/git-lab-issue.model';
 import { Assertion } from '@src/app/utils/assertion';
+import { isUndefined } from '../utils/utils';
 
 @Injectable({
   providedIn: 'root',
@@ -85,13 +86,13 @@ export class IssuesUpdateService {
     let result = '';
 
     // start_dateがある場合は先頭に追加
-    if (issue.start_date) {
+    if (!isUndefined(issue.start_date)) {
       const startDateStr = this.formatDate(issue.start_date);
       result += `$$start-date:${startDateStr}$$\n\n`;
     }
 
     // end_dateがある場合は追加
-    if (issue.end_date) {
+    if (!isUndefined(issue.end_date)) {
       const endDateStr = this.formatDate(issue.end_date);
       result += `$$end-date:${endDateStr}$$\n\n`;
     }
@@ -113,5 +114,29 @@ export class IssuesUpdateService {
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');
     return `${year}-${month}-${day}`;
+  }
+
+  /**
+   * issueの開始日と終了日を更新します。
+   * start_dateとend_dateをdescriptionに含めて更新します。
+   *
+   * @param issue 更新するissue
+   * @param newStartDate 新しい開始日
+   * @param newEndDate 新しい終了日
+   * @returns Observable<Issue> 更新されたissueデータを流すObservable
+   */
+  public updateIssueDates(
+    issue: Issue,
+    newStartDate: Date | undefined,
+    newEndDate: Date | undefined
+  ): Observable<Issue> {
+    // 新しい開始日と終了日を含むdescriptionを構築
+    const descriptionWithDates = this.buildDescriptionWithDates(
+      { ...issue, start_date: newStartDate, end_date: newEndDate },
+      issue.description
+    );
+
+    // 既存のupdateIssueDescriptionメソッドを使用
+    return this.updateIssueDescription(issue, descriptionWithDates);
   }
 }

@@ -79,6 +79,8 @@
         [assigneeWidth]="assigneeWidth"
         [(startDate)]="item.data.start_date"
         [(endDate)]="item.data.end_date"
+        (startDateChange)="onIssueStartDateChange(item.data, $event)"
+        (endDateChange)="onIssueEndDateChange(item.data, $event)"
       ></app-issue-row>
     </div>
   </div>
