@@ -28,16 +28,30 @@ import { CalendarPositionService } from '@src/app/chart-area/calendar-position.s
 import { CalendarRangeService } from '@src/app/chart-area/calendar-range.service';
 import { CalendarWidthService } from '@src/app/chart-area/calendar-width.service';
 import { Subscription } from 'rxjs';
+import { Project } from '../model/project.model';
+import { Milestone } from '../model/milestone.model';
+import { Issue } from '../model/issue.model';
 
 /**
  * チャート行のアイテムを表現するインターフェース
  */
-export interface ChartRowItem {
-  type: 'project' | 'milestone' | 'issue';
-  data: any;
-  isCollapsed?: boolean; // 折り畳み状態
-  parentId?: string; // 親のID（プロジェクトIDまたはマイルストーンID）
-}
+export type ChartRowItem =
+  | {
+      type: 'project';
+      data: Project;
+      isCollapsed: boolean;
+    }
+  | {
+      type: 'milestone';
+      data: Milestone;
+      isCollapsed: boolean;
+      parentId: string;
+    }
+  | {
+      type: 'issue';
+      data: Issue;
+      parentId: string;
+    };
 
 @Component({
   selector: 'app-chart-area',
