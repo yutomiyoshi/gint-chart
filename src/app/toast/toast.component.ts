@@ -10,24 +10,24 @@ interface ToastStyle {
 
 const TOAST_STYLE_MAP: Record<ToastType, ToastStyle> = {
   success: {
-    backgroundColor: '#ecfdf5',
-    borderLeftColor: '#10b981',
-    color: '#065f46',
+    backgroundColor: '#f0fdf4',
+    borderLeftColor: '#22c55e',
+    color: '#166534',
   },
   error: {
     backgroundColor: '#fef2f2',
     borderLeftColor: '#ef4444',
-    color: '#7f1d1d',
+    color: '#991b1b',
   },
   info: {
-    backgroundColor: '#eff6ff',
+    backgroundColor: '#f0f9ff',
     borderLeftColor: '#3b82f6',
-    color: '#1e3a8a',
+    color: '#1e40af',
   },
   warning: {
     backgroundColor: '#fffbeb',
     borderLeftColor: '#f59e0b',
-    color: '#78350f',
+    color: '#92400e',
   },
 };
 
