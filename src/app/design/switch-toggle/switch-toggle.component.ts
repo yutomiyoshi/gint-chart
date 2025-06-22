@@ -5,6 +5,7 @@ import {
   SWITCH_TOGGLE_HEIGHT,
   SWITCH_TOGGLE_THUMB_MARGIN,
   SWITCH_TOGGLE_THUMB_OFFSET,
+  SWITCH_TOGGLE_THUMB_TOP_OFFSET,
   SWITCH_TOGGLE_INACTIVE_COLOR,
   SWITCH_TOGGLE_ACTIVE_COLOR,
 } from './switch-toggle.const';
@@ -76,12 +77,12 @@ export class SwitchToggleComponent {
    */
   get thumbTranslateX(): string {
     if (this.checked) {
-      // ON状態：右端に移動（幅からthumbサイズとマージンを引く）
+      // ON状態：右端に移動（幅からthumbサイズとオフセットを引く）
       return `translateX(${
         this.width - this.thumbSize - SWITCH_TOGGLE_THUMB_OFFSET
       }px)`;
     } else {
-      // OFF状態：左端に配置（2pxのマージン）
+      // OFF状態：左端に配置（オフセット分のマージン）
       return `translateX(${SWITCH_TOGGLE_THUMB_OFFSET}px)`;
     }
   }
