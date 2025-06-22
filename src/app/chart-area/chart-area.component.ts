@@ -225,6 +225,48 @@ export class ChartAreaComponent implements OnInit, AfterViewInit {
     this.buildChartRowItems();
   }
 
+  /**
+   * アイテムが折り畳まれているかどうかを判定
+   */
+  isItemCollapsed(item: ChartRowItem): boolean {
+    if (item.type === 'project') {
+      const projectId = `project-${item.data.id}`;
+      return this.collapsedStates.get(projectId) || false;
+    } else if (item.type === 'milestone') {
+      const milestoneId = `milestone-${item.data.id}`;
+      return this.collapsedStates.get(milestoneId) || false;
+    }
+    return false;
+  }
+
+  /**
+   * アイテムの子要素数を取得
+   */
+  getChildCount(item: ChartRowItem): number {
+    if (item.type === 'project') {
+      const projectTree = this.projectTrees.find(
+        (pt) => pt.project.id === item.data.id
+      );
+      if (projectTree) {
+        return projectTree.milestones.length;
+      }
+    } else if (item.type === 'milestone') {
+      const projectTree = this.projectTrees.find(
+        (pt) =>
+          pt.project.id === parseInt(item.parentId.replace('project-', ''))
+      );
+      if (projectTree) {
+        const milestoneTree = projectTree.milestones.find(
+          (mt) => mt.milestone.id === item.data.id
+        );
+        if (milestoneTree) {
+          return milestoneTree.issues.length;
+        }
+      }
+    }
+    return 0;
+  }
+
   ngAfterViewInit(): void {
     const element = this.issueRowArea.nativeElement;
     const checkScroll = () => {

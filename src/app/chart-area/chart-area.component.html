@@ -28,28 +28,40 @@
     >
       <!-- プロジェクト行 -->
       <div *ngIf="item.type === 'project'" class="project-header">
-        <button
-          class="collapse-button"
-          [class.collapsed]="item.isCollapsed"
-          (click)="onToggleCollapse(item)"
-          [title]="item.isCollapsed ? '展開' : '折り畳み'"
-        >
-          <span class="collapse-icon">▶</span>
-        </button>
+        <div class="toggle-wrapper">
+          <button
+            class="switch-toggle"
+            [class.active]="!isItemCollapsed(item)"
+            (click)="onToggleCollapse(item)"
+            [title]="isItemCollapsed(item) ? '展開' : '折り畳み'"
+            [disabled]="getChildCount(item) === 0"
+          >
+            <span class="switch-thumb"></span>
+          </button>
+          <span class="child-count" *ngIf="getChildCount(item) > 0"
+            >({{ getChildCount(item) }})</span
+          >
+        </div>
         <div class="project-title">{{ item.data.name }}</div>
         <div class="project-description">{{ item.data.description }}</div>
       </div>
 
       <!-- マイルストーン行 -->
       <div *ngIf="item.type === 'milestone'" class="milestone-header">
-        <button
-          class="collapse-button"
-          [class.collapsed]="item.isCollapsed"
-          (click)="onToggleCollapse(item)"
-          [title]="item.isCollapsed ? '展開' : '折り畳み'"
-        >
-          <span class="collapse-icon">▶</span>
-        </button>
+        <div class="toggle-wrapper">
+          <button
+            class="switch-toggle"
+            [class.active]="!isItemCollapsed(item)"
+            (click)="onToggleCollapse(item)"
+            [title]="isItemCollapsed(item) ? '展開' : '折り畳み'"
+            [disabled]="getChildCount(item) === 0"
+          >
+            <span class="switch-thumb"></span>
+          </button>
+          <span class="child-count" *ngIf="getChildCount(item) > 0"
+            >({{ getChildCount(item) }})</span
+          >
+        </div>
         <div class="milestone-title">{{ item.data.title }}</div>
         <div class="milestone-state">{{ item.data.state }}</div>
         <div class="milestone-due-date" *ngIf="item.data.due_date">
