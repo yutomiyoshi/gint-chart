@@ -1,4 +1,9 @@
-<div class="toast-container" [style.background-color]="backGroundColor">
+<div
+  class="toast-container"
+  [style.background-color]="backGroundColor"
+  [style.border-left-color]="borderLeftColor"
+  [style.color]="textColor"
+>
   <!-- アイコン -->
   <div class="icon">
     <span class="icon-text">{{ getIconClass() }}</span>

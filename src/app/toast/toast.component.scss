@@ -93,29 +93,4 @@
     margin: 0;
     word-wrap: break-word;
   }
-
-  // トーストタイプ別のスタイル
-  &[style*="success"] {
-    border-left-color: #10b981;
-    color: #065f46;
-    background-color: #ecfdf5;
-  }
-
-  &[style*="error"] {
-    border-left-color: #ef4444;
-    color: #7f1d1d;
-    background-color: #fef2f2;
-  }
-
-  &[style*="info"] {
-    border-left-color: #3b82f6;
-    color: #1e3a8a;
-    background-color: #eff6ff;
-  }
-
-  &[style*="warning"] {
-    border-left-color: #f59e0b;
-    color: #78350f;
-    background-color: #fffbeb;
-  }
 }
