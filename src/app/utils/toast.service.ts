@@ -110,7 +110,7 @@ export class ToastService {
   /**
    * トーストを非表示にする
    */
-  private hide(): void {
+  hide(): void {
     this._info.next(false);
     this._id = undefined;
     this._message = undefined;
