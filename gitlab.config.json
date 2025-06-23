@@ -1,5 +1,5 @@
 {
-  "url": "https://gitlab.com",
-  "projectId": [144, 145],
-  "accessToken": "glpat-xxxxxxxxxxxxxxxxxxxx"
+  "url": "http://10.20.65.8/gitlab",
+  "projectId": [144],
+  "accessToken": "glpat-eU86bjt5nCDs8RzHmLJ_"
 }

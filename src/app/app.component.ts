@@ -88,6 +88,12 @@ export class AppComponent implements OnInit, OnDestroy {
               },
               next: () => {
                 this.loadingOverlay = false;
+                this.toastService.show(
+                  Assertion.no(1),
+                  'Complete to pull issues!!!',
+                  'success',
+                  5000
+                );
               },
             });
         },
