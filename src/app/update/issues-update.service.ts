@@ -17,18 +17,13 @@ export class IssuesUpdateService {
   ) {}
 
   /**
-   * issueのdescriptionを更新します。
-   * start_dateとend_dateが設定されている場合、descriptionの先頭に含めます。
-   * 更新後は新しいissueで古いissueを上書きします。
-   *
+   * issueのstart_date, end_date, descriptionを更新する
+   * なぜstart_dateとend_dateが含まれるかというと、これらはdescriptionの先頭の文字列で管理しているからである
+   * 更新後は新しいissueで古いissueを上書きする
    * @param issue 更新するissue
-   * @param newDescription 新しいdescription（start_dateとend_dateは自動的に先頭に追加されます）
    * @returns Observable<Issue> 更新されたissueデータを流すObservable
    */
-  public updateIssueDescription(
-    issue: Issue,
-    newDescription: string
-  ): Observable<Issue> {
+  public updateIssueDescription(issue: Issue): Observable<Issue> {
     const config = this.gitLabConfigStoreService.getConfig();
 
     if (config.projectId.length === 0) {
@@ -53,10 +48,7 @@ export class IssuesUpdateService {
     const accessToken = config.accessToken;
 
     // start_dateとend_dateを含むdescriptionを構築
-    const descriptionWithDates = this.buildDescriptionWithDates(
-      issue,
-      newDescription
-    );
+    const descriptionWithDates = this.buildDescriptionWithDates(issue);
 
     return this.gitLabApiService.put<GitLabApiIssue, Issue>(
       host,
@@ -82,7 +74,7 @@ export class IssuesUpdateService {
    * @param description 基本のdescription
    * @returns start_dateとend_dateを含むdescription
    */
-  private buildDescriptionWithDates(issue: Issue, description: string): string {
+  private buildDescriptionWithDates(issue: Issue): string {
     let result = '';
 
     // start_dateがある場合は先頭に追加
@@ -98,7 +90,7 @@ export class IssuesUpdateService {
     }
 
     // 基本のdescriptionを追加
-    result += description;
+    result += issue.description;
 
     return result;
   }
@@ -114,29 +106,5 @@ export class IssuesUpdateService {
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');
     return `${year}-${month}-${day}`;
-  }
-
-  /**
-   * issueの開始日と終了日を更新します。
-   * start_dateとend_dateをdescriptionに含めて更新します。
-   *
-   * @param issue 更新するissue
-   * @param newStartDate 新しい開始日
-   * @param newEndDate 新しい終了日
-   * @returns Observable<Issue> 更新されたissueデータを流すObservable
-   */
-  public updateIssueDates(
-    issue: Issue,
-    newStartDate: Date | undefined,
-    newEndDate: Date | undefined
-  ): Observable<Issue> {
-    // 新しい開始日と終了日を含むdescriptionを構築
-    const descriptionWithDates = this.buildDescriptionWithDates(
-      { ...issue, start_date: newStartDate, end_date: newEndDate },
-      issue.description
-    );
-
-    // 既存のupdateIssueDescriptionメソッドを使用
-    return this.updateIssueDescription(issue, descriptionWithDates);
   }
 }
