@@ -375,7 +375,7 @@ export class ChartAreaComponent implements OnInit, AfterViewInit {
    */
   private updateIssueOnServer(issue: Issue): void {
     this.issuesUpdateService
-      .updateIssueDates(issue, issue.start_date, issue.end_date)
+      .updateIssueDescription(issue)
       .subscribe({
         next: (updatedIssue) => {
           // 更新されたissueで古いissueを置き換える
