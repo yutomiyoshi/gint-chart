@@ -77,10 +77,9 @@
         [titleWidth]="titleWidth"
         [statusWidth]="statusWidth"
         [assigneeWidth]="assigneeWidth"
-        [(startDate)]="item.data.start_date"
-        [(endDate)]="item.data.end_date"
-        (startDateChange)="onIssueStartDateChange(item.data, $event)"
-        (endDateChange)="onIssueEndDateChange(item.data, $event)"
+        [startDate]="item.data.start_date"
+        [endDate]="item.data.end_date"
+        (scheduleChange)="onIssueScheduleChange(item.data, $event)"
       ></app-issue-row>
     </div>
   </div>

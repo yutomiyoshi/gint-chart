@@ -64,14 +64,9 @@ export class IssueRowComponent implements OnDestroy {
   @Input() endDate: Date | undefined;
 
   /**
-   * 開始日変更イベント
+   * スケジュール変更イベント（開始日・終了日）
    */
-  @Output() startDateChange = new EventEmitter<Date | undefined>();
-
-  /**
-   * 終了日変更イベント
-   */
-  @Output() endDateChange = new EventEmitter<Date | undefined>();
+  @Output() scheduleChange = new EventEmitter<{startDate: Date | undefined, endDate: Date | undefined}>();
 
   /**
    * タイトル幅
@@ -185,7 +180,7 @@ export class IssueRowComponent implements OnDestroy {
    * ドラッグ中に呼ばれる関数を削除する
    */
   onEndDateDragEnd() {
-    this.endDateChange.emit(this.endDate);
+    this.scheduleChange.emit({startDate: this.startDate, endDate: this.endDate});
     this.updateEndDate = undefined;
   }
 
@@ -261,7 +256,7 @@ export class IssueRowComponent implements OnDestroy {
    * ドラッグ中に呼ばれる関数を削除する
    */
   onStartDateDragEnd() {
-    this.startDateChange.emit(this.startDate);
+    this.scheduleChange.emit({startDate: this.startDate, endDate: this.endDate});
     this.updateSchedule = undefined;
   }
 
@@ -272,7 +267,7 @@ export class IssueRowComponent implements OnDestroy {
     if (!isUndefined(this.startDate)) {
       // startDateが設定されている場合、undefinedに設定
       this.startDate = undefined;
-      this.startDateChange.emit(undefined);
+      this.scheduleChange.emit({startDate: this.startDate, endDate: this.endDate});
       return;
     }
 
@@ -281,7 +276,7 @@ export class IssueRowComponent implements OnDestroy {
       const newStartDate = new Date(this.endDate);
       newStartDate.setDate(newStartDate.getDate() - undefinedDuration + 1);
       this.startDate = newStartDate;
-      this.startDateChange.emit(newStartDate);
+      this.scheduleChange.emit({startDate: this.startDate, endDate: this.endDate});
       return;
     }
 
@@ -298,14 +293,14 @@ export class IssueRowComponent implements OnDestroy {
   onEndDateDoubleClick() {
     if (!isUndefined(this.endDate)) {
       this.endDate = undefined;
-      this.endDateChange.emit(undefined);
+      this.scheduleChange.emit({startDate: this.startDate, endDate: this.endDate});
       return;
     }
 
     if (!isUndefined(this.startDate)) {
       this.endDate = new Date(this.startDate);
       this.endDate.setDate(this.endDate.getDate() + undefinedDuration - 1);
-      this.endDateChange.emit(this.endDate);
+      this.scheduleChange.emit({startDate: this.startDate, endDate: this.endDate});
       return;
     }
 
@@ -322,7 +317,7 @@ export class IssueRowComponent implements OnDestroy {
     const newEndDate = new Date();
     newEndDate.setDate(newEndDate.getDate() + newEndDateCreateOffsetDays);
     this.endDate = newEndDate;
-    this.endDateChange.emit(this.endDate);
+    this.scheduleChange.emit({startDate: this.startDate, endDate: this.endDate});
   }
 
   /**
