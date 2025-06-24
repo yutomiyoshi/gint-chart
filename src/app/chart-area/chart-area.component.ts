@@ -139,6 +139,14 @@ export class ChartAreaComponent implements OnInit, AfterViewInit {
   ) {}
 
   ngOnInit(): void {
+    if (isDebug) {
+      this.toastService.show(
+        Assertion.no(2),
+        'This is Debuging Mode. Your fetch and update of issues is executed without GitLab Server, showing just dummy-data. So, it is waste of time to compare with GitLab Home Page and this page.',
+        'info',
+        10000
+      );
+    }
     this.subscription.add(
       this.projectTreeStore.projectTree$.subscribe((projectTrees) => {
         this.projectTrees = projectTrees;
@@ -374,27 +382,25 @@ export class ChartAreaComponent implements OnInit, AfterViewInit {
    * サーバーにissueの更新を送信する
    */
   private updateIssueOnServer(issue: Issue): void {
-    this.issuesUpdateService
-      .updateIssueDescription(issue)
-      .subscribe({
-        next: (updatedIssue) => {
-          // 更新されたissueで古いissueを置き換える
-          Object.assign(issue, updatedIssue);
-          this.toastService.show(
-            Assertion.no(27),
-            `Issue ${issue.iid} updated`,
-            'success',
-            3000
-          );
-        },
-        error: (error) => {
-          this.toastService.show(
-            Assertion.no(21),
-            `Failed to update issue on server: ${error}`,
-            'error',
-            5000
-          );
-        },
-      });
+    this.issuesUpdateService.updateIssueDescription(issue).subscribe({
+      next: (updatedIssue) => {
+        // 更新されたissueで古いissueを置き換える
+        Object.assign(issue, updatedIssue);
+        this.toastService.show(
+          Assertion.no(27),
+          `Issue ${issue.iid} updated`,
+          'success',
+          3000
+        );
+      },
+      error: (error) => {
+        this.toastService.show(
+          Assertion.no(21),
+          `Failed to update issue on server: ${error}`,
+          'error',
+          5000
+        );
+      },
+    });
   }
 }
