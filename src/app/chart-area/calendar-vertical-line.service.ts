@@ -47,6 +47,11 @@ export interface CalendarVerticalLine {
    * 日曜日
    */
   isSunday: boolean;
+
+  /**
+   * 表示するべき最初の月はじめ
+   */
+  isDisplayedMonthStart: boolean;
 }
 
 /**
@@ -162,9 +167,10 @@ export class CalendarDisplayService {
   ): CalendarVerticalLine[] {
     const lines: CalendarVerticalLine[] = [];
     const scanner = new Date(this.calendarRangeService.currentRange.startDate);
+    let lastDisplayedMonth = scanner.getMonth();
     for (let i = 0; i < this.calendarRangeService.totalDays; i++) {
       const date = new Date(scanner);
-      lines.push({
+      const line: CalendarVerticalLine = {
         left: Math.round(widthPerDay * i),
         date,
         isToday: this.todayService.isToday(date),
@@ -172,7 +178,12 @@ export class CalendarDisplayService {
         isDisplayed: i % step === 0,
         isSaturday: date.getDay() === 6,
         isSunday: date.getDay() === 0,
-      });
+        isDisplayedMonthStart: lastDisplayedMonth !== date.getMonth(),
+      };
+      if (line.isDisplayed) {
+        lastDisplayedMonth = date.getMonth();
+      }
+      lines.push(line);
       scanner.setDate(scanner.getDate() + 1);
     }
     return lines;
@@ -188,9 +199,10 @@ export class CalendarDisplayService {
   ): CalendarVerticalLine[] {
     const lines: CalendarVerticalLine[] = [];
     const scanner = new Date(this.calendarRangeService.currentRange.startDate);
+    let lastDisplayedMonth = scanner.getMonth();
     for (let i = 0; i < this.calendarRangeService.totalDays; i++) {
       const date = new Date(scanner);
-      lines.push({
+      const line: CalendarVerticalLine = {
         left: Math.round(widthPerDay * i),
         date,
         isToday: this.todayService.isToday(date),
@@ -198,7 +210,12 @@ export class CalendarDisplayService {
         isDisplayed: i === 0 || date.getDay() === 1,
         isSaturday: date.getDay() === 6,
         isSunday: date.getDay() === 0,
-      });
+        isDisplayedMonthStart: lastDisplayedMonth !== date.getMonth(),
+      };
+      if (line.isDisplayed) {
+        lastDisplayedMonth = date.getMonth();
+      }
+      lines.push(line);
       scanner.setDate(scanner.getDate() + 1);
     }
     return lines;
@@ -214,9 +231,10 @@ export class CalendarDisplayService {
   ): CalendarVerticalLine[] {
     const lines: CalendarVerticalLine[] = [];
     const scanner = new Date(this.calendarRangeService.currentRange.startDate);
+    let lastDisplayedMonth = scanner.getMonth();
     for (let i = 0; i < this.calendarRangeService.totalDays; i++) {
       const date = new Date(scanner);
-      lines.push({
+      const line: CalendarVerticalLine = {
         left: Math.round(widthPerDay * i),
         date,
         isToday: this.todayService.isToday(date),
@@ -224,7 +242,12 @@ export class CalendarDisplayService {
         isDisplayed: i === 0 || date.getDate() === 1 || date.getDate() === 16,
         isSaturday: date.getDay() === 6,
         isSunday: date.getDay() === 0,
-      });
+        isDisplayedMonthStart: lastDisplayedMonth !== date.getMonth(),
+      };
+      if (line.isDisplayed) {
+        lastDisplayedMonth = date.getMonth();
+      }
+      lines.push(line);
       scanner.setDate(scanner.getDate() + 1);
     }
     return lines;

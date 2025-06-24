@@ -56,7 +56,10 @@
       [style.display]="line.isDisplayed ? 'block' : 'none'"
       [title]="line.date | date : 'yyyy/MM/dd'"
     >
-      <div class="month" [class.hidden]="!line.isMonthStart && i !== 0">
+      <div
+        class="month"
+        [class.hidden]="!line.isDisplayedMonthStart && i !== 0"
+      >
         {{
           i === 0 ? (line.date | date : "MM-yyyy") : (line.date | date : "MM")
         }}
