@@ -68,7 +68,7 @@ $issue-row-height: 100%;
   }
 }
 
-.calendar-day-per-block {
+.calendar-day-per-line-block {
   position: absolute;
   top: 0;
   bottom: 0;
@@ -80,7 +80,7 @@ $issue-row-height: 100%;
   > .month {
     height: 50%;
     padding-left: 2px;
-    border-left: 1px dashed #9c9c9c;
+    border-left: 1px solid #9c9c9c;
 
     &.hidden {
       color: transparent;
@@ -91,11 +91,32 @@ $issue-row-height: 100%;
   > .day {
     height: 50%;
     padding-left: 2px;
-    border-left: 1px dashed #9c9c9c;
+    border-left: 1px solid #9c9c9c;
 
     &.hidden {
       color: transparent;
       border-left: none;
     }
+  }
+}
+
+.calendar-day-per-background-block {
+  position: absolute;
+  top: 50%;
+  bottom: 0;
+
+  // 土曜日の背景色（薄い水色）
+  &.saturday {
+    background-color: rgba(173, 216, 230, 0.3); // lightblue with transparency
+  }
+
+  // 日曜日の背景色（薄いピンク色）
+  &.sunday {
+    background-color: rgba(255, 182, 193, 0.3); // lightpink with transparency
+  }
+
+  // 今日の背景色（薄いグレー）
+  &.today {
+    background-color: rgba(136, 136, 136, 0.3); // lightgray with transparency
   }
 }

@@ -84,6 +84,16 @@ export class IssueColumnComponent implements OnInit, OnDestroy, AfterViewInit {
    */
   private updateTitleWidth: ((distance: number) => void) | undefined;
 
+  /**
+   * 1日あたりの幅を取得
+   */
+  get dayPerWidth(): number {
+    return (
+      this.calendarWidthService.currentWidth /
+      this.calendarRangeService.totalDays
+    );
+  }
+
   constructor(
     private readonly calendarDisplayService: CalendarDisplayService,
     private readonly calendarRangeService: CalendarRangeService,

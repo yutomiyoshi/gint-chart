@@ -51,7 +51,7 @@
     <!-- 日付の縦線 -->
     <div
       *ngFor="let line of calendarVerticalLines; index as i"
-      class="calendar-day-per-block"
+      class="calendar-day-per-line-block"
       [style.left.px]="line.left"
       [style.display]="line.isDisplayed ? 'block' : 'none'"
       [title]="line.date | date : 'yyyy/MM/dd'"
@@ -65,6 +65,19 @@
         {{ line.date | date : "dd" }}
       </div>
     </div>
+
+    <!-- カレンダーの背景 -->
+    <div
+      *ngFor="let line of calendarVerticalLines; index as i"
+      class="calendar-day-per-background-block"
+      [ngClass]="{
+        saturday: line.isSaturday,
+        sunday: line.isSunday,
+        today: line.isToday,
+      }"
+      [style.left.px]="line.left"
+      [style.width.px]="dayPerWidth"
+    ></div>
   </div>
 
   <!--
