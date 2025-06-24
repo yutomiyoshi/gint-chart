@@ -3,8 +3,7 @@ import { BehaviorSubject } from 'rxjs';
 import { isUndefined } from './utils';
 import { Assertion } from './assertion';
 import { OneResourceSemaphore } from './semaphore';
-
-export type ToastType = 'success' | 'error' | 'info' | 'warning';
+import { ToastType } from './toast-history.service';
 
 @Injectable({
   providedIn: 'root',
