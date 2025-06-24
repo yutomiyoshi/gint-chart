@@ -355,23 +355,15 @@ export class ChartAreaComponent implements OnInit, AfterViewInit {
   }
 
   /**
-   * issueの開始日変更時の処理
+   * issueの開始日・終了日の変更の処理
    */
-  onIssueStartDateChange(issue: Issue, newStartDate: Date | undefined): void {
-    issue.start_date = newStartDate;
-    // サーバーに更新を送信
-    if (isDebug) {
+  onIssueScheduleChange(issue: Issue, schedule: {startDate: Date | undefined, endDate: Date | undefined}): void {
+    if (issue.start_date === schedule.startDate && issue.end_date === schedule.endDate) {
       return;
     }
-    this.updateIssueOnServer(issue);
-  }
-
-  /**
-   * issueの終了日変更時の処理
-   */
-  onIssueEndDateChange(issue: Issue, newEndDate: Date | undefined): void {
-    issue.end_date = newEndDate;
-    // サーバーに更新を送信
+    
+    issue.start_date = schedule.startDate;
+    issue.end_date = schedule.endDate;
     if (isDebug) {
       return;
     }
