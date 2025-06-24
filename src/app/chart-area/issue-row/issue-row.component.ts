@@ -230,11 +230,6 @@ export class IssueRowComponent implements OnDestroy {
       const newStartDate = new Date(startDate);
       newStartDate.setDate(newStartDate.getDate() + movedDays);
 
-      // 終了日が設定されている場合、開始日が終了日より後にならないようにする
-      if (!isUndefined(endDate) && newStartDate > endDate) {
-        return;
-      }
-
       this.startDate = newStartDate;
 
       // 終了日が設定されている場合、終了日も更新する
