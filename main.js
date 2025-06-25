@@ -35,6 +35,10 @@ function createWindow() {
   win.on("closed", () => {
     win = null;
   });
+
+  setTimeout(() => {
+    win.maximize();
+  }, 100);
 }
 
 app.whenReady().then(createWindow);
