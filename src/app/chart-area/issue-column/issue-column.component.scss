@@ -2,6 +2,10 @@
 
 $issue-row-height: 100%;
 
+* {
+  font-weight: bold;
+}
+
 .issue-column-row {
   display: flex;
   align-items: center;
