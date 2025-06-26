@@ -1,0 +1,137 @@
+$border-radius: 6px;
+
+.toast-history-dialog {
+  height: 80vh;
+  width: 300px;
+  background-color: #fff;
+  border-radius: $border-radius;
+  padding: 20px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+
+  .toast-history-content {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+
+    .dialog-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid #e0e0e0;
+
+      .dialog-title {
+        margin: 0;
+        color: #333;
+        font-size: 18px;
+      }
+
+      .clear-button {
+        background-color: #dc3545;
+        color: white;
+        border: none;
+        padding: 6px 12px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 12px;
+        transition: background-color 0.2s;
+
+        &:hover {
+          background-color: #c82333;
+        }
+      }
+    }
+
+    .log-list {
+      flex: 1;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .log-item {
+      padding: 12px;
+      border: 1px solid #e0e0e0;
+      border-radius: 4px;
+      background-color: #f8f9fa;
+      transition: background-color 0.2s;
+
+      &:hover {
+        background-color: #e9ecef;
+      }
+
+      .log-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 8px;
+
+        .log-type {
+          font-weight: bold;
+          font-size: 11px;
+          padding: 2px 6px;
+          border-radius: 3px;
+          text-transform: uppercase;
+        }
+
+        .log-date {
+          font-size: 11px;
+          color: #666;
+        }
+      }
+
+      .log-message {
+        color: #333;
+        line-height: 1.4;
+        word-break: break-word;
+        font-size: 13px;
+      }
+    }
+
+    // ログタイプ別のスタイル
+    .log-type-success {
+      .log-type {
+        background-color: #d4edda;
+        color: #155724;
+      }
+    }
+
+    .log-type-error {
+      .log-type {
+        background-color: #f8d7da;
+        color: #721c24;
+      }
+    }
+
+    .log-type-info {
+      .log-type {
+        background-color: #d1ecf1;
+        color: #0c5460;
+      }
+    }
+
+    .log-type-warning {
+      .log-type {
+        background-color: #fff3cd;
+        color: #856404;
+      }
+    }
+
+    .no-logs {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #666;
+
+      p {
+        margin: 0;
+        font-size: 14px;
+      }
+    }
+  }
+}
