@@ -33,6 +33,7 @@
 <div
   *ngIf="isToastHistoryDialogExpanded"
   class="toast-history-dialog-overlay"
+  [class.closing]="isToastHistoryDialogClosing"
   (click)="onToastHistoryDialogOverlayClick($event)"
 >
   <div class="dialog-slide-in-animation">

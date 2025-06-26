@@ -122,6 +122,10 @@ $header-height: 40px;
   animation: slideOut $dialog-animation-duration ease-in forwards;
 }
 
+.toast-history-dialog-overlay.closing .dialog-slide-in-animation {
+  animation: slideOut $dialog-animation-duration ease-in forwards;
+}
+
 @keyframes slideIn {
   from {
     transform: translate(100%, -50%);

@@ -27,6 +27,7 @@ export class AppComponent implements OnInit, OnDestroy {
   isIssueDetailDialogExpanded = false;
   isToastHistoryDialogExpanded = false;
   isDialogClosing = false;
+  isToastHistoryDialogClosing = false;
   private destroy$ = new Subject<void>();
 
   /**
@@ -182,7 +183,12 @@ export class AppComponent implements OnInit, OnDestroy {
   onToastHistoryDialogOverlayClick(event: MouseEvent): void {
     // クリックされた要素がオーバーレイ自体の場合のみダイアログを閉じる
     if (event.target === event.currentTarget) {
-      this.toastHistoryDialogExpansionService.setExpanded(false);
+      this.isToastHistoryDialogClosing = true;
+      // アニメーション完了後にダイアログを閉じる
+      setTimeout(() => {
+        this.toastHistoryDialogExpansionService.setExpanded(false);
+        this.isToastHistoryDialogClosing = false;
+      }, DIALOG_ANIMATION_DURATION);
     }
   }
 }
