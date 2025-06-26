@@ -31,4 +31,11 @@ export class IssueDetailDialogComponent implements OnInit {
       .getIssues()
       .find((issue) => issue.id === issueId);
   }
+
+  /**
+   * ngForのパフォーマンス最適化のためのtrackBy関数
+   */
+  trackByLabel(index: number, label: string): string {
+    return label;
+  }
 }
