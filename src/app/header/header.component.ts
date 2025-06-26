@@ -32,4 +32,9 @@ export class HeaderComponent {
   jumpToToday(): void {
     this.dateJumpService.requestTodayJump();
   }
+
+  showLogs(): void {
+    // TODO: ログダイアログを表示する処理を実装
+    console.log('ログボタンがクリックされました');
+  }
 }
