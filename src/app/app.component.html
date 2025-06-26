@@ -26,6 +26,22 @@
 </div>
 
 <!--
+** Toast History Dialog Overlay
+- トースト履歴ダイアログを表示するオーバーレイ
+- ダイアログの外側をクリックするとダイアログを閉じる
+ -->
+<div
+  *ngIf="isToastHistoryDialogExpanded"
+  class="toast-history-dialog-overlay"
+  [class.closing]="isToastHistoryDialogClosing"
+  (click)="onToastHistoryDialogOverlayClick($event)"
+>
+  <div class="dialog-slide-in-animation">
+    <app-toast-history-dialog></app-toast-history-dialog>
+  </div>
+</div>
+
+<!--
 ** Toast
 - 通信成否などを右下に表示するポップアップのこと
  -->

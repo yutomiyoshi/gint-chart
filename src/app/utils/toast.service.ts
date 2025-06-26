@@ -3,13 +3,14 @@ import { BehaviorSubject } from 'rxjs';
 import { isUndefined } from './utils';
 import { Assertion } from './assertion';
 import { OneResourceSemaphore } from './semaphore';
-
-export type ToastType = 'success' | 'error' | 'info' | 'warning';
+import { ToastHistoryService, ToastType } from './toast-history.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ToastService {
+  constructor(private readonly toastHistoryService: ToastHistoryService) {}
+
   private _isShow$ = new BehaviorSubject<boolean>(false);
 
   private _semaphore = new OneResourceSemaphore();
@@ -87,6 +88,12 @@ export class ToastService {
    */
   show(id: number, message: string, type: ToastType, duration: number): void {
     const now = new Date();
+    this.toastHistoryService.add({
+      id,
+      message,
+      type,
+      date: now,
+    });
     const showAction = () => {
       this._id = id;
       this._message = message;

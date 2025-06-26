@@ -67,6 +67,18 @@ $dialog-animation-duration: 0.3s;
   -webkit-backdrop-filter: blur(4px);
 }
 
+.toast-history-dialog-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(255, 255, 255, 0.5);
+  z-index: 9999;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
 $toast-width: 300px;
 $toast-bottom: 40px;
 $toast-right: 40px;
@@ -101,7 +113,16 @@ $header-height: 40px;
   animation: slideIn $dialog-animation-duration ease-out forwards;
 }
 
+.toast-history-dialog-overlay .dialog-slide-in-animation {
+  width: 300px;
+  height: 80vh;
+}
+
 .issue-detail-dialog-overlay.closing .dialog-slide-in-animation {
+  animation: slideOut $dialog-animation-duration ease-in forwards;
+}
+
+.toast-history-dialog-overlay.closing .dialog-slide-in-animation {
   animation: slideOut $dialog-animation-duration ease-in forwards;
 }
 

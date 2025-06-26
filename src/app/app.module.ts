@@ -11,6 +11,7 @@ import { IssueColumnComponent } from '@src/app/chart-area/issue-column/issue-col
 import { IssueDetailDialogComponent } from '@src/app/issue-detail-dialog/issue-detail-dialog.component';
 import { SwitchToggleComponent } from './design/switch-toggle/switch-toggle.component';
 import { ToastComponent } from './toast/toast.component';
+import { ToastHistoryDialogComponent } from './toast-history-dialog/toast-history-dialog.component';
 
 @NgModule({
   declarations: [
@@ -21,6 +22,7 @@ import { ToastComponent } from './toast/toast.component';
     IssueColumnComponent,
     IssueDetailDialogComponent,
     ToastComponent,
+    ToastHistoryDialogComponent,
   ],
   imports: [
     BrowserModule,

@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
-import { ToastService, ToastType } from '../utils/toast.service';
+import { ToastService } from '../utils/toast.service';
+import { ToastType } from '../utils/toast-history.service';
 import { isUndefined } from '../utils/utils';
 
 interface ToastStyle {
