@@ -1,5 +1,6 @@
 import { Component, Output, EventEmitter, Input } from '@angular/core';
 import { DateJumpService } from '../chart-area/date-jump.service';
+import { ToastHistoryDialogExpansionService } from '../toast-history-dialog/toast-history-dialog-expansion.service';
 
 @Component({
   selector: 'app-header',
@@ -15,7 +16,10 @@ export class HeaderComponent {
   @Output() isShowStatusChange = new EventEmitter<boolean>();
   @Output() isShowAssigneeChange = new EventEmitter<boolean>();
 
-  constructor(private readonly dateJumpService: DateJumpService) {}
+  constructor(
+    private readonly dateJumpService: DateJumpService,
+    private readonly toastHistoryDialogExpansionService: ToastHistoryDialogExpansionService
+  ) {}
 
   onTitleVisibilityChange() {
     this.isShowTitleChange.emit(this.isShowTitle);
@@ -34,7 +38,6 @@ export class HeaderComponent {
   }
 
   showLogs(): void {
-    // TODO: ログダイアログを表示する処理を実装
-    console.log('ログボタンがクリックされました');
+    this.toastHistoryDialogExpansionService.setExpanded(true);
   }
 }
