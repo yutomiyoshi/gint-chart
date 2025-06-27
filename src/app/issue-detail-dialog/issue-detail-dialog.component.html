@@ -51,6 +51,27 @@
       </div>
     </section>
 
+    <section class="issue-milestone" aria-label="マイルストーン">
+      <span class="label">マイルストーン</span>
+      <div class="milestone-content">
+        <div class="milestone-info">
+          <span class="milestone-title" [ngClass]="{ unset: !milestone }">
+            {{ milestone ? milestone.title : "未設定" }}
+          </span>
+          <span
+            class="milestone-date"
+            [ngClass]="{ unset: !milestone || !milestone.due_date }"
+          >
+            {{
+              milestone && milestone.due_date
+                ? (milestone.due_date | date : "yyyy/MM/dd")
+                : "期限なし"
+            }}
+          </span>
+        </div>
+      </div>
+    </section>
+
     <section class="issue-description" aria-label="説明">
       <h2 class="description-title">説明</h2>
       <div
