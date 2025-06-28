@@ -39,7 +39,7 @@ export class IssuesStoreService {
       this.issuesSubject.next(processedIssues);
       return from([processedIssues]);
     }
-    const config = this.gitlabConfigStore.getConfig();
+    const config = this.gitlabConfigStore.config;
     const projectIds = config.projectId || [];
     if (projectIds.length === 0) {
       this.issuesSubject.next([]);

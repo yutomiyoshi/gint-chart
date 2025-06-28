@@ -24,7 +24,7 @@ export class IssuesUpdateService {
    * @returns Observable<Issue> 更新されたissueデータを流すObservable
    */
   public updateIssueDescription(issue: Issue): Observable<Issue> {
-    const config = this.gitLabConfigStoreService.getConfig();
+    const config = this.gitLabConfigStoreService.config;
 
     if (config.projectId.length === 0) {
       Assertion.assert(

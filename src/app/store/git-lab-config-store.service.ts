@@ -37,7 +37,7 @@ export class GitLabConfigStoreService {
   /**
    * 現在の設定を取得
    */
-  getConfig(): GitLabConfig {
+  get config(): GitLabConfig {
     const config = this.configSubject.getValue();
     return isNull(config)
       ? { url: '', projectId: [], accessToken: '', groupId: 0 }

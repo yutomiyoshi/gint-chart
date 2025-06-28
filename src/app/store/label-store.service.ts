@@ -40,7 +40,7 @@ export class LabelStoreService {
       return from([SAMPLE_LABELS]);
     }
 
-    const config = this.gitlabConfigStore.getConfig();
+    const config = this.gitlabConfigStore.config;
     const groupId = config.groupId;
     if (isNull(groupId)) {
       this.labelsSubject.next([]);

@@ -40,7 +40,7 @@ export class MilestoneStoreService {
       this.milestonesSubject.next(SAMPLE_MILESTONES);
       return from([SAMPLE_MILESTONES]);
     }
-    const config = this.gitlabConfigStore.getConfig();
+    const config = this.gitlabConfigStore.config;
     const projectIds = config.projectId || [];
     if (projectIds.length === 0) {
       this.milestonesSubject.next([]);

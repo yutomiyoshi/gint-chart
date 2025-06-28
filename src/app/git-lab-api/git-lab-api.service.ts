@@ -32,7 +32,7 @@ export class GitLabApiService {
    * 初期化する
    */
   initialize(): void {
-    const host = this.gitlabConfig.getConfig().url;
+    const host = this.gitlabConfig.config.url;
 
     if (host === '') {
       Assertion.assert('GitLab host is not configured', Assertion.no(12));
@@ -70,7 +70,7 @@ export class GitLabApiService {
       .addPath(encodeURIComponent(projectId))
       .addPath(endpoint)
       .addMethod('GET')
-      .addPrivateToken(this.gitlabConfig.getConfig().accessToken)
+      .addPrivateToken(this.gitlabConfig.config.accessToken)
       .end()
       .pipe((data: T) => {
         const arr = Array.isArray(data) ? data.map(mapFn) : [mapFn(data)];
@@ -106,7 +106,7 @@ export class GitLabApiService {
       .addPath(encodeURIComponent(String(groupId)))
       .addPath(endpoint)
       .addMethod('GET')
-      .addPrivateToken(this.gitlabConfig.getConfig().accessToken)
+      .addPrivateToken(this.gitlabConfig.config.accessToken)
       .end()
       .pipe((data: T) => {
         const arr = Array.isArray(data) ? data.map(mapFn) : [mapFn(data)];
@@ -146,7 +146,7 @@ export class GitLabApiService {
       .addPath(endpoint)
       .addPath(encodeURIComponent(String(iid)))
       .addMethod('PUT')
-      .addPrivateToken(this.gitlabConfig.getConfig().accessToken)
+      .addPrivateToken(this.gitlabConfig.config.accessToken)
       .addOption(body)
       .end()
       .pipe((data: T) => {

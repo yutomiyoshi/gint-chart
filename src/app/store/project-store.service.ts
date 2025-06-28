@@ -28,7 +28,7 @@ export class ProjectStoreService {
       this.projectsSubject.next(SAMPLE_PROJECTS);
       return from([SAMPLE_PROJECTS]);
     }
-    const config = this.gitlabConfigStore.getConfig();
+    const config = this.gitlabConfigStore.config;
     const projectIds = config.projectId || [];
     if (projectIds.length === 0) {
       this.projectsSubject.next([]);
