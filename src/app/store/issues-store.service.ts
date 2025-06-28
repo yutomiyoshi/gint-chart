@@ -32,7 +32,6 @@ export class IssuesStoreService {
     }
     const config = this.gitlabConfigStore.getConfig();
     const projectIds = config.projectId || [];
-    const accessToken = config.accessToken || '';
     if (projectIds.length === 0) {
       this.issuesSubject.next([]);
       return from([[]]);
@@ -40,9 +39,7 @@ export class IssuesStoreService {
 
     // 各プロジェクトごとに全ページのissuesを取得
     return from(projectIds).pipe(
-      mergeMap((projectId) =>
-        this.fetchAllIssuesForProject(projectId, config.url, accessToken)
-      ),
+      mergeMap((projectId) => this.fetchAllIssuesForProject(projectId)),
       toArray(), // [[Issue], [Issue], ...] の配列に
       map((issuesArr) => issuesArr.flat()), // 1次元配列に
       tap((allIssues) => this.issuesSubject.next(allIssues))
@@ -63,17 +60,9 @@ export class IssuesStoreService {
    * @param accessToken アクセストークン
    * @returns Observable<Issue[]> 取得したissues配列を流すObservable
    */
-  private fetchAllIssuesForProject(
-    projectId: number,
-    url: string,
-    accessToken: string
-  ): Observable<Issue[]> {
-    const urlObj = new URL(url);
-    const host = urlObj.href;
+  private fetchAllIssuesForProject(projectId: number): Observable<Issue[]> {
     return this.gitlabApi.fetch<GitLabApiIssue, Issue>(
-      host,
       String(projectId),
-      accessToken,
       'issues',
       convertJsonToIssue
     );

@@ -1,5 +1,6 @@
 import { catchError, from, map, mergeMap, Observable, throwError } from 'rxjs';
 import { Assertion } from './assertion';
+import { isNull } from './utils';
 
 export type Method = 'GET' | 'POST' | 'PUT' | 'DELETE';
 
@@ -15,8 +16,6 @@ export class UrlChainBuilder {
 
   private url: string = '';
 
-  private method: Method = 'GET';
-
   private options: RequestInit = defaultOptions;
 
   constructor(private readonly base: string) {}
@@ -28,7 +27,6 @@ export class UrlChainBuilder {
   start(): UrlChainBuilder {
     this.isBuilding = true;
     this.url = this.base;
-    this.method = 'GET';
     this.options = defaultOptions;
     return this;
   }
@@ -43,7 +41,16 @@ export class UrlChainBuilder {
       Assertion.assert('URL chain is not started.', Assertion.no(28));
       return this;
     }
-    this.url += path;
+
+    if (path.includes('/')) {
+      Assertion.assert(
+        'Path contains slash. Use addPath() for each path segment.',
+        Assertion.no(36)
+      );
+      return this;
+    }
+
+    this.url += '/' + path;
     return this;
   }
 
@@ -57,7 +64,7 @@ export class UrlChainBuilder {
       Assertion.assert('Method is added before path.', Assertion.no(29));
       return this;
     }
-    this.method = method;
+    this.options.method = method;
     return this;
   }
 
@@ -97,16 +104,20 @@ export class UrlChainBuilder {
 
   /**
    * URL chainにオプションを追加する
-   * @param key オプションのキー
-   * @param value オプションの値
+   * @param
    * @returns 自身のインスタンス
    */
-  addOption(key: string, value: unknown): UrlChainBuilder {
+  addOption(option: Record<string, unknown> | null): UrlChainBuilder {
     if (!this.isBuilding) {
       Assertion.assert('Option is added before path.', Assertion.no(34));
       return this;
     }
-    this.options.body = JSON.stringify({ [key]: value });
+
+    if (isNull(option)) {
+      return this;
+    }
+
+    this.options.body = JSON.stringify(option);
     return this;
   }
 

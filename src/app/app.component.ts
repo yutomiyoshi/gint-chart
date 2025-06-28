@@ -4,7 +4,7 @@ import { GitLabConfigStoreService } from '@src/app/store/git-lab-config-store.se
 import { Subject, takeUntil, forkJoin } from 'rxjs';
 import { IssueDetailDialogExpansionService } from '@src/app/issue-detail-dialog/issue-detail-dialog-expansion.service';
 import { ToastHistoryDialogExpansionService } from '@src/app/toast-history-dialog/toast-history-dialog-expansion.service';
-import { isUndefined } from '@src/app/utils/utils';
+import { isNull, isUndefined } from '@src/app/utils/utils';
 import { DIALOG_ANIMATION_DURATION } from '@src/app/app-view.default';
 import { Assertion } from '@src/app/utils/assertion';
 import { MilestoneStoreService } from '@src/app/store/milestone-store.service';
@@ -12,6 +12,7 @@ import { ProjectStoreService } from '@src/app/store/project-store.service';
 import { ProjectTreeStoreService } from '@src/app/store/project-tree-store.service';
 import { ToastService } from './utils/toast.service';
 import { isDebug } from './debug';
+import { GitLabApiService } from './git-lab-api/git-lab-api.service';
 
 @Component({
   selector: 'app-root',
@@ -43,7 +44,8 @@ export class AppComponent implements OnInit, OnDestroy {
     private readonly issueDetailDialogExpansionService: IssueDetailDialogExpansionService,
     private readonly toastHistoryDialogExpansionService: ToastHistoryDialogExpansionService,
     private readonly projectTreeStore: ProjectTreeStoreService,
-    private readonly toastService: ToastService
+    private readonly toastService: ToastService,
+    private readonly gitLabApiService: GitLabApiService
   ) {}
 
   ngOnInit() {
@@ -90,7 +92,12 @@ export class AppComponent implements OnInit, OnDestroy {
           );
           this.loadingOverlay = false;
         },
-        next: () => {
+        next: (config) => {
+          // GitLabApiServiceを使用してGitLab APIを初期化
+          if (!isNull(config)) {
+            this.gitLabApiService.initialize();
+          }
+
           // ProjectTreeStoreServiceを使用してプロジェクト、マイルストーン、イシューを同期
           this.projectTreeStore
             .syncProjectMilestoneIssues()

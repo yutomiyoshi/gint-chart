@@ -44,17 +44,14 @@ export class IssuesUpdateService {
 
     // issueのproject_idを使用
     const projectId = issue.project_id.toString();
-    const host = config.url;
-    const accessToken = config.accessToken;
 
     // start_dateとend_dateを含むdescriptionを構築
     const descriptionWithDates = this.buildDescriptionWithDates(issue);
 
     return this.gitLabApiService.put<GitLabApiIssue, Issue>(
-      host,
       projectId,
-      accessToken,
-      `issues/${issue.iid}`,
+      'issues',
+      issue.iid,
       { description: descriptionWithDates },
       (apiIssue) => {
         // GitLab APIのissueをアプリ用のIssue型に変換

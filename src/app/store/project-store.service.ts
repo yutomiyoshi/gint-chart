@@ -30,16 +30,13 @@ export class ProjectStoreService {
     }
     const config = this.gitlabConfigStore.getConfig();
     const projectIds = config.projectId || [];
-    const accessToken = config.accessToken || '';
     if (projectIds.length === 0) {
       this.projectsSubject.next([]);
       return from([[]]);
     }
 
     return from(projectIds).pipe(
-      mergeMap((projectId) =>
-        this.fetchAllProjectsForProject(projectId, config.url, accessToken)
-      ),
+      mergeMap((projectId) => this.fetchAllProjectsForProject(projectId)),
       toArray(),
       map((projectsArr) => projectsArr.flat()),
       tap((allProjects) => this.projectsSubject.next(allProjects))
@@ -60,17 +57,9 @@ export class ProjectStoreService {
    * @param accessToken アクセストークン
    * @returns Observable<Project[]> 取得したprojects配列を流すObservable
    */
-  private fetchAllProjectsForProject(
-    projectId: number,
-    url: string,
-    accessToken: string
-  ): Observable<Project[]> {
-    const urlObj = new URL(url);
-    const host = urlObj.href;
+  private fetchAllProjectsForProject(projectId: number): Observable<Project[]> {
     return this.gitlabApi.fetch<GitLabProject, Project>(
-      host,
       String(projectId),
-      accessToken,
       '',
       convertJsonToProject
     );
