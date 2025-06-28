@@ -9,6 +9,11 @@ import { SAMPLE_ISSUES } from '@src/app/model/sample-issues';
 import { GitLabApiIssue } from '@src/app/git-lab-api/git-lab-issue.model';
 import { isDebug } from '../debug';
 import { extractStructuredLabel } from '../utils/string';
+import { isNull, isUndefined } from '../utils/utils';
+import {
+  FIXED_CATEGORIES,
+  FixedCategory,
+} from '../model/structured-labels.model';
 
 @Injectable({
   providedIn: 'root',
@@ -87,17 +92,19 @@ export class IssuesStoreService {
       // 各ラベルを解析
       for (const labelName of issue.labels) {
         const extracted = extractStructuredLabel(labelName);
-        if (extracted) {
-          // 構造化ラベルの場合、対応するラベルIDを取得
+        if (
+          !isNull(extracted) &&
+          FIXED_CATEGORIES.includes(extracted.category as FixedCategory)
+        ) {
           const structuredLabels =
             this.labelStore.getStructuredLabelsByCategory(
-              extracted.category as any
+              extracted.category as FixedCategory
             );
           const matchedLabel = structuredLabels.find(
             (label) => label.name === labelName
           );
 
-          if (matchedLabel) {
+          if (!isUndefined(matchedLabel)) {
             switch (extracted.category) {
               case 'category':
                 categoryIds.push(matchedLabel.id);
