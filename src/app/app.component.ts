@@ -1,5 +1,4 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { IssuesStoreService } from '@src/app/store/issues-store.service';
 import { GitLabConfigStoreService } from '@src/app/store/git-lab-config-store.service';
 import { Subject, takeUntil, switchMap } from 'rxjs';
 import { IssueDetailDialogExpansionService } from '@src/app/issue-detail-dialog/issue-detail-dialog-expansion.service';
@@ -7,8 +6,6 @@ import { ToastHistoryDialogExpansionService } from '@src/app/toast-history-dialo
 import { isNull, isUndefined } from '@src/app/utils/utils';
 import { DIALOG_ANIMATION_DURATION } from '@src/app/app-view.default';
 import { Assertion } from '@src/app/utils/assertion';
-import { MilestoneStoreService } from '@src/app/store/milestone-store.service';
-import { ProjectStoreService } from '@src/app/store/project-store.service';
 import { ProjectTreeStoreService } from '@src/app/store/project-tree-store.service';
 import { ToastService } from '@src/app/utils/toast.service';
 import { GitLabApiService } from '@src/app/git-lab-api/git-lab-api.service';
@@ -37,9 +34,6 @@ export class AppComponent implements OnInit, OnDestroy {
   isShowToast = false;
 
   constructor(
-    private readonly issueStore: IssuesStoreService,
-    private readonly milestoneStore: MilestoneStoreService,
-    private readonly projectStore: ProjectStoreService,
     private readonly gitLabConfigStore: GitLabConfigStoreService,
     private readonly issueDetailDialogExpansionService: IssueDetailDialogExpansionService,
     private readonly toastHistoryDialogExpansionService: ToastHistoryDialogExpansionService,
