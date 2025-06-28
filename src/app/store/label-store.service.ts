@@ -12,6 +12,7 @@ import {
   ClassifiedCategory,
   ClassifiedLabels,
   extractClassifiedLabel,
+  isClassifiedCategory,
 } from '../model/classified-labels.model';
 
 @Injectable({
@@ -78,29 +79,24 @@ export class LabelStoreService {
 
     for (const label of labels) {
       const extracted = extractClassifiedLabel(label.name);
-      if (extracted) {
-        const category = extracted.category;
-        if (
-          CLASSIFIED_LABEL_CATEGORIES.includes(category as ClassifiedCategory)
-        ) {
-          const classifiedCategory = category as ClassifiedCategory;
-          switch (classifiedCategory) {
-            case 'category':
-              classifiedLabels.category.push(label);
-              break;
-            case 'priority':
-              classifiedLabels.priority.push(label);
-              break;
-            case 'resource':
-              classifiedLabels.resource.push(label);
-              break;
-            case 'status':
-              classifiedLabels.status.push(label);
-              break;
-          }
-        } else {
-          normalLabels.push(label);
+      if (extracted && isClassifiedCategory(extracted.category)) {
+        const classifiedCategory = extracted.category;
+        switch (classifiedCategory) {
+          case 'category':
+            classifiedLabels.category.push(label);
+            break;
+          case 'priority':
+            classifiedLabels.priority.push(label);
+            break;
+          case 'resource':
+            classifiedLabels.resource.push(label);
+            break;
+          case 'status':
+            classifiedLabels.status.push(label);
+            break;
         }
+      } else if (extracted) {
+        normalLabels.push(label);
       } else {
         normalLabels.push(label);
       }

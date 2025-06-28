@@ -17,6 +17,15 @@ export interface ClassifiedLabels {
 }
 
 /**
+ * 文字列がClassifiedCategoryかどうかを判定する型ガード
+ */
+export function isClassifiedCategory(
+  value: string
+): value is ClassifiedCategory {
+  return (CLASSIFIED_LABEL_CATEGORIES as readonly string[]).includes(value);
+}
+
+/**
  * 文字列から$$category: 中身の形式を抽出（コロンの全角半角両対応）
  * @param text 抽出対象の文字列
  * @returns categoryと中身のペア、またはnull（マッチしない場合）

@@ -8,12 +8,12 @@ import { LabelStoreService } from '@src/app/store/label-store.service';
 import { SAMPLE_ISSUES } from '@src/app/model/sample-issues';
 import { GitLabApiIssue } from '@src/app/git-lab-api/git-lab-issue.model';
 import { isDebug } from '../debug';
-import { extractStructuredLabel } from '../utils/string';
 import { isNull, isUndefined } from '../utils/utils';
 import {
   CLASSIFIED_LABEL_CATEGORIES,
   ClassifiedCategory,
   extractClassifiedLabel,
+  isClassifiedCategory,
 } from '../model/classified-labels.model';
 import { Label } from '../model/label.model';
 
@@ -94,16 +94,9 @@ export class IssuesStoreService {
       // 各ラベルを解析
       for (const labelName of issue.labels) {
         const extracted = extractClassifiedLabel(labelName);
-        if (
-          !isNull(extracted) &&
-          CLASSIFIED_LABEL_CATEGORIES.includes(
-            extracted.category as ClassifiedCategory
-          )
-        ) {
+        if (!isNull(extracted) && isClassifiedCategory(extracted.category)) {
           const classifiedLabels =
-            this.labelStore.getClassifiedLabelsByCategory(
-              extracted.category as ClassifiedCategory
-            );
+            this.labelStore.getClassifiedLabelsByCategory(extracted.category);
           const matchedLabel = classifiedLabels.find(
             (label) => label.name === labelName
           );
