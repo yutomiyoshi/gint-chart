@@ -20,7 +20,7 @@ export const SAMPLE_ISSUES: Issue[] = [
       '$$category: テストケース作成',
       '$$priority: 緊急',
     ],
-    assignee: '田中太郎',
+    assignee_id: 1,
   },
   {
     id: 2,
@@ -36,7 +36,7 @@ export const SAMPLE_ISSUES: Issue[] = [
     priority: [],
     resource: [],
     labels: ['feature', '$$category: テスト実施', '$$priority: 遅延'],
-    assignee: '佐藤花子',
+    assignee_id: 2,
   },
   {
     id: 3,
@@ -52,7 +52,7 @@ export const SAMPLE_ISSUES: Issue[] = [
     priority: [],
     resource: [],
     labels: ['refactor', '$$category: フォロー', '$$resource: CTチェッカー1'],
-    assignee: '鈴木一郎',
+    assignee_id: 3,
   },
   {
     id: 4,
@@ -73,7 +73,7 @@ export const SAMPLE_ISSUES: Issue[] = [
       '$$resource: CTチェッカー2',
       '$$status: 保留',
     ],
-    assignee: '山田次郎',
+    assignee_id: 4,
   },
   {
     id: 5,
@@ -95,7 +95,7 @@ export const SAMPLE_ISSUES: Issue[] = [
       '$$resource: D3チェッカー1',
       '$$status: 進行中',
     ],
-    assignee: '高橋三郎',
+    assignee_id: 5,
   },
   {
     id: 6,
@@ -116,7 +116,7 @@ export const SAMPLE_ISSUES: Issue[] = [
       '$$resource: D3チェッカー2',
       '$$status: 未着手',
     ],
-    assignee: '伊藤四郎',
+    assignee_id: 6,
   },
   {
     id: 7,
@@ -138,7 +138,7 @@ export const SAMPLE_ISSUES: Issue[] = [
       '$$resource: ITM',
       '$$status: 進行中',
     ],
-    assignee: '渡辺五郎',
+    assignee_id: 7,
   },
   {
     id: 8,
@@ -159,7 +159,7 @@ export const SAMPLE_ISSUES: Issue[] = [
       '$$resource: ブレーカー1',
       '$$status: 保留',
     ],
-    assignee: '小林六郎',
+    assignee_id: 8,
   },
   {
     id: 9,
@@ -180,7 +180,7 @@ export const SAMPLE_ISSUES: Issue[] = [
       '$$resource: ブレーカー2',
       '$$status: 完了',
     ],
-    assignee: '加藤七郎',
+    assignee_id: 9,
   },
   {
     id: 10,
@@ -202,7 +202,7 @@ export const SAMPLE_ISSUES: Issue[] = [
       '$$resource: ITM',
       '$$status: 保留',
     ],
-    assignee: '吉田八郎',
+    assignee_id: 10,
   },
   // 11〜40件目はバリエーションを持たせて自動生成
   ...Array.from({ length: 30 }, (_, i) => {
@@ -233,7 +233,7 @@ export const SAMPLE_ISSUES: Issue[] = [
         idx % 23 === 0 ? '$$resource: ITM' : undefined,
         idx % 29 === 0 ? '$$resource: ブレーカー1' : undefined,
       ].filter(Boolean) as string[],
-      assignee: `担当者${idx}`,
+      assignee_id: idx,
     };
   }),
 ];
