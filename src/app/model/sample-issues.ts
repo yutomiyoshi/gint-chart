@@ -14,7 +14,12 @@ export const SAMPLE_ISSUES: Issue[] = [
     category: [],
     priority: [],
     resource: [],
-    labels: ['bug', 'urgent'],
+    labels: [
+      'bug',
+      'urgent',
+      '$$category: テストケース作成',
+      '$$priority: 緊急',
+    ],
     assignee: '田中太郎',
   },
   {
@@ -30,10 +35,9 @@ export const SAMPLE_ISSUES: Issue[] = [
     category: [],
     priority: [],
     resource: [],
-    labels: ['feature'],
+    labels: ['feature', '$$category: テスト実施', '$$priority: 遅延'],
     assignee: '佐藤花子',
   },
-  // 3件目以降を自動生成
   {
     id: 3,
     iid: 3,
@@ -47,7 +51,7 @@ export const SAMPLE_ISSUES: Issue[] = [
     category: [],
     priority: [],
     resource: [],
-    labels: ['refactor'],
+    labels: ['refactor', '$$category: フォロー', '$$resource: CTチェッカー1'],
     assignee: '鈴木一郎',
   },
   {
@@ -63,7 +67,7 @@ export const SAMPLE_ISSUES: Issue[] = [
     category: [],
     priority: [],
     resource: [],
-    labels: ['docs'],
+    labels: ['docs', '$$category: 実装', '$$resource: CTチェッカー2'],
     assignee: '山田次郎',
   },
   {
@@ -79,7 +83,7 @@ export const SAMPLE_ISSUES: Issue[] = [
     category: [],
     priority: [],
     resource: [],
-    labels: ['ci', 'devops'],
+    labels: ['ci', 'devops', '$$category: 管理', '$$resource: D3チェッカー1'],
     assignee: '高橋三郎',
   },
   {
@@ -95,7 +99,7 @@ export const SAMPLE_ISSUES: Issue[] = [
     category: [],
     priority: [],
     resource: [],
-    labels: ['bug'],
+    labels: ['bug', '$$category: 納品物確認', '$$resource: D3チェッカー2'],
     assignee: '伊藤四郎',
   },
   {
@@ -111,7 +115,7 @@ export const SAMPLE_ISSUES: Issue[] = [
     category: [],
     priority: [],
     resource: [],
-    labels: ['feature', 'ui'],
+    labels: ['feature', 'ui', '$$priority: 緊急', '$$resource: ITM'],
     assignee: '渡辺五郎',
   },
   {
@@ -127,7 +131,7 @@ export const SAMPLE_ISSUES: Issue[] = [
     category: [],
     priority: [],
     resource: [],
-    labels: ['performance'],
+    labels: ['performance', '$$priority: 遅延', '$$resource: ブレーカー1'],
     assignee: '小林六郎',
   },
   {
@@ -143,7 +147,7 @@ export const SAMPLE_ISSUES: Issue[] = [
     category: [],
     priority: [],
     resource: [],
-    labels: ['test'],
+    labels: ['test', '$$category: テストケース作成', '$$resource: ブレーカー2'],
     assignee: '加藤七郎',
   },
   {
@@ -159,7 +163,12 @@ export const SAMPLE_ISSUES: Issue[] = [
     category: [],
     priority: [],
     resource: [],
-    labels: ['security'],
+    labels: [
+      'security',
+      '$$category: 管理',
+      '$$priority: 緊急',
+      '$$resource: ITM',
+    ],
     assignee: '吉田八郎',
   },
   // 11〜40件目はバリエーションを持たせて自動生成
