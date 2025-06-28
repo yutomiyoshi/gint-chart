@@ -7,6 +7,7 @@ import {
   ViewChild,
   HostListener,
   OnDestroy,
+  OnInit,
 } from '@angular/core';
 import { CdkDragMove } from '@angular/cdk/drag-drop';
 import { Subscription } from 'rxjs';
@@ -34,7 +35,7 @@ import { StatusSelectorDialogExpansionService } from '@src/app/status-selector-d
   templateUrl: './issue-row.component.html',
   styleUrl: './issue-row.component.scss',
 })
-export class IssueRowComponent implements OnDestroy {
+export class IssueRowComponent implements OnInit, OnDestroy {
   /**
    * イシューID
    */
@@ -74,6 +75,11 @@ export class IssueRowComponent implements OnDestroy {
   }>();
 
   /**
+   * ステータス変更イベント
+   */
+  @Output() statusChange = new EventEmitter<number | undefined>();
+
+  /**
    * タイトル幅
    */
   @Input() titleWidth: number = titleWidthDefault;
@@ -98,10 +104,7 @@ export class IssueRowComponent implements OnDestroy {
    */
   isHovered = false;
 
-  /**
-   * カレンダー範囲の通知を受け取るためのサブスクリプション
-   */
-  private calendarRangeSubscription: Subscription | undefined;
+  private subscription = new Subscription();
 
   /**
    * 終了日のドラッグ中に呼ばれる関数
@@ -123,11 +126,37 @@ export class IssueRowComponent implements OnDestroy {
     private readonly statusSelectorDialogExpansionService: StatusSelectorDialogExpansionService
   ) {}
 
+  ngOnInit(): void {
+    // StatusSelectorDialogExpansionServiceからの変更通知を監視
+    this.subscription.add(
+      this.statusSelectorDialogExpansionService.status$.subscribe(
+        (statusData) => {
+          if (isUndefined(statusData)) {
+            return;
+          }
+
+          if (statusData.issueId !== this.id) {
+            return;
+          }
+
+          if (statusData.statusId === this.status) {
+            return;
+          }
+
+          // コンポーネントに紐づいたidと通知のissueIdが一致し、
+          // ステータスIDに変化があった場合にEventEmitterで通知
+          this.status = statusData.statusId;
+          this.statusChange.emit(this.status);
+        }
+      )
+    );
+  }
+
   /**
    * コンポーネント破棄時にサブスクリプションを解除
    */
   ngOnDestroy() {
-    this.calendarRangeSubscription?.unsubscribe();
+    this.subscription.unsubscribe();
   }
 
   /**
