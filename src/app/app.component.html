@@ -42,6 +42,22 @@
 </div>
 
 <!--
+** Status Selector Dialog Overlay
+- ステータス選択ダイアログを表示するオーバーレイ
+- ダイアログの外側をクリックするとダイアログを閉じる
+ -->
+<div
+  *ngIf="isStatusSelectorDialogExpanded"
+  class="status-selector-dialog-overlay"
+  [class.closing]="isStatusSelectorDialogClosing"
+  (click)="onStatusSelectorDialogOverlayClick($event)"
+>
+  <div class="dialog-slide-in-animation">
+    <app-status-selector-dialog></app-status-selector-dialog>
+  </div>
+</div>
+
+<!--
 ** Toast
 - 通信成否などを右下に表示するポップアップのこと
  -->

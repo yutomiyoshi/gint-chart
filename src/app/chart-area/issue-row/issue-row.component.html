@@ -16,6 +16,7 @@
     [style.width.px]="statusWidth === 0 ? 0 : statusWidth"
     [style.flex]="statusWidth === 0 ? '0 0 0px' : '0 0 ' + statusWidth + 'px'"
     [style.display]="statusWidth === 0 ? 'none' : 'flex'"
+    (click)="onStatusClick()"
   >
     {{ getStatusName(status) }}
   </div>

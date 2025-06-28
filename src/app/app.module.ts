@@ -12,6 +12,7 @@ import { IssueDetailDialogComponent } from '@src/app/issue-detail-dialog/issue-d
 import { SwitchToggleComponent } from '@src/app/design/switch-toggle/switch-toggle.component';
 import { ToastComponent } from '@src/app/toast/toast.component';
 import { ToastHistoryDialogComponent } from '@src/app/toast-history-dialog/toast-history-dialog.component';
+import { StatusSelectorDialogComponent } from '@src/app/status-selector-dialog/status-selector-dialog.component';
 
 @NgModule({
   declarations: [
@@ -23,6 +24,7 @@ import { ToastHistoryDialogComponent } from '@src/app/toast-history-dialog/toast
     IssueDetailDialogComponent,
     ToastComponent,
     ToastHistoryDialogComponent,
+    StatusSelectorDialogComponent,
   ],
   imports: [
     BrowserModule,

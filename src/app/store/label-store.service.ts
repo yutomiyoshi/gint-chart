@@ -33,6 +33,22 @@ export class LabelStoreService {
     private readonly gitlabConfigStore: GitLabConfigStoreService
   ) {}
 
+  get categoryLabels(): Label[] {
+    return this.classifiedLabelsSubject.getValue().category;
+  }
+
+  get priorityLabels(): Label[] {
+    return this.classifiedLabelsSubject.getValue().priority;
+  }
+
+  get resourceLabels(): Label[] {
+    return this.classifiedLabelsSubject.getValue().resource;
+  }
+
+  get statusLabels(): Label[] {
+    return this.classifiedLabelsSubject.getValue().status;
+  }
+
   syncLabels(): Observable<Label[]> {
     if (isDebug) {
       this.labelsSubject.next(SAMPLE_LABELS);
