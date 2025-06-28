@@ -1,4 +1,10 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  OnDestroy,
+  OnInit,
+} from '@angular/core';
 import { GitLabConfigStoreService } from '@src/app/store/git-lab-config-store.service';
 import { Subject, takeUntil, switchMap } from 'rxjs';
 import { IssueDetailDialogExpansionService } from '@src/app/issue-detail-dialog/issue-detail-dialog-expansion.service';
@@ -19,7 +25,7 @@ import { isDebug } from '@src/app/debug';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })
-export class AppComponent implements OnInit, OnDestroy {
+export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
   loadingOverlay = true;
   isShowTitle = true;
   isShowStatus = true;
@@ -42,7 +48,8 @@ export class AppComponent implements OnInit, OnDestroy {
     private readonly projectTreeStore: ProjectTreeStoreService,
     private readonly toastService: ToastService,
     private readonly gitLabApiService: GitLabApiService,
-    private readonly labelStore: LabelStoreService
+    private readonly labelStore: LabelStoreService,
+    private readonly cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
@@ -174,6 +181,24 @@ export class AppComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.destroy$.next();
     this.destroy$.complete();
+  }
+
+  ngAfterViewInit(): void {
+    /**
+     * XXX miyoshi:
+     * Electronアプリを起動したときに、カレンダーがきちんと表示されないバグがあった。（issue #91）
+     *カレンダーの日付が一番左の戦闘の日付しか表示されない。また、縦線が表示されない。
+     * しかし端末依存で、パソコンによっては再現しない。
+     * このバグの原因は分からず。Electronの仕組みの根深いところにある。
+     *
+     * この問題を回避するために、起動後しばらく100msしてからカレンダーのDOMを検知させる。
+     * これによって、カレンダーのHTML要素幅の変更検知を強引に発火させる。
+     * ただし汚い手段であることは承知。
+     * 真の原因の解明ときれいな問題解決を望む。
+     */
+    setTimeout(() => {
+      this.cdr.detectChanges();
+    }, 100);
   }
 
   onIssueDetailDialogOverlayClick(event: MouseEvent): void {
