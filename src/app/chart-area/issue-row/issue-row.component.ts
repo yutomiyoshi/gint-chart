@@ -401,4 +401,12 @@ export class IssueRowComponent implements OnDestroy {
 
     return matchedLabel.name;
   }
+
+  /**
+   * ステータスクリック時に呼ばれる関数
+   */
+  onStatusClick() {
+    console.log('Status clicked for issue:', this.id);
+    // TODO: ステータス選択ポップアップを表示する処理を実装
+  }
 }
