@@ -151,7 +151,6 @@ export class LabelStoreService {
    */
   findCategoryLabelFromName(category: string): Label | undefined {
     const current = this.structuredLabelsSubject.getValue();
-    console.log(current.category);
     return current.category.find((label) => label.name === category);
   }
 
