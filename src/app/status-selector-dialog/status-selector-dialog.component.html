@@ -1,0 +1,26 @@
+<div class="status-selector-dialog">
+  <div class="dialog-header">
+    <h3>ステータスを選択</h3>
+    <button class="close-button" (click)="closeDialog()">×</button>
+  </div>
+
+  <div class="dialog-content">
+    <div class="status-option" (click)="onStatusSelect(undefined)">
+      <span class="status-name">未設定</span>
+      <span class="status-indicator" *ngIf="currentStatusId === undefined"
+        >✓</span
+      >
+    </div>
+
+    <div
+      class="status-option"
+      *ngFor="let label of statusLabels"
+      (click)="onStatusSelect(label.id)"
+    >
+      <span class="status-name">{{ label.name }}</span>
+      <span class="status-indicator" *ngIf="currentStatusId === label.id"
+        >✓</span
+      >
+    </div>
+  </div>
+</div>
