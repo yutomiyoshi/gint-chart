@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { StatusSelectorDialogExpansionService } from './status-selector-dialog-expansion.service';
 import { LabelStoreService } from '@src/app/store/label-store.service';
 import { Label } from '@src/app/model/label.model';
@@ -9,10 +9,8 @@ import { Label } from '@src/app/model/label.model';
   templateUrl: './status-selector-dialog.component.html',
   styleUrl: './status-selector-dialog.component.scss',
 })
-export class StatusSelectorDialogComponent {
+export class StatusSelectorDialogComponent implements OnInit {
   isVisible = false;
-  currentIssueId: number | undefined;
-  currentStatusId: number | undefined;
   statusLabels: Label[] = [];
 
   constructor(
@@ -20,16 +18,22 @@ export class StatusSelectorDialogComponent {
     private readonly labelStore: LabelStoreService
   ) {}
 
+  ngOnInit(): void {
+    this.statusLabels = this.labelStore.statusLabels;
+  }
+
+  isSelected(statusId: number | undefined): boolean {
+    return this.statusSelectorDialogExpansionService.statusId === statusId;
+  }
+
   /**
    * ステータスを選択した時の処理
    */
   onStatusSelect(statusId: number | undefined): void {
-    if (this.currentIssueId !== undefined && statusId !== undefined) {
-      this.statusSelectorDialogExpansionService.updateStatus(
-        this.currentIssueId,
-        statusId
-      );
-    }
+    this.statusSelectorDialogExpansionService.updateStatus(
+      this.statusSelectorDialogExpansionService.issueId,
+      statusId
+    );
     this.closeDialog();
   }
 
