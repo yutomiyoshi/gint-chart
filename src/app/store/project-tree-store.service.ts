@@ -55,9 +55,9 @@ export class ProjectTreeStoreService {
    */
   syncProjectMilestoneIssues(): Observable<ProjectTree[]> {
     return combineLatest([
-      this.projectStore.syncAllProjects(),
-      this.milestoneStore.syncAllMilestones(),
-      this.issuesStore.syncAllIssues(),
+      this.projectStore.syncProjects(),
+      this.milestoneStore.syncMilestones(),
+      this.issuesStore.syncIssues(),
     ]).pipe(
       map(([projects, milestones, issues]) =>
         buildProjectTree(projects, milestones, issues)

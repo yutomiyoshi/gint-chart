@@ -32,7 +32,7 @@ export class IssuesStoreService {
    * configにある全プロジェクトの全issuesをAPIから取得し、ストアに反映する
    * @returns Observable<Issue[]> 取得・反映後のissues配列を流すObservable
    */
-  syncAllIssues(): Observable<Issue[]> {
+  syncIssues(): Observable<Issue[]> {
     if (isDebug) {
       // デバッグモード時はサンプルデータを返す
       const processedIssues = this.processIssuesLabels(SAMPLE_ISSUES);
@@ -48,7 +48,7 @@ export class IssuesStoreService {
 
     // 各プロジェクトごとに全ページのissuesを取得
     return from(projectIds).pipe(
-      mergeMap((projectId) => this.fetchAllIssuesForProject(projectId)),
+      mergeMap((projectId) => this.fetchIssuesForProject(projectId)),
       toArray(), // [[Issue], [Issue], ...] の配列に
       map((issuesArr) => issuesArr.flat()), // 1次元配列に
       map((issues) => this.processIssuesLabels(issues)), // ラベルを解析・処理
@@ -59,7 +59,7 @@ export class IssuesStoreService {
   /**
    * 現在保持しているissuesを取得
    */
-  getIssues(): Issue[] {
+  get issues(): Issue[] {
     return this.issuesSubject.getValue();
   }
 
@@ -70,7 +70,7 @@ export class IssuesStoreService {
    * @param accessToken アクセストークン
    * @returns Observable<Issue[]> 取得したissues配列を流すObservable
    */
-  private fetchAllIssuesForProject(projectId: number): Observable<Issue[]> {
+  private fetchIssuesForProject(projectId: number): Observable<Issue[]> {
     return this.gitlabApi.fetch<GitLabApiIssue, Issue>(
       String(projectId),
       'issues',
