@@ -10,6 +10,7 @@ import { Subject, takeUntil, switchMap, forkJoin } from 'rxjs';
 import { IssueDetailDialogExpansionService } from '@src/app/issue-detail-dialog/issue-detail-dialog-expansion.service';
 import { ToastHistoryDialogExpansionService } from '@src/app/toast-history-dialog/toast-history-dialog-expansion.service';
 import { StatusSelectorDialogExpansionService } from '@src/app/status-selector-dialog/status-selector-dialog-expansion.service';
+import { AssigneeSelectorDialogExpansionService } from '@src/app/assignee-selector-dialog/assignee-selector-dialog-expansion.service';
 import { isNull, isUndefined } from '@src/app/utils/utils';
 import { DIALOG_ANIMATION_DURATION } from '@src/app/app-view.default';
 import { Assertion } from '@src/app/utils/assertion';
@@ -35,9 +36,11 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
   isIssueDetailDialogExpanded = false;
   isToastHistoryDialogExpanded = false;
   isStatusSelectorDialogExpanded = false;
+  isAssigneeSelectorDialogExpanded = false;
   isDialogClosing = false;
   isToastHistoryDialogClosing = false;
   isStatusSelectorDialogClosing = false;
+  isAssigneeSelectorDialogClosing = false;
   private destroy$ = new Subject<void>();
 
   /**
@@ -50,6 +53,7 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
     private readonly issueDetailDialogExpansionService: IssueDetailDialogExpansionService,
     private readonly toastHistoryDialogExpansionService: ToastHistoryDialogExpansionService,
     private readonly statusSelectorDialogExpansionService: StatusSelectorDialogExpansionService,
+    private readonly assigneeSelectorDialogExpansionService: AssigneeSelectorDialogExpansionService,
     private readonly projectTreeStore: ProjectTreeStoreService,
     private readonly toastService: ToastService,
     private readonly gitLabApiService: GitLabApiService,
@@ -101,6 +105,21 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
             Assertion.no(33)
           );
           this.isStatusSelectorDialogExpanded = false;
+        },
+      });
+
+    this.assigneeSelectorDialogExpansionService.isExpanded$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (isExpanded: boolean) => {
+          this.isAssigneeSelectorDialogExpanded = isExpanded;
+        },
+        error: (error) => {
+          Assertion.assert(
+            'Assignee selector dialog expansion error: ' + error,
+            Assertion.no(34)
+          );
+          this.isAssigneeSelectorDialogExpanded = false;
         },
       });
 
@@ -253,6 +272,18 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
       setTimeout(() => {
         this.statusSelectorDialogExpansionService.collapse();
         this.isStatusSelectorDialogClosing = false;
+      }, DIALOG_ANIMATION_DURATION);
+    }
+  }
+
+  onAssigneeSelectorDialogOverlayClick(event: MouseEvent): void {
+    // クリックされた要素がオーバーレイ自体の場合のみダイアログを閉じる
+    if (event.target === event.currentTarget) {
+      this.isAssigneeSelectorDialogClosing = true;
+      // アニメーション完了後にダイアログを閉じる
+      setTimeout(() => {
+        this.assigneeSelectorDialogExpansionService.collapse();
+        this.isAssigneeSelectorDialogClosing = false;
       }, DIALOG_ANIMATION_DURATION);
     }
   }
