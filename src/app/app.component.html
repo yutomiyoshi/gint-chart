@@ -58,6 +58,22 @@
 </div>
 
 <!--
+** Assignee Selector Dialog Overlay
+- 担当者選択ダイアログを表示するオーバーレイ
+- ダイアログの外側をクリックするとダイアログを閉じる
+ -->
+<div
+  *ngIf="isAssigneeSelectorDialogExpanded"
+  class="assignee-selector-dialog-overlay"
+  [class.closing]="isAssigneeSelectorDialogClosing"
+  (click)="onAssigneeSelectorDialogOverlayClick($event)"
+>
+  <div class="dialog-slide-in-animation">
+    <app-assignee-selector-dialog></app-assignee-selector-dialog>
+  </div>
+</div>
+
+<!--
 ** Toast
 - 通信成否などを右下に表示するポップアップのこと
  -->

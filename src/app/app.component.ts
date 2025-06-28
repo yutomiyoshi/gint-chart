@@ -6,10 +6,11 @@ import {
   OnInit,
 } from '@angular/core';
 import { GitLabConfigStoreService } from '@src/app/store/git-lab-config-store.service';
-import { Subject, takeUntil, switchMap } from 'rxjs';
+import { Subject, takeUntil, switchMap, forkJoin } from 'rxjs';
 import { IssueDetailDialogExpansionService } from '@src/app/issue-detail-dialog/issue-detail-dialog-expansion.service';
 import { ToastHistoryDialogExpansionService } from '@src/app/toast-history-dialog/toast-history-dialog-expansion.service';
 import { StatusSelectorDialogExpansionService } from '@src/app/status-selector-dialog/status-selector-dialog-expansion.service';
+import { AssigneeSelectorDialogExpansionService } from '@src/app/assignee-selector-dialog/assignee-selector-dialog-expansion.service';
 import { isNull, isUndefined } from '@src/app/utils/utils';
 import { DIALOG_ANIMATION_DURATION } from '@src/app/app-view.default';
 import { Assertion } from '@src/app/utils/assertion';
@@ -17,6 +18,7 @@ import { ProjectTreeStoreService } from '@src/app/store/project-tree-store.servi
 import { ToastService } from '@src/app/utils/toast.service';
 import { GitLabApiService } from '@src/app/git-lab-api/git-lab-api.service';
 import { LabelStoreService } from '@src/app/store/label-store.service';
+import { MemberStoreService } from '@src/app/store/member-store.service';
 import { TOAST_DURATION_LONG } from '@src/app/toast/toast.const';
 import { isDebug } from '@src/app/debug';
 
@@ -34,9 +36,11 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
   isIssueDetailDialogExpanded = false;
   isToastHistoryDialogExpanded = false;
   isStatusSelectorDialogExpanded = false;
+  isAssigneeSelectorDialogExpanded = false;
   isDialogClosing = false;
   isToastHistoryDialogClosing = false;
   isStatusSelectorDialogClosing = false;
+  isAssigneeSelectorDialogClosing = false;
   private destroy$ = new Subject<void>();
 
   /**
@@ -49,10 +53,12 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
     private readonly issueDetailDialogExpansionService: IssueDetailDialogExpansionService,
     private readonly toastHistoryDialogExpansionService: ToastHistoryDialogExpansionService,
     private readonly statusSelectorDialogExpansionService: StatusSelectorDialogExpansionService,
+    private readonly assigneeSelectorDialogExpansionService: AssigneeSelectorDialogExpansionService,
     private readonly projectTreeStore: ProjectTreeStoreService,
     private readonly toastService: ToastService,
     private readonly gitLabApiService: GitLabApiService,
     private readonly labelStore: LabelStoreService,
+    private readonly memberStore: MemberStoreService,
     private readonly cdr: ChangeDetectorRef
   ) {}
 
@@ -102,6 +108,21 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
         },
       });
 
+    this.assigneeSelectorDialogExpansionService.isExpanded$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (isExpanded: boolean) => {
+          this.isAssigneeSelectorDialogExpanded = isExpanded;
+        },
+        error: (error) => {
+          Assertion.assert(
+            'Assignee selector dialog expansion error: ' + error,
+            Assertion.no(34)
+          );
+          this.isAssigneeSelectorDialogExpanded = false;
+        },
+      });
+
     this.gitLabConfigStore
       .loadConfig()
       .pipe(
@@ -112,21 +133,20 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
             this.gitLabApiService.initialize();
           }
 
-          // ラベルを先に取得し、その後プロジェクト、マイルストーン、イシューを同期
-          return this.labelStore
-            .syncLabels()
-            .pipe(
-              switchMap(() =>
-                this.projectTreeStore.syncProjectMilestoneIssues()
-              )
-            );
+          // ラベルとメンバーを同時に取得し、その後プロジェクト、マイルストーン、イシューを同期
+          return forkJoin({
+            labels: this.labelStore.syncLabels(),
+            members: this.memberStore.syncMembers(),
+          }).pipe(
+            switchMap(() => this.projectTreeStore.syncProjectMilestoneIssues())
+          );
         })
       )
       .subscribe({
         error: (error) => {
           this.toastService.show(
             Assertion.no(31),
-            `Failed to sync project, milestone, issue, and labels. error: ${error}`,
+            `Failed to sync project, milestone, issue, labels, and members. error: ${error}`,
             'error',
             TOAST_DURATION_LONG
           );
@@ -136,7 +156,7 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
           this.loadingOverlay = false;
           this.toastService.show(
             Assertion.no(1),
-            'Complete to pull issues and labels!!!',
+            'Complete to pull issues, labels, and members!!!',
             'success',
             TOAST_DURATION_LONG
           );
@@ -252,6 +272,18 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
       setTimeout(() => {
         this.statusSelectorDialogExpansionService.collapse();
         this.isStatusSelectorDialogClosing = false;
+      }, DIALOG_ANIMATION_DURATION);
+    }
+  }
+
+  onAssigneeSelectorDialogOverlayClick(event: MouseEvent): void {
+    // クリックされた要素がオーバーレイ自体の場合のみダイアログを閉じる
+    if (event.target === event.currentTarget) {
+      this.isAssigneeSelectorDialogClosing = true;
+      // アニメーション完了後にダイアログを閉じる
+      setTimeout(() => {
+        this.assigneeSelectorDialogExpansionService.collapse();
+        this.isAssigneeSelectorDialogClosing = false;
       }, DIALOG_ANIMATION_DURATION);
     }
   }

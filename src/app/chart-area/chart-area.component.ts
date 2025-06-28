@@ -424,4 +424,37 @@ export class ChartAreaComponent implements OnInit, AfterViewInit {
       },
     });
   }
+
+  /**
+   * issueの担当者の変更の処理
+   */
+  onIssueAssigneeChange(issue: Issue, assigneeId: number | undefined): void {
+    if (issue.assignee_id === assigneeId) {
+      return;
+    }
+
+    issue.assignee_id = assigneeId;
+    if (isDebug) {
+      return;
+    }
+    this.issuesUpdateService.updateIssueAssignee(issue).subscribe({
+      next: (updatedIssue) => {
+        Object.assign(issue, updatedIssue);
+        this.toastService.show(
+          Assertion.no(27),
+          `Issue ${issue.iid} updated`,
+          'success',
+          TOAST_DURATION_MEDIUM
+        );
+      },
+      error: (error) => {
+        this.toastService.show(
+          Assertion.no(21),
+          `Failed to update issue on server: ${error}`,
+          'error',
+          TOAST_DURATION_LONG
+        );
+      },
+    });
+  }
 }

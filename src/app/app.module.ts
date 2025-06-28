@@ -13,6 +13,7 @@ import { SwitchToggleComponent } from '@src/app/design/switch-toggle/switch-togg
 import { ToastComponent } from '@src/app/toast/toast.component';
 import { ToastHistoryDialogComponent } from '@src/app/toast-history-dialog/toast-history-dialog.component';
 import { StatusSelectorDialogComponent } from '@src/app/status-selector-dialog/status-selector-dialog.component';
+import { AssigneeSelectorDialogComponent } from '@src/app/assignee-selector-dialog/assignee-selector-dialog.component';
 
 @NgModule({
   declarations: [
@@ -25,6 +26,7 @@ import { StatusSelectorDialogComponent } from '@src/app/status-selector-dialog/s
     ToastComponent,
     ToastHistoryDialogComponent,
     StatusSelectorDialogComponent,
+    AssigneeSelectorDialogComponent,
   ],
   imports: [
     BrowserModule,

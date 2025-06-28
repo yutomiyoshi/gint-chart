@@ -11,8 +11,9 @@ import { GitLabConfigStoreService } from '@src/app/store/git-lab-config-store.se
  * 'milestones': マイルストーン
  * '': プロジェクト
  * 'labels': ラベル
+ * 'members': メンバー
  */
-type EndPoint = 'issues' | 'milestones' | '' | 'labels';
+type EndPoint = 'issues' | 'milestones' | '' | 'labels' | 'members';
 
 @Injectable({
   providedIn: 'root',

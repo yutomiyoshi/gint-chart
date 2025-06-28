@@ -28,6 +28,8 @@ import { CalendarRangeService } from '@src/app/chart-area/calendar-range.service
 import { CalendarWidthService } from '@src/app/chart-area/calendar-width.service';
 import { LabelStoreService } from '@src/app/store/label-store.service';
 import { StatusSelectorDialogExpansionService } from '@src/app/status-selector-dialog/status-selector-dialog-expansion.service';
+import { AssigneeSelectorDialogExpansionService } from '@src/app/assignee-selector-dialog/assignee-selector-dialog-expansion.service';
+import { MemberStoreService } from '@src/app/store/member-store.service';
 
 @Component({
   selector: 'app-issue-row',
@@ -52,9 +54,9 @@ export class IssueRowComponent implements OnInit, OnDestroy {
   @Input() status: number | undefined;
 
   /**
-   * 担当者
+   * 担当者ID
    */
-  @Input() assignee: string | undefined;
+  @Input() assigneeId: number | undefined;
 
   /**
    * 開始日
@@ -78,6 +80,11 @@ export class IssueRowComponent implements OnInit, OnDestroy {
    * ステータス変更イベント
    */
   @Output() statusChange = new EventEmitter<number | undefined>();
+
+  /**
+   * 担当者変更イベント
+   */
+  @Output() assigneeChange = new EventEmitter<number | undefined>();
 
   /**
    * タイトル幅
@@ -123,7 +130,9 @@ export class IssueRowComponent implements OnInit, OnDestroy {
     private readonly calendarRangeService: CalendarRangeService,
     private readonly calendarWidthService: CalendarWidthService,
     private readonly labelStore: LabelStoreService,
-    private readonly statusSelectorDialogExpansionService: StatusSelectorDialogExpansionService
+    private readonly statusSelectorDialogExpansionService: StatusSelectorDialogExpansionService,
+    private readonly assigneeSelectorDialogExpansionService: AssigneeSelectorDialogExpansionService,
+    private readonly memberStore: MemberStoreService
   ) {}
 
   ngOnInit(): void {
@@ -147,6 +156,30 @@ export class IssueRowComponent implements OnInit, OnDestroy {
           // ステータスIDに変化があった場合にEventEmitterで通知
           this.status = statusData.statusId;
           this.statusChange.emit(this.status);
+        }
+      )
+    );
+
+    // AssigneeSelectorDialogExpansionServiceからの変更通知を監視
+    this.subscription.add(
+      this.assigneeSelectorDialogExpansionService.assignee$.subscribe(
+        (assigneeData) => {
+          if (isUndefined(assigneeData)) {
+            return;
+          }
+
+          if (assigneeData.issueId !== this.id) {
+            return;
+          }
+
+          if (assigneeData.assigneeId === this.assigneeId) {
+            return;
+          }
+
+          // コンポーネントに紐づいたidと通知のissueIdが一致し、
+          // 担当者IDに変化があった場合にEventEmitterで通知
+          this.assigneeId = assigneeData.assigneeId;
+          this.assigneeChange.emit(this.assigneeId);
         }
       )
     );
@@ -434,9 +467,36 @@ export class IssueRowComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * 担当者名を取得する
+   */
+  getAssigneeName(assigneeId: number | undefined): string {
+    if (isUndefined(assigneeId)) {
+      return 'undefined';
+    }
+
+    const assignee = this.memberStore.findMemberById(assigneeId);
+
+    if (isUndefined(assignee)) {
+      return 'not found';
+    }
+
+    return assignee.name;
+  }
+
+  /**
    * ステータスクリック時に呼ばれる関数
    */
   onStatusClick() {
     this.statusSelectorDialogExpansionService.expand(this.id, this.status);
+  }
+
+  /**
+   * 担当者クリック時に呼ばれる関数
+   */
+  onAssigneeClick() {
+    this.assigneeSelectorDialogExpansionService.expand(
+      this.id,
+      this.assigneeId
+    );
   }
 }

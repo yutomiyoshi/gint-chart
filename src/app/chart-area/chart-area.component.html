@@ -73,7 +73,7 @@
         [id]="item.data.id"
         [title]="item.data.title"
         [status]="item.data.status"
-        [assignee]="item.data.assignee"
+        [assigneeId]="item.data.assignee_id"
         [titleWidth]="titleWidth"
         [statusWidth]="statusWidth"
         [assigneeWidth]="assigneeWidth"
@@ -81,6 +81,7 @@
         [endDate]="item.data.end_date"
         (scheduleChange)="onIssueScheduleChange(item.data, $event)"
         (statusChange)="onIssueStatusChange(item.data, $event)"
+        (assigneeChange)="onIssueAssigneeChange(item.data, $event)"
       ></app-issue-row>
     </div>
   </div>
