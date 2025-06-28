@@ -6,13 +6,13 @@ import { BehaviorSubject, from, Observable, tap } from 'rxjs';
 import { isDebug } from '../debug';
 import { GitLabConfigStoreService } from './git-lab-config-store.service';
 import { isNull } from '../utils/utils';
-import { extractStructuredLabel } from '../utils/string';
 import { SAMPLE_LABELS } from '../model/sample-labels';
 import {
-  FIXED_CATEGORIES,
-  FixedCategory,
-  StructuredLabels,
-} from '../model/structured-labels.model';
+  CLASSIFIED_LABEL_CATEGORIES,
+  ClassifiedCategory,
+  ClassifiedLabels,
+  extractClassifiedLabel,
+} from '../model/classified-labels.model';
 
 @Injectable({
   providedIn: 'root',
@@ -21,13 +21,13 @@ export class LabelStoreService {
   private labelsSubject = new BehaviorSubject<Label[]>([]);
   public labels$: Observable<Label[]> = this.labelsSubject.asObservable();
 
-  private structuredLabelsSubject = new BehaviorSubject<StructuredLabels>({
+  private classifiedLabelsSubject = new BehaviorSubject<ClassifiedLabels>({
     category: [],
     priority: [],
     resource: [],
     status: [],
   });
-  public structuredLabels$ = this.structuredLabelsSubject.asObservable();
+  public classifiedLabels$ = this.classifiedLabelsSubject.asObservable();
 
   constructor(
     private readonly gitlabApi: GitLabApiService,
@@ -69,7 +69,7 @@ export class LabelStoreService {
    */
   private processLabels(labels: Label[]): void {
     const normalLabels: Label[] = [];
-    const structuredLabels: StructuredLabels = {
+    const classifiedLabels: ClassifiedLabels = {
       category: [],
       priority: [],
       resource: [],
@@ -77,41 +77,37 @@ export class LabelStoreService {
     };
 
     for (const label of labels) {
-      // $$category: 中身 の形式を抽出
-      const extracted = extractStructuredLabel(label.name);
+      const extracted = extractClassifiedLabel(label.name);
       if (extracted) {
         const category = extracted.category;
-        if (FIXED_CATEGORIES.includes(category as FixedCategory)) {
-          const fixedCategory = category as FixedCategory;
-          label.name = extracted.content;
-          switch (fixedCategory) {
+        if (
+          CLASSIFIED_LABEL_CATEGORIES.includes(category as ClassifiedCategory)
+        ) {
+          const classifiedCategory = category as ClassifiedCategory;
+          switch (classifiedCategory) {
             case 'category':
-              structuredLabels.category.push(label);
+              classifiedLabels.category.push(label);
               break;
             case 'priority':
-              structuredLabels.priority.push(label);
+              classifiedLabels.priority.push(label);
               break;
             case 'resource':
-              structuredLabels.resource.push(label);
+              classifiedLabels.resource.push(label);
               break;
             case 'status':
-              structuredLabels.status.push(label);
+              classifiedLabels.status.push(label);
               break;
           }
         } else {
-          // 固定カテゴリに含まれない構造化ラベルは通常ラベルとして扱う
           normalLabels.push(label);
         }
       } else {
-        // 構造化ラベルでない場合は通常ラベル
         normalLabels.push(label);
       }
     }
 
-    // 通常ラベルのみを更新
     this.labelsSubject.next(normalLabels);
-    // 構造化ラベルを更新
-    this.structuredLabelsSubject.next(structuredLabels);
+    this.classifiedLabelsSubject.next(classifiedLabels);
   }
 
   /**
@@ -120,7 +116,7 @@ export class LabelStoreService {
    * @returns ステータスラベル
    */
   findStatusLabel(status: number): Label | undefined {
-    const current = this.structuredLabelsSubject.getValue();
+    const current = this.classifiedLabelsSubject.getValue();
     return current.status.find((label) => label.id === status);
   }
 
@@ -130,7 +126,7 @@ export class LabelStoreService {
    * @returns ステータスラベル
    */
   findStatusLabelFromName(status: string): Label | undefined {
-    const current = this.structuredLabelsSubject.getValue();
+    const current = this.classifiedLabelsSubject.getValue();
     return current.status.find((label) => label.name === status);
   }
 
@@ -140,7 +136,7 @@ export class LabelStoreService {
    * @returns カテゴリラベル
    */
   findCategoryLabel(category: number): Label | undefined {
-    const current = this.structuredLabelsSubject.getValue();
+    const current = this.classifiedLabelsSubject.getValue();
     return current.category.find((label) => label.id === category);
   }
 
@@ -150,7 +146,7 @@ export class LabelStoreService {
    * @returns カテゴリラベル
    */
   findCategoryLabelFromName(category: string): Label | undefined {
-    const current = this.structuredLabelsSubject.getValue();
+    const current = this.classifiedLabelsSubject.getValue();
     return current.category.find((label) => label.name === category);
   }
 
@@ -160,7 +156,7 @@ export class LabelStoreService {
    * @returns 優先度ラベル
    */
   findPriorityLabel(priority: number): Label | undefined {
-    const current = this.structuredLabelsSubject.getValue();
+    const current = this.classifiedLabelsSubject.getValue();
     return current.priority.find((label) => label.id === priority);
   }
 
@@ -170,7 +166,7 @@ export class LabelStoreService {
    * @returns 優先度ラベル
    */
   findPriorityLabelFromName(priority: string): Label | undefined {
-    const current = this.structuredLabelsSubject.getValue();
+    const current = this.classifiedLabelsSubject.getValue();
     return current.priority.find((label) => label.name === priority);
   }
 
@@ -180,7 +176,7 @@ export class LabelStoreService {
    * @returns リソースラベル
    */
   findResourceLabel(resource: number): Label | undefined {
-    const current = this.structuredLabelsSubject.getValue();
+    const current = this.classifiedLabelsSubject.getValue();
     return current.resource.find((label) => label.id === resource);
   }
 
@@ -190,7 +186,12 @@ export class LabelStoreService {
    * @returns リソースラベル
    */
   findResourceLabelFromName(resource: string): Label | undefined {
-    const current = this.structuredLabelsSubject.getValue();
+    const current = this.classifiedLabelsSubject.getValue();
     return current.resource.find((label) => label.name === resource);
+  }
+
+  public getClassifiedLabelsByCategory(category: ClassifiedCategory): Label[] {
+    const current = this.classifiedLabelsSubject.getValue();
+    return current[category] || [];
   }
 }

@@ -11,9 +11,10 @@ import { isDebug } from '../debug';
 import { extractStructuredLabel } from '../utils/string';
 import { isNull, isUndefined } from '../utils/utils';
 import {
-  FIXED_CATEGORIES,
-  FixedCategory,
-} from '../model/structured-labels.model';
+  CLASSIFIED_LABEL_CATEGORIES,
+  ClassifiedCategory,
+  extractClassifiedLabel,
+} from '../model/classified-labels.model';
 import { Label } from '../model/label.model';
 
 @Injectable({
@@ -92,65 +93,45 @@ export class IssuesStoreService {
 
       // 各ラベルを解析
       for (const labelName of issue.labels) {
-        const extracted = extractStructuredLabel(labelName);
-
-        if (isNull(extracted)) {
-          normalLabels.push(labelName);
-          continue;
-        }
-
-        if (!FIXED_CATEGORIES.includes(extracted.category as FixedCategory)) {
-          normalLabels.push(labelName);
-          continue;
-        }
-
-        let matchedLabel: Label | undefined = undefined;
-
-        switch (extracted.category) {
-          case 'category':
-            matchedLabel = this.labelStore.findCategoryLabelFromName(
-              extracted.content
+        const extracted = extractClassifiedLabel(labelName);
+        if (
+          !isNull(extracted) &&
+          CLASSIFIED_LABEL_CATEGORIES.includes(
+            extracted.category as ClassifiedCategory
+          )
+        ) {
+          const classifiedLabels =
+            this.labelStore.getClassifiedLabelsByCategory(
+              extracted.category as ClassifiedCategory
             );
-            if (isUndefined(matchedLabel)) {
-              normalLabels.push(labelName);
-            } else {
-              categoryIds.push(matchedLabel.id);
+          const matchedLabel = classifiedLabels.find(
+            (label) => label.name === labelName
+          );
+          if (!isUndefined(matchedLabel)) {
+            switch (extracted.category) {
+              case 'category':
+                categoryIds.push(matchedLabel.id);
+                break;
+              case 'priority':
+                priorityIds.push(matchedLabel.id);
+                break;
+              case 'resource':
+                resourceIds.push(matchedLabel.id);
+                break;
+              case 'status':
+                statusId = matchedLabel.id;
+                break;
+              default:
+                normalLabels.push(labelName);
+                break;
             }
-            break;
-          case 'priority':
-            matchedLabel = this.labelStore.findPriorityLabelFromName(
-              extracted.content
-            );
-            if (isUndefined(matchedLabel)) {
-              normalLabels.push(labelName);
-            } else {
-              priorityIds.push(matchedLabel.id);
-            }
-            break;
-          case 'resource':
-            matchedLabel = this.labelStore.findResourceLabelFromName(
-              extracted.content
-            );
-            if (isUndefined(matchedLabel)) {
-              normalLabels.push(labelName);
-            } else {
-              resourceIds.push(matchedLabel.id);
-            }
-            break;
-          case 'status':
-            matchedLabel = this.labelStore.findStatusLabelFromName(
-              extracted.content
-            );
-            if (isUndefined(matchedLabel)) {
-              normalLabels.push(labelName);
-            } else {
-              statusId = matchedLabel.id;
-            }
-            break;
-          default:
-            // 固定カテゴリに含まれない構造化ラベルは通常ラベルとして扱う
+          } else {
             normalLabels.push(labelName);
-            break;
+          }
+        } else if (extracted) {
+          normalLabels.push(labelName);
+        } else {
+          normalLabels.push(labelName);
         }
       }
 
