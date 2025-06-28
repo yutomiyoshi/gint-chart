@@ -52,6 +52,13 @@ $activate-opacity-transition-duration: 0.2s;
   padding-left: 12px;
 }
 
+.issue-iid {
+  font-size: 0.8em;
+  color: #999;
+  margin-right: 8px;
+  font-weight: normal;
+}
+
 .status,
 .assignee {
   @extend %column-base;

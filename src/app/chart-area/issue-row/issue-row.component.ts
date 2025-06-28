@@ -484,6 +484,13 @@ export class IssueRowComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * iidを#0000形式でフォーマットする
+   */
+  formatIid(iid: number): string {
+    return `#${iid.toString().padStart(4, '0')}`;
+  }
+
+  /**
    * ステータスクリック時に呼ばれる関数
    */
   onStatusClick() {

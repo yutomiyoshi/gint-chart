@@ -7,6 +7,7 @@
     [style.display]="titleWidth === 0 ? 'none' : 'flex'"
     (click)="onTitleClick()"
   >
+    <span class="issue-iid">{{ formatIid(id) }}</span>
     {{ title }}
   </div>
 
