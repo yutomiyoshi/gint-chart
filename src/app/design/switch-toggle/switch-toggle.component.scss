@@ -1,0 +1,39 @@
+.switch-toggle {
+  position: relative;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+  display: inline-block;
+
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+  }
+
+  &:disabled {
+    background-color: #f5f5f5 !important;
+    cursor: not-allowed;
+
+    .switch-thumb {
+      background-color: #bdbdbd;
+    }
+  }
+
+  &.active {
+    .switch-thumb {
+      /* transformは動的にバインディングされるのでここでは指定しない */
+    }
+  }
+}
+
+.switch-thumb {
+  position: absolute;
+  top: 2px; /* SWITCH_TOGGLE_THUMB_TOP_OFFSET と一致 */
+  left: 0;
+  background-color: white;
+  border-radius: 50%;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s ease-in-out, background-color 0.2s ease-in-out;
+  will-change: transform;
+}

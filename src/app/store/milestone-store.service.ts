@@ -1,0 +1,87 @@
+import { Injectable } from '@angular/core';
+import {
+  BehaviorSubject,
+  from,
+  map,
+  mergeMap,
+  Observable,
+  tap,
+  toArray,
+} from 'rxjs';
+import { convertJsonToMilestone, Milestone } from '../model/milestone.model';
+import { GitLabApiService } from '../git-lab-api/git-lab-api.service';
+import { GitLabConfigStoreService } from './git-lab-config-store.service';
+import { SAMPLE_MILESTONES } from '../model/sample-milestone';
+import { GitLabApiMilestone } from '../git-lab-api/git-lab-milestone.model';
+import { isDebug } from '../debug';
+
+@Injectable({
+  providedIn: 'root',
+})
+export class MilestoneStoreService {
+  private milestonesSubject = new BehaviorSubject<Milestone[]>([]);
+  public milestones$: Observable<Milestone[]> =
+    this.milestonesSubject.asObservable();
+
+  constructor(
+    private readonly gitlabApi: GitLabApiService,
+    private readonly gitlabConfigStore: GitLabConfigStoreService
+  ) {}
+
+  /**
+   * configにある全プロジェクトの全milestonesをAPIから取得し、ストアに反映する
+   * @returns Observable<Milestone[]> 取得・反映後のmilestones配列を流すObservable
+   */
+  syncAllMilestones(): Observable<Milestone[]> {
+    if (isDebug) {
+      this.milestonesSubject.next(SAMPLE_MILESTONES);
+      return from([SAMPLE_MILESTONES]);
+    }
+    const config = this.gitlabConfigStore.getConfig();
+    const projectIds = config.projectId || [];
+    const accessToken = config.accessToken || '';
+    if (projectIds.length === 0) {
+      this.milestonesSubject.next([]);
+      return from([[]]);
+    }
+    return from(projectIds).pipe(
+      mergeMap((projectId) =>
+        this.fetchAllMilestonesForProject(projectId, config.url, accessToken)
+      ),
+      toArray(),
+      map((milestonesArr) => milestonesArr.flat()),
+      tap((allMilestones) => this.milestonesSubject.next(allMilestones))
+    );
+  }
+
+  /**
+   * 現在保持しているmilestonesを取得
+   */
+  getMilestones(): Milestone[] {
+    return this.milestonesSubject.getValue();
+  }
+
+  /**
+   * 指定されたプロジェクトの全milestonesをGitLab APIから取得します。
+   *
+   * @param projectId プロジェクトID
+   * @param url GitLabホストURL
+   * @param accessToken アクセストークン
+   * @returns Observable<Milestone[]> 取得したmilestones配列を流すObservable
+   */
+  private fetchAllMilestonesForProject(
+    projectId: number,
+    url: string,
+    accessToken: string
+  ): Observable<Milestone[]> {
+    const urlObj = new URL(url);
+    const host = urlObj.href;
+    return this.gitlabApi.fetch<GitLabApiMilestone, Milestone>(
+      host,
+      String(projectId),
+      accessToken,
+      'milestones',
+      convertJsonToMilestone
+    );
+  }
+}

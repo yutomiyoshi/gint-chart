@@ -1,0 +1,186 @@
+@import "@src/app/design/scroll-bar.scss";
+
+$calendar-area-height: 40px;
+$issue-row-margin-left: 5px;
+
+.chart-area-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  position: relative;
+}
+
+.calendar-area {
+  height: $calendar-area-height;
+  flex: 0 0 $calendar-area-height;
+  overflow: hidden;
+  border-bottom: 2px solid rgb(176, 176, 176);
+}
+
+.issue-row-area {
+  flex: 1 1 0;
+  min-height: 0;
+  min-width: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  position: relative;
+
+  &::-webkit-scrollbar {
+    width: $scroll-bar-width;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: $scroll-bar-thumb-color;
+    border-radius: $scroll-bar-radius;
+  }
+
+  &::-webkit-scrollbar-track {
+    background-color: $scroll-bar-track-color;
+    border-radius: $scroll-bar-radius;
+  }
+}
+
+.chart-row {
+  position: relative;
+  z-index: 1;
+}
+
+.project-row {
+  background-color: #f8f9fa;
+  border-bottom: 2px solid #dee2e6;
+  padding: 6px calc($issue-row-margin-left + 16px);
+  font-weight: bold;
+  font-size: 16px;
+  z-index: 3;
+  position: relative;
+  border-bottom-left-radius: 2px;
+  border-bottom-right-radius: 2px;
+
+  .project-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .project-info {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .project-title {
+    color: #495057;
+    font-size: 1.2rem;
+    font-weight: bold;
+  }
+
+  .project-description {
+    color: #6c757d;
+    font-size: 0.8rem;
+    font-weight: normal;
+    margin-top: 2px;
+  }
+}
+
+.milestone-row {
+  background-color: #e9ecef;
+  border-bottom: 1px solid #ced4da;
+  padding: 3px 16px;
+  font-weight: 600;
+  font-size: 14px;
+  z-index: 3;
+  position: relative;
+  border-bottom-left-radius: 2px;
+  margin-left: $issue-row-margin-left;
+
+  .milestone-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .milestone-info {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+  }
+
+  .milestone-title {
+    color: #495057;
+    font-size: 1.2rem;
+    font-weight: bold;
+  }
+
+  .milestone-state {
+    color: #6c757d;
+    font-size: 0.8rem;
+    font-weight: normal;
+    margin-left: auto;
+    background-color: #f8f9fa;
+    padding: 2px 6px;
+    border-radius: 4px;
+  }
+
+  .milestone-due-date {
+    color: #6c757d;
+    font-size: 0.8rem;
+    font-weight: normal;
+    margin-top: 2px;
+  }
+}
+
+.issue-row {
+  // 既存のissue-rowスタイルはそのまま
+}
+
+.calendar-day-per-block {
+  position: absolute;
+  // カレンダーの縦線
+  // カレンダー日付の文字が書いてあるエリアにはみ出さないように
+  top: $calendar-area-height;
+  bottom: 0;
+
+  // カレンダーの背景はissue-barの背後にあるので、いかなるイベントも発生しない
+  z-index: 0;
+
+  // 土曜日の背景色（薄い水色）
+  &.saturday {
+    background-color: rgba(173, 216, 230, 0.3); // lightblue with transparency
+  }
+
+  // 日曜日の背景色（薄いピンク色）
+  &.sunday {
+    background-color: rgba(255, 182, 193, 0.3); // lightpink with transparency
+  }
+
+  // 今日の背景色（薄いグレー）
+  &.today {
+    background-color: rgba(136, 136, 136, 0.3); // lightgray with transparency
+  }
+}
+
+.calendar-day-vertical-line {
+  position: absolute;
+  // カレンダーの縦線
+  // カレンダー日付の文字が書いてあるエリアにはみ出さないように
+  top: $calendar-area-height;
+  bottom: 0;
+  width: 1px;
+  background-color: #e0e0e0;
+
+  // カレンダーの縦線はissue-barの全面にあるので、ツールチップイベントに反応する
+  z-index: 2;
+}
+
+.toggle-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.child-count {
+  font-size: 12px;
+  font-weight: 500;
+  color: #6c757d;
+  min-width: 24px;
+}

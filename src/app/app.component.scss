@@ -1,0 +1,149 @@
+$dialog-animation-duration: 0.3s;
+
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.spinner {
+  position: relative;
+  width: 80px;
+  height: 80px;
+}
+.ring {
+  box-sizing: border-box;
+  position: absolute;
+  width: 80px;
+  height: 80px;
+  border: 8px solid #fff;
+  border-top: 8px solid #1976d2;
+  border-radius: 50%;
+  animation: spin 1.2s linear infinite;
+  opacity: 0.8;
+}
+.ring2 {
+  border: 8px solid #fff;
+  border-bottom: 8px solid #90caf9;
+  width: 60px;
+  height: 60px;
+  top: 10px;
+  left: 10px;
+  animation: spin-reverse 1.2s linear infinite;
+  opacity: 0.6;
+}
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+@keyframes spin-reverse {
+  0% {
+    transform: rotate(360deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}
+
+.issue-detail-dialog-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(255, 255, 255, 0.5);
+  z-index: 9999;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+.toast-history-dialog-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(255, 255, 255, 0.5);
+  z-index: 9999;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+$toast-width: 300px;
+$toast-bottom: 40px;
+$toast-right: 40px;
+
+.toast-container {
+  position: fixed;
+  bottom: $toast-bottom;
+  right: $toast-right;
+  width: $toast-width;
+  z-index: 9999;
+}
+
+$header-height: 40px;
+
+.header {
+  width: 100%;
+  height: $header-height;
+}
+
+.chart-area {
+  width: 100%;
+  height: calc(100vh - $header-height);
+}
+
+.dialog-slide-in-animation {
+  position: fixed;
+  top: 50%;
+  right: 5vw;
+  transform: translateY(-50%);
+  width: 60vw;
+  height: 80vh;
+  animation: slideIn $dialog-animation-duration ease-out forwards;
+}
+
+.toast-history-dialog-overlay .dialog-slide-in-animation {
+  width: 300px;
+  height: 80vh;
+}
+
+.issue-detail-dialog-overlay.closing .dialog-slide-in-animation {
+  animation: slideOut $dialog-animation-duration ease-in forwards;
+}
+
+.toast-history-dialog-overlay.closing .dialog-slide-in-animation {
+  animation: slideOut $dialog-animation-duration ease-in forwards;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translate(100%, -50%);
+    opacity: 0;
+  }
+  to {
+    transform: translate(0, -50%);
+    opacity: 1;
+  }
+}
+
+@keyframes slideOut {
+  from {
+    transform: translate(0, -50%);
+    opacity: 1;
+  }
+  to {
+    transform: translate(100%, -50%);
+    opacity: 0;
+  }
+}

@@ -1,0 +1,87 @@
+<div class="issue-detail-dialog" role="dialog" aria-labelledby="issue-title">
+  <div *ngIf="issue" class="issue-content">
+    <h1 id="issue-title" class="issue-title">
+      {{ issue.title }}
+    </h1>
+
+    <section class="issue-meta" aria-label="課題の基本情報">
+      <div class="meta-item">
+        <span class="label">ステータス</span>
+        <span class="value" [ngClass]="issue.state">
+          {{ issue.state === "opened" ? "オープン" : "クローズ" }}
+        </span>
+      </div>
+
+      <div class="meta-item">
+        <span class="label">開始日</span>
+        <span class="value" [ngClass]="{ unset: !issue.start_date }">
+          {{
+            issue.start_date
+              ? (issue.start_date | date : "yyyy/MM/dd")
+              : "未設定"
+          }}
+        </span>
+      </div>
+
+      <div class="meta-item">
+        <span class="label">終了日</span>
+        <span class="value" [ngClass]="{ unset: !issue.end_date }">
+          {{
+            issue.end_date ? (issue.end_date | date : "yyyy/MM/dd") : "未設定"
+          }}
+        </span>
+      </div>
+    </section>
+
+    <section class="issue-labels" aria-label="ラベル">
+      <span class="label">ラベル</span>
+      <div class="label-tags">
+        <span
+          *ngFor="let label of issue.labels; trackBy: trackByLabel"
+          class="label-tag"
+        >
+          {{ label }}
+        </span>
+        <span
+          *ngIf="!issue.labels || issue.labels.length === 0"
+          class="no-labels"
+        >
+          ラベルが設定されていません
+        </span>
+      </div>
+    </section>
+
+    <section class="issue-milestone" aria-label="マイルストーン">
+      <span class="label">マイルストーン</span>
+      <div class="milestone-content">
+        <div class="milestone-info">
+          <span class="milestone-title" [ngClass]="{ unset: !milestone }">
+            {{ milestone ? milestone.title : "未設定" }}
+          </span>
+          <span
+            class="milestone-date"
+            [ngClass]="{ unset: !milestone || !milestone.due_date }"
+          >
+            {{
+              milestone && milestone.due_date
+                ? (milestone.due_date | date : "yyyy/MM/dd")
+                : "期限なし"
+            }}
+          </span>
+        </div>
+      </div>
+    </section>
+
+    <section class="issue-description" aria-label="説明">
+      <h2 class="description-title">説明</h2>
+      <div
+        class="description-content"
+        [class.empty-description]="!issue.description"
+      >
+        {{ issue.description || "説明がありません" }}
+      </div>
+    </section>
+  </div>
+
+  <div *ngIf="!issue" class="no-issue">課題情報が見つかりません</div>
+</div>
