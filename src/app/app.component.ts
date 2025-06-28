@@ -6,7 +6,7 @@ import {
   OnInit,
 } from '@angular/core';
 import { GitLabConfigStoreService } from '@src/app/store/git-lab-config-store.service';
-import { Subject, takeUntil, switchMap } from 'rxjs';
+import { Subject, takeUntil, switchMap, forkJoin } from 'rxjs';
 import { IssueDetailDialogExpansionService } from '@src/app/issue-detail-dialog/issue-detail-dialog-expansion.service';
 import { ToastHistoryDialogExpansionService } from '@src/app/toast-history-dialog/toast-history-dialog-expansion.service';
 import { StatusSelectorDialogExpansionService } from '@src/app/status-selector-dialog/status-selector-dialog-expansion.service';
@@ -17,6 +17,7 @@ import { ProjectTreeStoreService } from '@src/app/store/project-tree-store.servi
 import { ToastService } from '@src/app/utils/toast.service';
 import { GitLabApiService } from '@src/app/git-lab-api/git-lab-api.service';
 import { LabelStoreService } from '@src/app/store/label-store.service';
+import { MemberStoreService } from '@src/app/store/member-store.service';
 import { TOAST_DURATION_LONG } from '@src/app/toast/toast.const';
 import { isDebug } from '@src/app/debug';
 
@@ -53,6 +54,7 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
     private readonly toastService: ToastService,
     private readonly gitLabApiService: GitLabApiService,
     private readonly labelStore: LabelStoreService,
+    private readonly memberStore: MemberStoreService,
     private readonly cdr: ChangeDetectorRef
   ) {}
 
@@ -112,21 +114,20 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
             this.gitLabApiService.initialize();
           }
 
-          // ラベルを先に取得し、その後プロジェクト、マイルストーン、イシューを同期
-          return this.labelStore
-            .syncLabels()
-            .pipe(
-              switchMap(() =>
-                this.projectTreeStore.syncProjectMilestoneIssues()
-              )
-            );
+          // ラベルとメンバーを同時に取得し、その後プロジェクト、マイルストーン、イシューを同期
+          return forkJoin({
+            labels: this.labelStore.syncLabels(),
+            members: this.memberStore.syncMembers(),
+          }).pipe(
+            switchMap(() => this.projectTreeStore.syncProjectMilestoneIssues())
+          );
         })
       )
       .subscribe({
         error: (error) => {
           this.toastService.show(
             Assertion.no(31),
-            `Failed to sync project, milestone, issue, and labels. error: ${error}`,
+            `Failed to sync project, milestone, issue, labels, and members. error: ${error}`,
             'error',
             TOAST_DURATION_LONG
           );
@@ -136,7 +137,7 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
           this.loadingOverlay = false;
           this.toastService.show(
             Assertion.no(1),
-            'Complete to pull issues and labels!!!',
+            'Complete to pull issues, labels, and members!!!',
             'success',
             TOAST_DURATION_LONG
           );
