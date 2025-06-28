@@ -79,7 +79,7 @@ export class LabelStoreService {
 
     for (const label of labels) {
       const extracted = extractClassifiedLabel(label.name);
-      if (extracted && isClassifiedCategory(extracted.category)) {
+      if (!isNull(extracted) && isClassifiedCategory(extracted.category)) {
         label.name = extracted.content;
         const classifiedCategory = extracted.category;
         switch (classifiedCategory) {
@@ -95,9 +95,10 @@ export class LabelStoreService {
           case 'status':
             classifiedLabels.status.push(label);
             break;
+          default:
+            normalLabels.push(label);
+            break;
         }
-      } else if (extracted) {
-        normalLabels.push(label);
       } else {
         normalLabels.push(label);
       }
@@ -185,10 +186,5 @@ export class LabelStoreService {
   findResourceLabelFromName(resource: string): Label | undefined {
     const current = this.classifiedLabelsSubject.getValue();
     return current.resource.find((label) => label.name === resource);
-  }
-
-  public getClassifiedLabelsByCategory(category: ClassifiedCategory): Label[] {
-    const current = this.classifiedLabelsSubject.getValue();
-    return current[category] || [];
   }
 }

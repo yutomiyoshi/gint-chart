@@ -95,34 +95,52 @@ export class IssuesStoreService {
       for (const labelName of issue.labels) {
         const extracted = extractClassifiedLabel(labelName);
         if (!isNull(extracted) && isClassifiedCategory(extracted.category)) {
-          const classifiedLabels =
-            this.labelStore.getClassifiedLabelsByCategory(extracted.category);
-          const matchedLabel = classifiedLabels.find(
-            (label) => label.name === labelName
-          );
-          if (!isUndefined(matchedLabel)) {
-            switch (extracted.category) {
-              case 'category':
+          let matchedLabel: Label | undefined = undefined;
+          switch (extracted.category) {
+            case 'category':
+              matchedLabel = this.labelStore.findCategoryLabelFromName(
+                extracted.content
+              );
+              if (!isUndefined(matchedLabel)) {
                 categoryIds.push(matchedLabel.id);
-                break;
-              case 'priority':
-                priorityIds.push(matchedLabel.id);
-                break;
-              case 'resource':
-                resourceIds.push(matchedLabel.id);
-                break;
-              case 'status':
-                statusId = matchedLabel.id;
-                break;
-              default:
+              } else {
                 normalLabels.push(labelName);
-                break;
-            }
-          } else {
-            normalLabels.push(labelName);
+              }
+              break;
+            case 'priority':
+              matchedLabel = this.labelStore.findPriorityLabelFromName(
+                extracted.content
+              );
+              if (!isUndefined(matchedLabel)) {
+                priorityIds.push(matchedLabel.id);
+              } else {
+                normalLabels.push(labelName);
+              }
+              break;
+            case 'resource':
+              matchedLabel = this.labelStore.findResourceLabelFromName(
+                extracted.content
+              );
+              if (!isUndefined(matchedLabel)) {
+                resourceIds.push(matchedLabel.id);
+              } else {
+                normalLabels.push(labelName);
+              }
+              break;
+            case 'status':
+              matchedLabel = this.labelStore.findStatusLabelFromName(
+                extracted.content
+              );
+              if (!isUndefined(matchedLabel)) {
+                statusId = matchedLabel.id;
+              } else {
+                normalLabels.push(labelName);
+              }
+              break;
+            default:
+              normalLabels.push(labelName);
+              break;
           }
-        } else if (extracted) {
-          normalLabels.push(labelName);
         } else {
           normalLabels.push(labelName);
         }
