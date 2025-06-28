@@ -55,10 +55,28 @@ export interface Issue {
   end_date: Date | undefined;
 
   /**
-   * state
-   * @type {string}
+   * ラベルから抽出するステータスのID
+   * @type {number | undefined}
    */
-  state: 'opened' | 'closed' | string;
+  status: number | undefined;
+
+  /**
+   * ラベルから抽出するカテゴリのID
+   * @type {number[]}
+   */
+  category: number[];
+
+  /**
+   * ラベルから抽出する優先度のID
+   * @type {number[]}
+   */
+  priority: number[];
+
+  /**
+   * ラベルから抽出するリソースのID
+   * @type {number[]}
+   */
+  resource: number[];
 
   /**
    * label
@@ -81,7 +99,6 @@ export function convertJsonToIssue(apiIssue: GitLabApiIssue): Issue | null {
     typeof apiIssue.iid !== 'number' ||
     typeof apiIssue.project_id !== 'number' ||
     typeof apiIssue.title !== 'string' ||
-    typeof apiIssue.state !== 'string' ||
     !Array.isArray(apiIssue.labels)
   ) {
     return null;
@@ -135,8 +152,11 @@ export function convertJsonToIssue(apiIssue: GitLabApiIssue): Issue | null {
     description: description,
     start_date,
     end_date,
-    state: apiIssue.state,
     labels: apiIssue.labels,
     assignee,
+    status: undefined,
+    category: [],
+    priority: [],
+    resource: [],
   };
 }
