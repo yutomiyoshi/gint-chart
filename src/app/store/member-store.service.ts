@@ -83,4 +83,15 @@ export class MemberStoreService {
     const current = this.membersSubject.getValue();
     return current.find((member) => member.name === name);
   }
+
+  /**
+   * assignee_idからメンバー名を取得
+   * @param assignee_id 担当者ID
+   * @returns メンバー名
+   */
+  getMemberNameById(assignee_id: number): string | undefined {
+    const current = this.membersSubject.getValue();
+    const member = current.find((member) => member.id === assignee_id);
+    return member ? member.name : undefined;
+  }
 }
