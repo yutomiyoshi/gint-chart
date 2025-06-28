@@ -1,19 +1,23 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { IssuesStoreService } from '@src/app/store/issues-store.service';
+import {
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  OnDestroy,
+  OnInit,
+} from '@angular/core';
 import { GitLabConfigStoreService } from '@src/app/store/git-lab-config-store.service';
-import { Subject, takeUntil, forkJoin, switchMap } from 'rxjs';
+import { Subject, takeUntil, switchMap } from 'rxjs';
 import { IssueDetailDialogExpansionService } from '@src/app/issue-detail-dialog/issue-detail-dialog-expansion.service';
 import { ToastHistoryDialogExpansionService } from '@src/app/toast-history-dialog/toast-history-dialog-expansion.service';
 import { isNull, isUndefined } from '@src/app/utils/utils';
 import { DIALOG_ANIMATION_DURATION } from '@src/app/app-view.default';
 import { Assertion } from '@src/app/utils/assertion';
-import { MilestoneStoreService } from '@src/app/store/milestone-store.service';
-import { ProjectStoreService } from '@src/app/store/project-store.service';
 import { ProjectTreeStoreService } from '@src/app/store/project-tree-store.service';
-import { ToastService } from './utils/toast.service';
-import { isDebug } from './debug';
-import { GitLabApiService } from './git-lab-api/git-lab-api.service';
-import { LabelStoreService } from './store/label-store.service';
+import { ToastService } from '@src/app/utils/toast.service';
+import { GitLabApiService } from '@src/app/git-lab-api/git-lab-api.service';
+import { LabelStoreService } from '@src/app/store/label-store.service';
+import { TOAST_DURATION_LONG } from '@src/app/toast/toast.const';
+import { isDebug } from '@src/app/debug';
 
 @Component({
   selector: 'app-root',
@@ -21,7 +25,7 @@ import { LabelStoreService } from './store/label-store.service';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })
-export class AppComponent implements OnInit, OnDestroy {
+export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
   loadingOverlay = true;
   isShowTitle = true;
   isShowStatus = true;
@@ -38,16 +42,14 @@ export class AppComponent implements OnInit, OnDestroy {
   isShowToast = false;
 
   constructor(
-    private readonly issueStore: IssuesStoreService,
-    private readonly milestoneStore: MilestoneStoreService,
-    private readonly projectStore: ProjectStoreService,
     private readonly gitLabConfigStore: GitLabConfigStoreService,
     private readonly issueDetailDialogExpansionService: IssueDetailDialogExpansionService,
     private readonly toastHistoryDialogExpansionService: ToastHistoryDialogExpansionService,
     private readonly projectTreeStore: ProjectTreeStoreService,
     private readonly toastService: ToastService,
     private readonly gitLabApiService: GitLabApiService,
-    private readonly labelStore: LabelStoreService
+    private readonly labelStore: LabelStoreService,
+    private readonly cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
@@ -75,7 +77,7 @@ export class AppComponent implements OnInit, OnDestroy {
         error: (error) => {
           Assertion.assert(
             'Toast history dialog expansion error: ' + error,
-            Assertion.no(17)
+            Assertion.no(32)
           );
           this.isToastHistoryDialogExpanded = false;
         },
@@ -107,7 +109,7 @@ export class AppComponent implements OnInit, OnDestroy {
             Assertion.no(31),
             `Failed to sync project, milestone, issue, and labels. error: ${error}`,
             'error',
-            5000
+            TOAST_DURATION_LONG
           );
           this.loadingOverlay = false;
         },
@@ -117,7 +119,7 @@ export class AppComponent implements OnInit, OnDestroy {
             Assertion.no(1),
             'Complete to pull issues and labels!!!',
             'success',
-            5000
+            TOAST_DURATION_LONG
           );
         },
       });
@@ -127,6 +129,15 @@ export class AppComponent implements OnInit, OnDestroy {
         this.isShowToast = isShow;
       },
     });
+
+    if (isDebug) {
+      this.toastService.show(
+        Assertion.no(2),
+        'This is Debuging Mode. Your fetch and update of issues is executed without GitLab Server, showing just dummy-data. So, it is waste of time to compare with GitLab Home Page and this page.',
+        'info',
+        TOAST_DURATION_LONG
+      );
+    }
 
     // if (isDebug) {
     //   setInterval(() => {
@@ -170,6 +181,24 @@ export class AppComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.destroy$.next();
     this.destroy$.complete();
+  }
+
+  ngAfterViewInit(): void {
+    /**
+     * XXX miyoshi:
+     * Electronアプリを起動したときに、カレンダーがきちんと表示されないバグがあった。（issue #91）
+     *カレンダーの日付が一番左の戦闘の日付しか表示されない。また、縦線が表示されない。
+     * しかし端末依存で、パソコンによっては再現しない。
+     * このバグの原因は分からず。Electronの仕組みの根深いところにある。
+     *
+     * この問題を回避するために、起動後しばらく100msしてからカレンダーのDOMを検知させる。
+     * これによって、カレンダーのHTML要素幅の変更検知を強引に発火させる。
+     * ただし汚い手段であることは承知。
+     * 真の原因の解明ときれいな問題解決を望む。
+     */
+    setTimeout(() => {
+      this.cdr.detectChanges();
+    }, 100);
   }
 
   onIssueDetailDialogOverlayClick(event: MouseEvent): void {

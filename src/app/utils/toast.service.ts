@@ -1,9 +1,12 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { isUndefined } from './utils';
-import { Assertion } from './assertion';
-import { OneResourceSemaphore } from './semaphore';
-import { ToastHistoryService, ToastType } from './toast-history.service';
+import { isUndefined } from '@src/app/utils/utils';
+import { Assertion } from '@src/app/utils/assertion';
+import { OneResourceSemaphore } from '@src/app/utils/semaphore';
+import {
+  ToastHistoryService,
+  ToastType,
+} from '@src/app/utils/toast-history.service';
 
 @Injectable({
   providedIn: 'root',

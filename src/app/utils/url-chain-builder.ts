@@ -1,6 +1,6 @@
 import { catchError, from, map, mergeMap, Observable, throwError } from 'rxjs';
-import { Assertion } from './assertion';
-import { isNull } from './utils';
+import { Assertion } from '@src/app/utils/assertion';
+import { isNull } from '@src/app/utils/utils';
 
 export type Method = 'GET' | 'POST' | 'PUT' | 'DELETE';
 
@@ -11,10 +11,14 @@ const defaultOptions: RequestInit = {
   },
 };
 
+/**
+ * URL chainを構築するクラス
+ * メソッドチェーンでURL chainを構築する
+ */
 export class UrlChainBuilder {
-  private isBuilding: boolean = false;
+  private isBuilding = false;
 
-  private url: string = '';
+  private url = '';
 
   private options: RequestInit = defaultOptions;
 

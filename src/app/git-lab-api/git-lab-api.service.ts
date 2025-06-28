@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
 import { isNull } from '@src/app/utils/utils';
-import { Observable, defer, from, throwError } from 'rxjs';
-import { catchError, map, mergeMap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 import { Assertion } from '@src/app/utils/assertion';
 import { UrlChainBuilder } from '@src/app/utils/url-chain-builder';
-import { GitLabConfigStoreService } from '../store/git-lab-config-store.service';
+import { GitLabConfigStoreService } from '@src/app/store/git-lab-config-store.service';
 
 /**
  * GitLab APIのエンドポイント
@@ -33,7 +32,7 @@ export class GitLabApiService {
    * 初期化する
    */
   initialize(): void {
-    const host = this.gitlabConfig.getConfig().url;
+    const host = this.gitlabConfig.config.url;
 
     if (host === '') {
       Assertion.assert('GitLab host is not configured', Assertion.no(12));
@@ -71,7 +70,7 @@ export class GitLabApiService {
       .addPath(encodeURIComponent(projectId))
       .addPath(endpoint)
       .addMethod('GET')
-      .addPrivateToken(this.gitlabConfig.getConfig().accessToken)
+      .addPrivateToken(this.gitlabConfig.config.accessToken)
       .end()
       .pipe((data: T) => {
         const arr = Array.isArray(data) ? data.map(mapFn) : [mapFn(data)];
@@ -95,7 +94,7 @@ export class GitLabApiService {
     mapFn: (data: T) => S | null
   ): Observable<S[]> {
     if (isNull(this.urlChainBuilder)) {
-      Assertion.assert('GitLab host is not configured', Assertion.no(15));
+      Assertion.assert('GitLab host is not configured', Assertion.no(37));
       return new Observable<S[]>();
     }
 
@@ -107,7 +106,7 @@ export class GitLabApiService {
       .addPath(encodeURIComponent(String(groupId)))
       .addPath(endpoint)
       .addMethod('GET')
-      .addPrivateToken(this.gitlabConfig.getConfig().accessToken)
+      .addPrivateToken(this.gitlabConfig.config.accessToken)
       .end()
       .pipe((data: T) => {
         const arr = Array.isArray(data) ? data.map(mapFn) : [mapFn(data)];
@@ -147,7 +146,7 @@ export class GitLabApiService {
       .addPath(endpoint)
       .addPath(encodeURIComponent(String(iid)))
       .addMethod('PUT')
-      .addPrivateToken(this.gitlabConfig.getConfig().accessToken)
+      .addPrivateToken(this.gitlabConfig.config.accessToken)
       .addOption(body)
       .end()
       .pipe((data: T) => {

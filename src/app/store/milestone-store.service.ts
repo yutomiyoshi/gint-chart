@@ -8,12 +8,15 @@ import {
   tap,
   toArray,
 } from 'rxjs';
-import { convertJsonToMilestone, Milestone } from '../model/milestone.model';
-import { GitLabApiService } from '../git-lab-api/git-lab-api.service';
-import { GitLabConfigStoreService } from './git-lab-config-store.service';
-import { SAMPLE_MILESTONES } from '../model/sample-milestone';
-import { GitLabApiMilestone } from '../git-lab-api/git-lab-milestone.model';
-import { isDebug } from '../debug';
+import {
+  convertJsonToMilestone,
+  Milestone,
+} from '@src/app/model/milestone.model';
+import { GitLabApiService } from '@src/app/git-lab-api/git-lab-api.service';
+import { GitLabConfigStoreService } from '@src/app/store/git-lab-config-store.service';
+import { SAMPLE_MILESTONES } from '@src/app/model/sample-milestone';
+import { GitLabApiMilestone } from '@src/app/git-lab-api/git-lab-milestone.model';
+import { isDebug } from '@src/app/debug';
 
 @Injectable({
   providedIn: 'root',
@@ -32,19 +35,19 @@ export class MilestoneStoreService {
    * configにある全プロジェクトの全milestonesをAPIから取得し、ストアに反映する
    * @returns Observable<Milestone[]> 取得・反映後のmilestones配列を流すObservable
    */
-  syncAllMilestones(): Observable<Milestone[]> {
+  syncMilestones(): Observable<Milestone[]> {
     if (isDebug) {
       this.milestonesSubject.next(SAMPLE_MILESTONES);
       return from([SAMPLE_MILESTONES]);
     }
-    const config = this.gitlabConfigStore.getConfig();
+    const config = this.gitlabConfigStore.config;
     const projectIds = config.projectId || [];
     if (projectIds.length === 0) {
       this.milestonesSubject.next([]);
       return from([[]]);
     }
     return from(projectIds).pipe(
-      mergeMap((projectId) => this.fetchAllMilestonesForProject(projectId)),
+      mergeMap((projectId) => this.fetchMilestonesForProject(projectId)),
       toArray(),
       map((milestonesArr) => milestonesArr.flat()),
       tap((allMilestones) => this.milestonesSubject.next(allMilestones))
@@ -54,7 +57,7 @@ export class MilestoneStoreService {
   /**
    * 現在保持しているmilestonesを取得
    */
-  getMilestones(): Milestone[] {
+  get milestones(): Milestone[] {
     return this.milestonesSubject.getValue();
   }
 
@@ -64,7 +67,7 @@ export class MilestoneStoreService {
    * @param projectId プロジェクトID
    * @returns Observable<Milestone[]> 取得したmilestones配列を流すObservable
    */
-  private fetchAllMilestonesForProject(
+  private fetchMilestonesForProject(
     projectId: number
   ): Observable<Milestone[]> {
     return this.gitlabApi.fetch<GitLabApiMilestone, Milestone>(

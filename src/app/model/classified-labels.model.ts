@@ -1,4 +1,4 @@
-import { Label } from './label.model';
+import { Label } from '@src/app/model/label.model';
 
 // 分類済みラベルカテゴリ
 export const CLASSIFIED_LABEL_CATEGORIES = [

@@ -27,19 +27,17 @@ export class IssueDetailDialogComponent implements OnInit {
     const issueId = this.issueDetailDialogExpansionService.getExpandedIssueId();
 
     if (isUndefined(issueId)) {
-      Assertion.assert('issueId is undefined', Assertion.no(14));
+      Assertion.assert('issueId is undefined', Assertion.no(38));
       return;
     }
 
-    this.issue = this.issueStore
-      .getIssues()
-      .find((issue) => issue.id === issueId);
+    this.issue = this.issueStore.issues.find((issue) => issue.id === issueId);
 
     // マイルストーンの情報を取得
     if (this.issue?.milestone_id) {
-      this.milestone = this.milestoneStore
-        .getMilestones()
-        .find((milestone) => milestone.id === this.issue!.milestone_id);
+      this.milestone = this.milestoneStore.milestones.find(
+        (milestone) => milestone.id === this.issue!.milestone_id
+      );
     }
   }
 

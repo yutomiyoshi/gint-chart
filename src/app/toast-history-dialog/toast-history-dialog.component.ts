@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import {
   ToastHistoryService,
   ToastHistory,
-} from '../utils/toast-history.service';
+} from '@src/app/utils/toast-history.service';
 
 @Component({
   selector: 'app-toast-history-dialog',

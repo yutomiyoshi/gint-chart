@@ -6,7 +6,7 @@ import { GitLabApiService } from '@src/app/git-lab-api/git-lab-api.service';
 import { Project, convertJsonToProject } from '@src/app/model/project.model';
 import { GitLabConfigStoreService } from '@src/app/store/git-lab-config-store.service';
 import { SAMPLE_PROJECTS } from '@src/app/model/sample-project';
-import { isDebug } from '../debug';
+import { isDebug } from '@src/app/debug';
 
 @Injectable({
   providedIn: 'root',
@@ -23,12 +23,12 @@ export class ProjectStoreService {
   /**
    * configにある全プロジェクトの全projectsをAPIから取得し、ストアに反映する
    */
-  syncAllProjects(): Observable<Project[]> {
+  syncProjects(): Observable<Project[]> {
     if (isDebug) {
       this.projectsSubject.next(SAMPLE_PROJECTS);
       return from([SAMPLE_PROJECTS]);
     }
-    const config = this.gitlabConfigStore.getConfig();
+    const config = this.gitlabConfigStore.config;
     const projectIds = config.projectId || [];
     if (projectIds.length === 0) {
       this.projectsSubject.next([]);
@@ -36,7 +36,13 @@ export class ProjectStoreService {
     }
 
     return from(projectIds).pipe(
-      mergeMap((projectId) => this.fetchAllProjectsForProject(projectId)),
+      mergeMap((projectId) => {
+        return this.gitlabApi.fetch<GitLabProject, Project>(
+          String(projectId),
+          '',
+          convertJsonToProject
+        );
+      }),
       toArray(),
       map((projectsArr) => projectsArr.flat()),
       tap((allProjects) => this.projectsSubject.next(allProjects))
@@ -46,22 +52,7 @@ export class ProjectStoreService {
   /**
    * 現在保持しているprojectsを取得
    */
-  getProjects(): Project[] {
+  get projects(): Project[] {
     return this.projectsSubject.getValue();
-  }
-
-  /**
-   * 指定されたプロジェクトの全projectsをGitLab APIから取得します。
-   *
-   * @param project GitLabプロジェクト情報
-   * @param accessToken アクセストークン
-   * @returns Observable<Project[]> 取得したprojects配列を流すObservable
-   */
-  private fetchAllProjectsForProject(projectId: number): Observable<Project[]> {
-    return this.gitlabApi.fetch<GitLabProject, Project>(
-      String(projectId),
-      '',
-      convertJsonToProject
-    );
   }
 }

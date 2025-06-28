@@ -1,5 +1,5 @@
 import { Observable, Subscriber } from 'rxjs';
-import { isUndefined } from './utils';
+import { isUndefined } from '@src/app/utils/utils';
 
 /**
  * 1つの資源を管理するセマフォ
@@ -8,7 +8,7 @@ export class OneResourceSemaphore {
   /**
    * 現在使われている数
    */
-  private isUsed: boolean = false;
+  private isUsed = false;
 
   /**
    * 待機中のタスク

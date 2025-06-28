@@ -9,9 +9,9 @@ import { ChartAreaComponent } from '@src/app/chart-area/chart-area.component';
 import { IssueRowComponent } from '@src/app/chart-area/issue-row/issue-row.component';
 import { IssueColumnComponent } from '@src/app/chart-area/issue-column/issue-column.component';
 import { IssueDetailDialogComponent } from '@src/app/issue-detail-dialog/issue-detail-dialog.component';
-import { SwitchToggleComponent } from './design/switch-toggle/switch-toggle.component';
-import { ToastComponent } from './toast/toast.component';
-import { ToastHistoryDialogComponent } from './toast-history-dialog/toast-history-dialog.component';
+import { SwitchToggleComponent } from '@src/app/design/switch-toggle/switch-toggle.component';
+import { ToastComponent } from '@src/app/toast/toast.component';
+import { ToastHistoryDialogComponent } from '@src/app/toast-history-dialog/toast-history-dialog.component';
 
 @NgModule({
   declarations: [

@@ -1,4 +1,4 @@
-import { GitLabLabel } from '../git-lab-api/git-lab-label.model';
+import { GitLabLabel } from '@src/app/git-lab-api/git-lab-label.model';
 
 export interface Label {
   /**

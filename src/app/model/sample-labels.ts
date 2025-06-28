@@ -1,4 +1,4 @@
-import { Label } from './label.model';
+import { Label } from '@src/app/model/label.model';
 
 export const SAMPLE_LABELS: Label[] = [
   {

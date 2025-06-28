@@ -1,19 +1,17 @@
 import { Injectable } from '@angular/core';
-import { GitLabApiService } from '../git-lab-api/git-lab-api.service';
-import { Label, convertGitLabLabelToLabel } from '../model/label.model';
-import { GitLabLabel } from '../git-lab-api/git-lab-label.model';
+import { GitLabApiService } from '@src/app/git-lab-api/git-lab-api.service';
+import { Label, convertGitLabLabelToLabel } from '@src/app/model/label.model';
+import { GitLabLabel } from '@src/app/git-lab-api/git-lab-label.model';
 import { BehaviorSubject, from, Observable, tap } from 'rxjs';
-import { isDebug } from '../debug';
-import { GitLabConfigStoreService } from './git-lab-config-store.service';
-import { isNull } from '../utils/utils';
-import { SAMPLE_LABELS } from '../model/sample-labels';
+import { isDebug } from '@src/app/debug';
+import { GitLabConfigStoreService } from '@src/app/store/git-lab-config-store.service';
+import { isNull } from '@src/app/utils/utils';
+import { SAMPLE_LABELS } from '@src/app/model/sample-labels';
 import {
-  CLASSIFIED_LABEL_CATEGORIES,
-  ClassifiedCategory,
   ClassifiedLabels,
   extractClassifiedLabel,
   isClassifiedCategory,
-} from '../model/classified-labels.model';
+} from '@src/app/model/classified-labels.model';
 
 @Injectable({
   providedIn: 'root',
@@ -42,7 +40,7 @@ export class LabelStoreService {
       return from([SAMPLE_LABELS]);
     }
 
-    const config = this.gitlabConfigStore.getConfig();
+    const config = this.gitlabConfigStore.config;
     const groupId = config.groupId;
     if (isNull(groupId)) {
       this.labelsSubject.next([]);

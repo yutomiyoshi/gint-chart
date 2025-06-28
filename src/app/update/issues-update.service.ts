@@ -5,7 +5,7 @@ import { GitLabConfigStoreService } from '@src/app/store/git-lab-config-store.se
 import { Issue, convertJsonToIssue } from '@src/app/model/issue.model';
 import { GitLabApiIssue } from '@src/app/git-lab-api/git-lab-issue.model';
 import { Assertion } from '@src/app/utils/assertion';
-import { isUndefined } from '../utils/utils';
+import { isUndefined } from '@src/app/utils/utils';
 
 @Injectable({
   providedIn: 'root',
@@ -24,7 +24,7 @@ export class IssuesUpdateService {
    * @returns Observable<Issue> 更新されたissueデータを流すObservable
    */
   public updateIssueDescription(issue: Issue): Observable<Issue> {
-    const config = this.gitLabConfigStoreService.getConfig();
+    const config = this.gitLabConfigStoreService.config;
 
     if (config.projectId.length === 0) {
       Assertion.assert(

@@ -42,7 +42,7 @@ export class CalendarRangeService {
    * RULE:
    * 基本的にはsetRange()を使用して、直接的に_calendarRangeや_totalDaysを更新しないこと。
    */
-  private _totalDays: number = 1;
+  private _totalDays = 1;
 
   public readonly calendarRange$: Observable<CalendarRange> =
     this._calendarRange.asObservable();
