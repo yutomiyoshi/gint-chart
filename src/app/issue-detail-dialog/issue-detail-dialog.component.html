@@ -7,8 +7,8 @@
     <section class="issue-meta" aria-label="課題の基本情報">
       <div class="meta-item">
         <span class="label">ステータス</span>
-        <span class="value" [ngClass]="issue.state">
-          {{ issue.state === "opened" ? "オープン" : "クローズ" }}
+        <span class="value">
+          {{ issue.status }}
         </span>
       </div>
 

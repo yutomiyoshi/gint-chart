@@ -25,6 +25,7 @@ import {
 import { Assertion } from '@src/app/utils/assertion';
 import { CalendarRangeService } from '@src/app/chart-area/calendar-range.service';
 import { CalendarWidthService } from '@src/app/chart-area/calendar-width.service';
+import { LabelStoreService } from '@src/app/store/label-store.service';
 
 @Component({
   selector: 'app-issue-row',
@@ -46,7 +47,7 @@ export class IssueRowComponent implements OnDestroy {
   /**
    * イシューステータス
    */
-  @Input() state = 'dummy state';
+  @Input() status: number | undefined;
 
   /**
    * 担当者
@@ -66,7 +67,10 @@ export class IssueRowComponent implements OnDestroy {
   /**
    * スケジュール変更イベント（開始日・終了日）
    */
-  @Output() scheduleChange = new EventEmitter<{startDate: Date | undefined, endDate: Date | undefined}>();
+  @Output() scheduleChange = new EventEmitter<{
+    startDate: Date | undefined;
+    endDate: Date | undefined;
+  }>();
 
   /**
    * タイトル幅
@@ -113,7 +117,8 @@ export class IssueRowComponent implements OnDestroy {
   constructor(
     private readonly issueDetailDialogExpansionService: IssueDetailDialogExpansionService,
     private readonly calendarRangeService: CalendarRangeService,
-    private readonly calendarWidthService: CalendarWidthService
+    private readonly calendarWidthService: CalendarWidthService,
+    private readonly labelStore: LabelStoreService
   ) {}
 
   /**
@@ -180,7 +185,10 @@ export class IssueRowComponent implements OnDestroy {
    * ドラッグ中に呼ばれる関数を削除する
    */
   onEndDateDragEnd() {
-    this.scheduleChange.emit({startDate: this.startDate, endDate: this.endDate});
+    this.scheduleChange.emit({
+      startDate: this.startDate,
+      endDate: this.endDate,
+    });
     this.updateEndDate = undefined;
   }
 
@@ -251,7 +259,10 @@ export class IssueRowComponent implements OnDestroy {
    * ドラッグ中に呼ばれる関数を削除する
    */
   onStartDateDragEnd() {
-    this.scheduleChange.emit({startDate: this.startDate, endDate: this.endDate});
+    this.scheduleChange.emit({
+      startDate: this.startDate,
+      endDate: this.endDate,
+    });
     this.updateSchedule = undefined;
   }
 
@@ -262,7 +273,10 @@ export class IssueRowComponent implements OnDestroy {
     if (!isUndefined(this.startDate)) {
       // startDateが設定されている場合、undefinedに設定
       this.startDate = undefined;
-      this.scheduleChange.emit({startDate: this.startDate, endDate: this.endDate});
+      this.scheduleChange.emit({
+        startDate: this.startDate,
+        endDate: this.endDate,
+      });
       return;
     }
 
@@ -271,7 +285,10 @@ export class IssueRowComponent implements OnDestroy {
       const newStartDate = new Date(this.endDate);
       newStartDate.setDate(newStartDate.getDate() - undefinedDuration + 1);
       this.startDate = newStartDate;
-      this.scheduleChange.emit({startDate: this.startDate, endDate: this.endDate});
+      this.scheduleChange.emit({
+        startDate: this.startDate,
+        endDate: this.endDate,
+      });
       return;
     }
 
@@ -288,14 +305,20 @@ export class IssueRowComponent implements OnDestroy {
   onEndDateDoubleClick() {
     if (!isUndefined(this.endDate)) {
       this.endDate = undefined;
-      this.scheduleChange.emit({startDate: this.startDate, endDate: this.endDate});
+      this.scheduleChange.emit({
+        startDate: this.startDate,
+        endDate: this.endDate,
+      });
       return;
     }
 
     if (!isUndefined(this.startDate)) {
       this.endDate = new Date(this.startDate);
       this.endDate.setDate(this.endDate.getDate() + undefinedDuration - 1);
-      this.scheduleChange.emit({startDate: this.startDate, endDate: this.endDate});
+      this.scheduleChange.emit({
+        startDate: this.startDate,
+        endDate: this.endDate,
+      });
       return;
     }
 
@@ -312,7 +335,10 @@ export class IssueRowComponent implements OnDestroy {
     const newEndDate = new Date();
     newEndDate.setDate(newEndDate.getDate() + newEndDateCreateOffsetDays);
     this.endDate = newEndDate;
-    this.scheduleChange.emit({startDate: this.startDate, endDate: this.endDate});
+    this.scheduleChange.emit({
+      startDate: this.startDate,
+      endDate: this.endDate,
+    });
   }
 
   /**
@@ -357,5 +383,22 @@ export class IssueRowComponent implements OnDestroy {
    */
   get showEndDateCreateButton(): boolean {
     return isUndefined(this.startDate) && isUndefined(this.endDate);
+  }
+
+  /**
+   * ステータス名を取得する
+   */
+  getStatusName(status: number | undefined): string {
+    if (isUndefined(status)) {
+      return 'undefined';
+    }
+
+    const matchedLabel = this.labelStore.findStatusLabel(status);
+
+    if (isUndefined(matchedLabel)) {
+      return 'not found';
+    }
+
+    return matchedLabel.name;
   }
 }

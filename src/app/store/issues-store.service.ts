@@ -4,9 +4,18 @@ import { mergeMap, map, toArray, tap } from 'rxjs/operators';
 import { GitLabApiService } from '@src/app/git-lab-api/git-lab-api.service';
 import { Issue, convertJsonToIssue } from '@src/app/model/issue.model';
 import { GitLabConfigStoreService } from '@src/app/store/git-lab-config-store.service';
+import { LabelStoreService } from '@src/app/store/label-store.service';
 import { SAMPLE_ISSUES } from '@src/app/model/sample-issues';
 import { GitLabApiIssue } from '@src/app/git-lab-api/git-lab-issue.model';
 import { isDebug } from '../debug';
+import { isNull, isUndefined } from '../utils/utils';
+import {
+  CLASSIFIED_LABEL_CATEGORIES,
+  ClassifiedCategory,
+  extractClassifiedLabel,
+  isClassifiedCategory,
+} from '../model/classified-labels.model';
+import { Label } from '../model/label.model';
 
 @Injectable({
   providedIn: 'root',
@@ -17,7 +26,8 @@ export class IssuesStoreService {
 
   constructor(
     private readonly gitlabApi: GitLabApiService,
-    private readonly gitlabConfigStore: GitLabConfigStoreService
+    private readonly gitlabConfigStore: GitLabConfigStoreService,
+    private readonly labelStore: LabelStoreService
   ) {}
 
   /**
@@ -27,8 +37,9 @@ export class IssuesStoreService {
   syncAllIssues(): Observable<Issue[]> {
     if (isDebug) {
       // デバッグモード時はサンプルデータを返す
-      this.issuesSubject.next(SAMPLE_ISSUES);
-      return from([SAMPLE_ISSUES]);
+      const processedIssues = this.processIssuesLabels(SAMPLE_ISSUES);
+      this.issuesSubject.next(processedIssues);
+      return from([processedIssues]);
     }
     const config = this.gitlabConfigStore.getConfig();
     const projectIds = config.projectId || [];
@@ -42,6 +53,7 @@ export class IssuesStoreService {
       mergeMap((projectId) => this.fetchAllIssuesForProject(projectId)),
       toArray(), // [[Issue], [Issue], ...] の配列に
       map((issuesArr) => issuesArr.flat()), // 1次元配列に
+      map((issues) => this.processIssuesLabels(issues)), // ラベルを解析・処理
       tap((allIssues) => this.issuesSubject.next(allIssues))
     );
   }
@@ -66,5 +78,83 @@ export class IssuesStoreService {
       'issues',
       convertJsonToIssue
     );
+  }
+
+  /**
+   * issueのラベルを解析して、構造化ラベルを通常ラベルから削除し、それぞれの構造化フィールドに移す
+   */
+  private processIssuesLabels(issues: Issue[]): Issue[] {
+    return issues.map((issue) => {
+      const normalLabels: string[] = [];
+      const categoryIds: number[] = [];
+      const priorityIds: number[] = [];
+      const resourceIds: number[] = [];
+      let statusId: number | undefined = undefined;
+
+      // 各ラベルを解析
+      for (const labelName of issue.labels) {
+        const extracted = extractClassifiedLabel(labelName);
+        if (!isNull(extracted) && isClassifiedCategory(extracted.category)) {
+          let matchedLabel: Label | undefined = undefined;
+          switch (extracted.category) {
+            case 'category':
+              matchedLabel = this.labelStore.findCategoryLabelFromName(
+                extracted.content
+              );
+              if (!isUndefined(matchedLabel)) {
+                categoryIds.push(matchedLabel.id);
+              } else {
+                normalLabels.push(labelName);
+              }
+              break;
+            case 'priority':
+              matchedLabel = this.labelStore.findPriorityLabelFromName(
+                extracted.content
+              );
+              if (!isUndefined(matchedLabel)) {
+                priorityIds.push(matchedLabel.id);
+              } else {
+                normalLabels.push(labelName);
+              }
+              break;
+            case 'resource':
+              matchedLabel = this.labelStore.findResourceLabelFromName(
+                extracted.content
+              );
+              if (!isUndefined(matchedLabel)) {
+                resourceIds.push(matchedLabel.id);
+              } else {
+                normalLabels.push(labelName);
+              }
+              break;
+            case 'status':
+              matchedLabel = this.labelStore.findStatusLabelFromName(
+                extracted.content
+              );
+              if (!isUndefined(matchedLabel)) {
+                statusId = matchedLabel.id;
+              } else {
+                normalLabels.push(labelName);
+              }
+              break;
+            default:
+              normalLabels.push(labelName);
+              break;
+          }
+        } else {
+          normalLabels.push(labelName);
+        }
+      }
+
+      // 処理済みのissueを返す
+      return {
+        ...issue,
+        labels: normalLabels,
+        category: categoryIds,
+        priority: priorityIds,
+        resource: resourceIds,
+        status: statusId,
+      };
+    });
   }
 }

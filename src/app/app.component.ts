@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { IssuesStoreService } from '@src/app/store/issues-store.service';
 import { GitLabConfigStoreService } from '@src/app/store/git-lab-config-store.service';
-import { Subject, takeUntil, forkJoin } from 'rxjs';
+import { Subject, takeUntil, forkJoin, switchMap } from 'rxjs';
 import { IssueDetailDialogExpansionService } from '@src/app/issue-detail-dialog/issue-detail-dialog-expansion.service';
 import { ToastHistoryDialogExpansionService } from '@src/app/toast-history-dialog/toast-history-dialog-expansion.service';
 import { isNull, isUndefined } from '@src/app/utils/utils';
@@ -13,6 +13,7 @@ import { ProjectTreeStoreService } from '@src/app/store/project-tree-store.servi
 import { ToastService } from './utils/toast.service';
 import { isDebug } from './debug';
 import { GitLabApiService } from './git-lab-api/git-lab-api.service';
+import { LabelStoreService } from './store/label-store.service';
 
 @Component({
   selector: 'app-root',
@@ -45,7 +46,8 @@ export class AppComponent implements OnInit, OnDestroy {
     private readonly toastHistoryDialogExpansionService: ToastHistoryDialogExpansionService,
     private readonly projectTreeStore: ProjectTreeStoreService,
     private readonly toastService: ToastService,
-    private readonly gitLabApiService: GitLabApiService
+    private readonly gitLabApiService: GitLabApiService,
+    private readonly labelStore: LabelStoreService
   ) {}
 
   ngOnInit() {
@@ -81,47 +83,42 @@ export class AppComponent implements OnInit, OnDestroy {
 
     this.gitLabConfigStore
       .loadConfig()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        error: (error) => {
-          this.toastService.show(
-            Assertion.no(32),
-            `Failed to load GitLab config. error: ${error}`,
-            'error',
-            5000
-          );
-          this.loadingOverlay = false;
-        },
-        next: (config) => {
+      .pipe(
+        takeUntil(this.destroy$),
+        switchMap((config) => {
           // GitLabApiServiceを使用してGitLab APIを初期化
           if (!isNull(config)) {
             this.gitLabApiService.initialize();
           }
 
-          // ProjectTreeStoreServiceを使用してプロジェクト、マイルストーン、イシューを同期
-          this.projectTreeStore
-            .syncProjectMilestoneIssues()
-            .pipe(takeUntil(this.destroy$))
-            .subscribe({
-              error: (error) => {
-                this.toastService.show(
-                  Assertion.no(31),
-                  `Failed to sync project, milestone, and issue. error: ${error}`,
-                  'error',
-                  5000
-                );
-                this.loadingOverlay = false;
-              },
-              next: () => {
-                this.loadingOverlay = false;
-                this.toastService.show(
-                  Assertion.no(1),
-                  'Complete to pull issues!!!',
-                  'success',
-                  5000
-                );
-              },
-            });
+          // ラベルを先に取得し、その後プロジェクト、マイルストーン、イシューを同期
+          return this.labelStore
+            .syncLabels()
+            .pipe(
+              switchMap(() =>
+                this.projectTreeStore.syncProjectMilestoneIssues()
+              )
+            );
+        })
+      )
+      .subscribe({
+        error: (error) => {
+          this.toastService.show(
+            Assertion.no(31),
+            `Failed to sync project, milestone, issue, and labels. error: ${error}`,
+            'error',
+            5000
+          );
+          this.loadingOverlay = false;
+        },
+        next: () => {
+          this.loadingOverlay = false;
+          this.toastService.show(
+            Assertion.no(1),
+            'Complete to pull issues and labels!!!',
+            'success',
+            5000
+          );
         },
       });
 

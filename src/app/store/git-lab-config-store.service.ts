@@ -40,7 +40,7 @@ export class GitLabConfigStoreService {
   getConfig(): GitLabConfig {
     const config = this.configSubject.getValue();
     return isNull(config)
-      ? { url: '', projectId: [], accessToken: '' }
+      ? { url: '', projectId: [], accessToken: '', groupId: 0 }
       : config;
   }
 }

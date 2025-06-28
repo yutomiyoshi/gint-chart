@@ -11,8 +11,9 @@ import { GitLabConfigStoreService } from '../store/git-lab-config-store.service'
  * 'issues': イシュー
  * 'milestones': マイルストーン
  * '': プロジェクト
+ * 'labels': ラベル
  */
-type EndPoint = 'issues' | 'milestones' | '';
+type EndPoint = 'issues' | 'milestones' | '' | 'labels';
 
 @Injectable({
   providedIn: 'root',
@@ -68,6 +69,42 @@ export class GitLabApiService {
       .addPath('v4')
       .addPath('projects')
       .addPath(encodeURIComponent(projectId))
+      .addPath(endpoint)
+      .addMethod('GET')
+      .addPrivateToken(this.gitlabConfig.getConfig().accessToken)
+      .end()
+      .pipe((data: T) => {
+        const arr = Array.isArray(data) ? data.map(mapFn) : [mapFn(data)];
+        return arr.filter((item): item is S => !isNull(item));
+      });
+  }
+
+  /**
+   * 任意のGitLab APIエンドポイントからデータを取得し、アプリ用の型に変換して返すObservableを返す
+   * @note
+   * @template T APIから取得する生データの型
+   * @template S 変換後のアプリ用データ型
+   * @param projectId プロジェクトID
+   * @param endpoint プロジェクト配下のAPIエンドポイント（例: 'issues', 'merge_requests' など）
+   * @param mapFn APIのレスポンスTをアプリ用型Sに変換する関数
+   * @returns Observable<S[]> 変換後データの配列を流すObservable
+   */
+  fetchGroup<T, S>(
+    groupId: number,
+    endpoint: EndPoint,
+    mapFn: (data: T) => S | null
+  ): Observable<S[]> {
+    if (isNull(this.urlChainBuilder)) {
+      Assertion.assert('GitLab host is not configured', Assertion.no(15));
+      return new Observable<S[]>();
+    }
+
+    return this.urlChainBuilder
+      .start()
+      .addPath('api')
+      .addPath('v4')
+      .addPath('groups')
+      .addPath(encodeURIComponent(String(groupId)))
       .addPath(endpoint)
       .addMethod('GET')
       .addPrivateToken(this.gitlabConfig.getConfig().accessToken)
