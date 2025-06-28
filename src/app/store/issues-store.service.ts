@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, from } from 'rxjs';
-import { mergeMap, map, toArray } from 'rxjs/operators';
+import { mergeMap, map, toArray, tap } from 'rxjs/operators';
 import { GitLabApiService } from '@src/app/git-lab-api/git-lab-api.service';
 import { Issue, convertJsonToIssue } from '@src/app/model/issue.model';
 import { GitLabConfigStoreService } from '@src/app/store/git-lab-config-store.service';
