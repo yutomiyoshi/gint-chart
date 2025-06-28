@@ -15,6 +15,8 @@ import { ToastHistoryDialogComponent } from '@src/app/toast-history-dialog/toast
 import { StatusSelectorDialogComponent } from '@src/app/status-selector-dialog/status-selector-dialog.component';
 import { AssigneeSelectorDialogComponent } from '@src/app/assignee-selector-dialog/assignee-selector-dialog.component';
 import { IssueIidPipe } from '@src/app/chart-area/issue-row/issue-iid.pipe';
+import { IssueStatusNamePipe } from '@src/app/chart-area/issue-row/issue-status-name.pipe';
+import { IssueAssigneeNamePipe } from '@src/app/chart-area/issue-row/issue-assignee-name.pipe';
 
 @NgModule({
   declarations: [
@@ -36,6 +38,8 @@ import { IssueIidPipe } from '@src/app/chart-area/issue-row/issue-iid.pipe';
     DragDropModule,
     SwitchToggleComponent,
     IssueIidPipe,
+    IssueStatusNamePipe,
+    IssueAssigneeNamePipe,
   ],
   providers: [],
   bootstrap: [AppComponent],

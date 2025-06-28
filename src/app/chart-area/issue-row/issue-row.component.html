@@ -19,7 +19,7 @@
     [style.display]="statusWidth === 0 ? 'none' : 'flex'"
     (click)="onStatusClick()"
   >
-    {{ getStatusName(status) }}
+    {{ status | issueStatusName }}
   </div>
 
   <!-- Assignee -->
@@ -32,7 +32,7 @@
     [style.display]="assigneeWidth === 0 ? 'none' : 'flex'"
     (click)="onAssigneeClick()"
   >
-    {{ getAssigneeName(assigneeId) }}
+    {{ assigneeId | issueAssigneeName }}
   </div>
 
   <!-- Calendar Area -->
