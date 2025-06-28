@@ -3,7 +3,9 @@ import { Subscription } from 'rxjs';
 import { isUndefined } from '@src/app/utils/utils';
 import { AssigneeSelectorDialogExpansionService } from './assignee-selector-dialog-expansion.service';
 import { MemberStoreService } from '@src/app/store/member-store.service';
+import { IssuesStoreService } from '@src/app/store/issues-store.service';
 import { Member } from '@src/app/model/member.model';
+import { Issue } from '@src/app/model/issue.model';
 
 @Component({
   selector: 'app-assignee-selector-dialog',
@@ -16,12 +18,14 @@ export class AssigneeSelectorDialogComponent implements OnInit, OnDestroy {
   currentAssigneeId: number | undefined;
   members: Member[] = [];
   selectedAssigneeId: number | undefined;
+  currentIssue: Issue | undefined;
 
   private subscription = new Subscription();
 
   constructor(
     private readonly assigneeSelectorDialogExpansionService: AssigneeSelectorDialogExpansionService,
-    private readonly memberStore: MemberStoreService
+    private readonly memberStore: MemberStoreService,
+    private readonly issuesStore: IssuesStoreService
   ) {}
 
   ngOnInit(): void {
@@ -33,12 +37,18 @@ export class AssigneeSelectorDialogComponent implements OnInit, OnDestroy {
             this.currentIssueId = undefined;
             this.currentAssigneeId = undefined;
             this.selectedAssigneeId = undefined;
+            this.currentIssue = undefined;
             return;
           }
 
           this.currentIssueId = assigneeData.issueId;
           this.currentAssigneeId = assigneeData.assigneeId;
           this.selectedAssigneeId = assigneeData.assigneeId;
+
+          // 現在のissueを取得
+          this.currentIssue = this.issuesStore.issues.find(
+            (issue) => issue.id === assigneeData.issueId
+          );
         }
       )
     );
@@ -53,6 +63,16 @@ export class AssigneeSelectorDialogComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
+  }
+
+  /**
+   * 現在のissueのtitleを取得
+   */
+  get title(): string {
+    if (!this.currentIssue) {
+      return '不明な課題';
+    }
+    return this.currentIssue.title;
   }
 
   /**
