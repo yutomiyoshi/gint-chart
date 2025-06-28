@@ -28,6 +28,7 @@ import { CalendarRangeService } from '@src/app/chart-area/calendar-range.service
 import { CalendarWidthService } from '@src/app/chart-area/calendar-width.service';
 import { LabelStoreService } from '@src/app/store/label-store.service';
 import { StatusSelectorDialogExpansionService } from '@src/app/status-selector-dialog/status-selector-dialog-expansion.service';
+import { MemberStoreService } from '@src/app/store/member-store.service';
 
 @Component({
   selector: 'app-issue-row',
@@ -52,9 +53,9 @@ export class IssueRowComponent implements OnInit, OnDestroy {
   @Input() status: number | undefined;
 
   /**
-   * 担当者
+   * 担当者ID
    */
-  @Input() assignee: string | undefined;
+  @Input() assigneeId: number | undefined;
 
   /**
    * 開始日
@@ -123,7 +124,8 @@ export class IssueRowComponent implements OnInit, OnDestroy {
     private readonly calendarRangeService: CalendarRangeService,
     private readonly calendarWidthService: CalendarWidthService,
     private readonly labelStore: LabelStoreService,
-    private readonly statusSelectorDialogExpansionService: StatusSelectorDialogExpansionService
+    private readonly statusSelectorDialogExpansionService: StatusSelectorDialogExpansionService,
+    private readonly memberStore: MemberStoreService
   ) {}
 
   ngOnInit(): void {
@@ -431,6 +433,23 @@ export class IssueRowComponent implements OnInit, OnDestroy {
     }
 
     return matchedLabel.name;
+  }
+
+  /**
+   * 担当者名を取得する
+   */
+  getAssigneeName(assigneeId: number | undefined): string {
+    if (isUndefined(assigneeId)) {
+      return 'undefined';
+    }
+
+    const assignee = this.memberStore.findMemberById(assigneeId);
+
+    if (isUndefined(assignee)) {
+      return 'not found';
+    }
+
+    return assignee.name;
   }
 
   /**
