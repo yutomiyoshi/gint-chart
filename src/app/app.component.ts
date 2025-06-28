@@ -70,7 +70,7 @@ export class AppComponent implements OnInit, OnDestroy {
         error: (error) => {
           Assertion.assert(
             'Toast history dialog expansion error: ' + error,
-            Assertion.no(17)
+            Assertion.no(32)
           );
           this.isToastHistoryDialogExpanded = false;
         },

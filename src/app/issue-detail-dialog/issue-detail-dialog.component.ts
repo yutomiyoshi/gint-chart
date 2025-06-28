@@ -27,7 +27,7 @@ export class IssueDetailDialogComponent implements OnInit {
     const issueId = this.issueDetailDialogExpansionService.getExpandedIssueId();
 
     if (isUndefined(issueId)) {
-      Assertion.assert('issueId is undefined', Assertion.no(14));
+      Assertion.assert('issueId is undefined', Assertion.no(38));
       return;
     }
 

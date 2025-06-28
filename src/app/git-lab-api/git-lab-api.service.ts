@@ -94,7 +94,7 @@ export class GitLabApiService {
     mapFn: (data: T) => S | null
   ): Observable<S[]> {
     if (isNull(this.urlChainBuilder)) {
-      Assertion.assert('GitLab host is not configured', Assertion.no(15));
+      Assertion.assert('GitLab host is not configured', Assertion.no(37));
       return new Observable<S[]>();
     }
 
