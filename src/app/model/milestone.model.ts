@@ -1,5 +1,5 @@
-import { GitLabApiMilestone } from '../git-lab-api/git-lab-milestone.model';
-import { isNull, isUndefined } from '../utils/utils';
+import { GitLabApiMilestone } from '@src/app/git-lab-api/git-lab-milestone.model';
+import { isNull, isUndefined } from '@src/app/utils/utils';
 
 export interface Milestone {
   /**

@@ -5,10 +5,9 @@ import {
   SWITCH_TOGGLE_HEIGHT,
   SWITCH_TOGGLE_THUMB_MARGIN,
   SWITCH_TOGGLE_THUMB_OFFSET,
-  SWITCH_TOGGLE_THUMB_TOP_OFFSET,
   SWITCH_TOGGLE_INACTIVE_COLOR,
   SWITCH_TOGGLE_ACTIVE_COLOR,
-} from './switch-toggle.const';
+} from '@src/app/design/switch-toggle/switch-toggle.const';
 
 @Component({
   selector: 'app-switch-toggle',

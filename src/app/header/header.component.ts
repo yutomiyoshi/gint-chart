@@ -1,6 +1,6 @@
 import { Component, Output, EventEmitter, Input } from '@angular/core';
-import { DateJumpService } from '../chart-area/date-jump.service';
-import { ToastHistoryDialogExpansionService } from '../toast-history-dialog/toast-history-dialog-expansion.service';
+import { DateJumpService } from '@src/app/chart-area/date-jump.service';
+import { ToastHistoryDialogExpansionService } from '@src/app/toast-history-dialog/toast-history-dialog-expansion.service';
 
 @Component({
   selector: 'app-header',

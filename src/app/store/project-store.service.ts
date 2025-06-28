@@ -6,7 +6,7 @@ import { GitLabApiService } from '@src/app/git-lab-api/git-lab-api.service';
 import { Project, convertJsonToProject } from '@src/app/model/project.model';
 import { GitLabConfigStoreService } from '@src/app/store/git-lab-config-store.service';
 import { SAMPLE_PROJECTS } from '@src/app/model/sample-project';
-import { isDebug } from '../debug';
+import { isDebug } from '@src/app/debug';
 
 @Injectable({
   providedIn: 'root',

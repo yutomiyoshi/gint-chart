@@ -28,13 +28,13 @@ import { CalendarPositionService } from '@src/app/chart-area/calendar-position.s
 import { CalendarRangeService } from '@src/app/chart-area/calendar-range.service';
 import { CalendarWidthService } from '@src/app/chart-area/calendar-width.service';
 import { Subscription } from 'rxjs';
-import { Project } from '../model/project.model';
-import { Milestone } from '../model/milestone.model';
-import { Issue } from '../model/issue.model';
+import { Project } from '@src/app/model/project.model';
+import { Milestone } from '@src/app/model/milestone.model';
+import { Issue } from '@src/app/model/issue.model';
 import { IssuesUpdateService } from '@src/app/update/issues-update.service';
-import { Assertion } from '../utils/assertion';
-import { isDebug } from '../debug';
-import { ToastService } from '../utils/toast.service';
+import { Assertion } from '@src/app/utils/assertion';
+import { isDebug } from '@src/app/debug';
+import { ToastService } from '@src/app/utils/toast.service';
 
 /**
  * チャート行のアイテムを表現するインターフェース
@@ -357,11 +357,17 @@ export class ChartAreaComponent implements OnInit, AfterViewInit {
   /**
    * issueの開始日・終了日の変更の処理
    */
-  onIssueScheduleChange(issue: Issue, schedule: {startDate: Date | undefined, endDate: Date | undefined}): void {
-    if (issue.start_date === schedule.startDate && issue.end_date === schedule.endDate) {
+  onIssueScheduleChange(
+    issue: Issue,
+    schedule: { startDate: Date | undefined; endDate: Date | undefined }
+  ): void {
+    if (
+      issue.start_date === schedule.startDate &&
+      issue.end_date === schedule.endDate
+    ) {
       return;
     }
-    
+
     issue.start_date = schedule.startDate;
     issue.end_date = schedule.endDate;
     if (isDebug) {

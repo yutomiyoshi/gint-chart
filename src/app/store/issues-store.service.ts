@@ -1,21 +1,19 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, from } from 'rxjs';
-import { mergeMap, map, toArray, tap } from 'rxjs/operators';
+import { mergeMap, map, toArray } from 'rxjs/operators';
 import { GitLabApiService } from '@src/app/git-lab-api/git-lab-api.service';
 import { Issue, convertJsonToIssue } from '@src/app/model/issue.model';
 import { GitLabConfigStoreService } from '@src/app/store/git-lab-config-store.service';
 import { LabelStoreService } from '@src/app/store/label-store.service';
 import { SAMPLE_ISSUES } from '@src/app/model/sample-issues';
 import { GitLabApiIssue } from '@src/app/git-lab-api/git-lab-issue.model';
-import { isDebug } from '../debug';
-import { isNull, isUndefined } from '../utils/utils';
+import { isDebug } from '@src/app/debug';
+import { isNull, isUndefined } from '@src/app/utils/utils';
 import {
-  CLASSIFIED_LABEL_CATEGORIES,
-  ClassifiedCategory,
   extractClassifiedLabel,
   isClassifiedCategory,
-} from '../model/classified-labels.model';
-import { Label } from '../model/label.model';
+} from '@src/app/model/classified-labels.model';
+import { Label } from '@src/app/model/label.model';
 
 @Injectable({
   providedIn: 'root',

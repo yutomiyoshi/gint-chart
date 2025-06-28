@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
 import { isNull } from '@src/app/utils/utils';
-import { Observable, defer, from, throwError } from 'rxjs';
-import { catchError, map, mergeMap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 import { Assertion } from '@src/app/utils/assertion';
 import { UrlChainBuilder } from '@src/app/utils/url-chain-builder';
-import { GitLabConfigStoreService } from '../store/git-lab-config-store.service';
+import { GitLabConfigStoreService } from '@src/app/store/git-lab-config-store.service';
 
 /**
  * GitLab APIのエンドポイント

@@ -8,12 +8,15 @@ import {
   tap,
   toArray,
 } from 'rxjs';
-import { convertJsonToMilestone, Milestone } from '../model/milestone.model';
-import { GitLabApiService } from '../git-lab-api/git-lab-api.service';
-import { GitLabConfigStoreService } from './git-lab-config-store.service';
-import { SAMPLE_MILESTONES } from '../model/sample-milestone';
-import { GitLabApiMilestone } from '../git-lab-api/git-lab-milestone.model';
-import { isDebug } from '../debug';
+import {
+  convertJsonToMilestone,
+  Milestone,
+} from '@src/app/model/milestone.model';
+import { GitLabApiService } from '@src/app/git-lab-api/git-lab-api.service';
+import { GitLabConfigStoreService } from '@src/app/store/git-lab-config-store.service';
+import { SAMPLE_MILESTONES } from '@src/app/model/sample-milestone';
+import { GitLabApiMilestone } from '@src/app/git-lab-api/git-lab-milestone.model';
+import { isDebug } from '@src/app/debug';
 
 @Injectable({
   providedIn: 'root',

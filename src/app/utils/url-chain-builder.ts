@@ -1,6 +1,6 @@
 import { catchError, from, map, mergeMap, Observable, throwError } from 'rxjs';
-import { Assertion } from './assertion';
-import { isNull } from './utils';
+import { Assertion } from '@src/app/utils/assertion';
+import { isNull } from '@src/app/utils/utils';
 
 export type Method = 'GET' | 'POST' | 'PUT' | 'DELETE';
 

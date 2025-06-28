@@ -1,4 +1,4 @@
-import { Milestone } from './milestone.model';
+import { Milestone } from '@src/app/model/milestone.model';
 
 export const SAMPLE_MILESTONES: Milestone[] = [
   {

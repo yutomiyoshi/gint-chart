@@ -1,4 +1,4 @@
-import { GitLabProject } from '../git-lab-api/git-lab-project.model';
+import { GitLabProject } from '@src/app/git-lab-api/git-lab-project.model';
 
 export const SAMPLE_PROJECTS: GitLabProject[] = [
   {

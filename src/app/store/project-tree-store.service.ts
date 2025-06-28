@@ -1,18 +1,18 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, combineLatest, from } from 'rxjs';
-import { map, switchMap, tap } from 'rxjs/operators';
+import { BehaviorSubject, Observable, combineLatest } from 'rxjs';
+import { map, tap } from 'rxjs/operators';
 import {
   ProjectTree,
   MilestoneTree,
   buildProjectTree,
   extractFlatData,
-} from '../model/project-tree.model';
-import { Project } from '../model/project.model';
-import { Milestone } from '../model/milestone.model';
-import { Issue } from '../model/issue.model';
-import { ProjectStoreService } from './project-store.service';
-import { MilestoneStoreService } from './milestone-store.service';
-import { IssuesStoreService } from './issues-store.service';
+} from '@src/app/model/project-tree.model';
+import { Project } from '@src/app/model/project.model';
+import { Milestone } from '@src/app/model/milestone.model';
+import { Issue } from '@src/app/model/issue.model';
+import { ProjectStoreService } from '@src/app/store/project-store.service';
+import { MilestoneStoreService } from '@src/app/store/milestone-store.service';
+import { IssuesStoreService } from '@src/app/store/issues-store.service';
 
 @Injectable({
   providedIn: 'root',

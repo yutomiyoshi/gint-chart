@@ -1,6 +1,6 @@
-import { Project } from './project.model';
-import { Milestone } from './milestone.model';
-import { Issue } from './issue.model';
+import { Project } from '@src/app/model/project.model';
+import { Milestone } from '@src/app/model/milestone.model';
+import { Issue } from '@src/app/model/issue.model';
 
 /**
  * プロジェクトツリー構造を表現するインターフェース
