@@ -26,6 +26,7 @@ import { Assertion } from '@src/app/utils/assertion';
 import { CalendarRangeService } from '@src/app/chart-area/calendar-range.service';
 import { CalendarWidthService } from '@src/app/chart-area/calendar-width.service';
 import { LabelStoreService } from '@src/app/store/label-store.service';
+import { StatusSelectorDialogExpansionService } from '@src/app/status-selector-dialog/status-selector-dialog-expansion.service';
 
 @Component({
   selector: 'app-issue-row',
@@ -118,7 +119,8 @@ export class IssueRowComponent implements OnDestroy {
     private readonly issueDetailDialogExpansionService: IssueDetailDialogExpansionService,
     private readonly calendarRangeService: CalendarRangeService,
     private readonly calendarWidthService: CalendarWidthService,
-    private readonly labelStore: LabelStoreService
+    private readonly labelStore: LabelStoreService,
+    private readonly statusSelectorDialogExpansionService: StatusSelectorDialogExpansionService
   ) {}
 
   /**
@@ -406,7 +408,6 @@ export class IssueRowComponent implements OnDestroy {
    * ステータスクリック時に呼ばれる関数
    */
   onStatusClick() {
-    console.log('Status clicked for issue:', this.id);
-    // TODO: ステータス選択ポップアップを表示する処理を実装
+    this.statusSelectorDialogExpansionService.expand(this.id, this.status);
   }
 }
