@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { GitLabApiService } from '@src/app/git-lab-api/git-lab-api.service';
-import { GitLabConfigStoreService } from '@src/app/store/git-lab-config-store.service';
 import { Issue, convertJsonToIssue } from '@src/app/model/issue.model';
 import { GitLabApiIssue } from '@src/app/git-lab-api/git-lab-issue.model';
 import { Assertion } from '@src/app/utils/assertion';
-import { isUndefined } from '@src/app/utils/utils';
+import { isNull, isUndefined } from '@src/app/utils/utils';
+import { LabelStoreService } from '@src/app/store/label-store.service';
 
 @Injectable({
   providedIn: 'root',
@@ -13,7 +13,7 @@ import { isUndefined } from '@src/app/utils/utils';
 export class IssuesUpdateService {
   constructor(
     private gitLabApiService: GitLabApiService,
-    private gitLabConfigStoreService: GitLabConfigStoreService
+    private labelStore: LabelStoreService
   ) {}
 
   /**
@@ -23,25 +23,7 @@ export class IssuesUpdateService {
    * @param issue 更新するissue
    * @returns Observable<Issue> 更新されたissueデータを流すObservable
    */
-  public updateIssueDescription(issue: Issue): Observable<Issue> {
-    const config = this.gitLabConfigStoreService.config;
-
-    if (config.projectId.length === 0) {
-      Assertion.assert(
-        'GitLab設定が不完全です。プロジェクトを設定してください。',
-        Assertion.no(19)
-      );
-      return new Observable<Issue>();
-    }
-
-    if (config.accessToken === '') {
-      Assertion.assert(
-        'GitLab設定が不完全です。アクセストークンを設定してください。',
-        Assertion.no(20)
-      );
-      return new Observable<Issue>();
-    }
-
+  public updateIssueDescription(issue: Issue): Observable<Issue | null> {
     // issueのproject_idを使用
     const projectId = issue.project_id.toString();
 
@@ -56,8 +38,42 @@ export class IssuesUpdateService {
       (apiIssue) => {
         // GitLab APIのissueをアプリ用のIssue型に変換
         const convertedIssue = convertJsonToIssue(apiIssue);
-        if (convertedIssue === null) {
-          throw new Error('Failed to convert GitLab API response to Issue');
+        if (isNull(convertedIssue)) {
+          Assertion.assert(
+            'Failed to convert GitLab API response to Issue',
+            Assertion.no(41)
+          );
+          return null;
+        }
+        return convertedIssue;
+      }
+    );
+  }
+
+  /**
+   * issueのlabelsを更新する
+   * @param issue 更新するissue
+   * @returns Observable<Issue> 更新されたissueデータを流すObservable
+   */
+  public updateIssueLabels(issue: Issue): Observable<Issue | null> {
+    const projectId = issue.project_id.toString();
+
+    // 通常のラベルとclassifiedなラベルを組み合わせてlabelsを構築
+    const labels = this.buildLabelsWithClassified(issue);
+
+    return this.gitLabApiService.put<GitLabApiIssue, Issue>(
+      projectId,
+      'issues',
+      issue.iid,
+      { labels },
+      (apiIssue) => {
+        const convertedIssue = convertJsonToIssue(apiIssue);
+        if (isNull(convertedIssue)) {
+          Assertion.assert(
+            'Failed to convert GitLab API response to Issue',
+            Assertion.no(41)
+          );
+          return null;
         }
         return convertedIssue;
       }
@@ -103,5 +119,51 @@ export class IssuesUpdateService {
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');
     return `${year}-${month}-${day}`;
+  }
+
+  /**
+   * 通常のラベルとclassifiedなラベルを組み合わせてlabelsを構築します。
+   * @param issue issueデータ
+   * @returns 更新用のlabels配列
+   */
+  private buildLabelsWithClassified(issue: Issue): string[] {
+    const labels: string[] = [];
+
+    // 通常のラベルを追加
+    labels.push(...issue.labels);
+
+    // ステータスラベルを追加
+    if (!isUndefined(issue.status)) {
+      const statusLabel = this.labelStore.findStatusLabel(issue.status);
+      if (statusLabel) {
+        labels.push(`$$status: ${statusLabel.name}`);
+      }
+    }
+
+    // カテゴリラベルを追加
+    for (const categoryId of issue.category) {
+      const categoryLabel = this.labelStore.findCategoryLabel(categoryId);
+      if (categoryLabel) {
+        labels.push(`$$category: ${categoryLabel.name}`);
+      }
+    }
+
+    // 優先度ラベルを追加
+    for (const priorityId of issue.priority) {
+      const priorityLabel = this.labelStore.findPriorityLabel(priorityId);
+      if (priorityLabel) {
+        labels.push(`$$priority: ${priorityLabel.name}`);
+      }
+    }
+
+    // リソースラベルを追加
+    for (const resourceId of issue.resource) {
+      const resourceLabel = this.labelStore.findResourceLabel(resourceId);
+      if (resourceLabel) {
+        labels.push(`$$resource: ${resourceLabel.name}`);
+      }
+    }
+
+    return labels;
   }
 }
