@@ -9,7 +9,7 @@ import { LabelStoreService } from '@src/app/store/label-store.service';
 import {
   buildDescriptionWithDates,
   buildLabelsWithClassified,
-} from './issues-update.logic';
+} from '@src/app/update/issues-update.logic';
 
 @Injectable({
   providedIn: 'root',
