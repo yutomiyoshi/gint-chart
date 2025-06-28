@@ -83,52 +83,42 @@ export class AppComponent implements OnInit, OnDestroy {
 
     this.gitLabConfigStore
       .loadConfig()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        error: (error) => {
-          this.toastService.show(
-            Assertion.no(32),
-            `Failed to load GitLab config. error: ${error}`,
-            'error',
-            5000
-          );
-          this.loadingOverlay = false;
-        },
-        next: (config) => {
+      .pipe(
+        takeUntil(this.destroy$),
+        switchMap((config) => {
           // GitLabApiServiceを使用してGitLab APIを初期化
           if (!isNull(config)) {
             this.gitLabApiService.initialize();
           }
 
           // ラベルを先に取得し、その後プロジェクト、マイルストーン、イシューを同期
-          this.labelStore
+          return this.labelStore
             .syncLabels()
             .pipe(
-              takeUntil(this.destroy$),
               switchMap(() =>
                 this.projectTreeStore.syncProjectMilestoneIssues()
               )
-            )
-            .subscribe({
-              error: (error) => {
-                this.toastService.show(
-                  Assertion.no(31),
-                  `Failed to sync project, milestone, issue, and labels. error: ${error}`,
-                  'error',
-                  5000
-                );
-                this.loadingOverlay = false;
-              },
-              next: () => {
-                this.loadingOverlay = false;
-                this.toastService.show(
-                  Assertion.no(1),
-                  'Complete to pull issues and labels!!!',
-                  'success',
-                  5000
-                );
-              },
-            });
+            );
+        })
+      )
+      .subscribe({
+        error: (error) => {
+          this.toastService.show(
+            Assertion.no(31),
+            `Failed to sync project, milestone, issue, and labels. error: ${error}`,
+            'error',
+            5000
+          );
+          this.loadingOverlay = false;
+        },
+        next: () => {
+          this.loadingOverlay = false;
+          this.toastService.show(
+            Assertion.no(1),
+            'Complete to pull issues and labels!!!',
+            'success',
+            5000
+          );
         },
       });
 
