@@ -6,6 +6,7 @@ import { BehaviorSubject, from, Observable, tap } from 'rxjs';
 import { isDebug } from '../debug';
 import { GitLabConfigStoreService } from './git-lab-config-store.service';
 import { isNull } from '../utils/utils';
+import { extractStructuredLabel } from '../utils/string';
 import { SAMPLE_LABELS } from '../model/sample-labels';
 
 // 固定カテゴリ
@@ -88,9 +89,9 @@ export class LabelStoreService {
 
     for (const label of labels) {
       // $$category: 中身 の形式を抽出
-      const match = label.name.match(/^\$\$(\w+):\s*(.+)$/);
-      if (match) {
-        const category = match[1];
+      const extracted = extractStructuredLabel(label.name);
+      if (extracted) {
+        const category = extracted.category;
         if (FIXED_CATEGORIES.includes(category as FixedCategory)) {
           const fixedCategory = category as FixedCategory;
           switch (fixedCategory) {
