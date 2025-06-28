@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { StatusSelectorDialogExpansionService } from './status-selector-dialog-expansion.service';
 import { LabelStoreService } from '@src/app/store/label-store.service';
 import { Label } from '@src/app/model/label.model';
