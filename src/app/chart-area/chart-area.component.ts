@@ -35,6 +35,10 @@ import { IssuesUpdateService } from '@src/app/update/issues-update.service';
 import { Assertion } from '@src/app/utils/assertion';
 import { isDebug } from '@src/app/debug';
 import { ToastService } from '@src/app/utils/toast.service';
+import {
+  TOAST_DURATION_MEDIUM,
+  TOAST_DURATION_LONG,
+} from '@src/app/toast/toast.const';
 
 /**
  * チャート行のアイテムを表現するインターフェース
@@ -139,14 +143,6 @@ export class ChartAreaComponent implements OnInit, AfterViewInit {
   ) {}
 
   ngOnInit(): void {
-    if (isDebug) {
-      this.toastService.show(
-        Assertion.no(2),
-        'This is Debuging Mode. Your fetch and update of issues is executed without GitLab Server, showing just dummy-data. So, it is waste of time to compare with GitLab Home Page and this page.',
-        'info',
-        10000
-      );
-    }
     this.subscription.add(
       this.projectTreeStore.projectTree$.subscribe((projectTrees) => {
         this.projectTrees = projectTrees;
@@ -388,7 +384,7 @@ export class ChartAreaComponent implements OnInit, AfterViewInit {
           Assertion.no(27),
           `Issue ${issue.iid} updated`,
           'success',
-          3000
+          TOAST_DURATION_MEDIUM
         );
       },
       error: (error) => {
@@ -396,7 +392,7 @@ export class ChartAreaComponent implements OnInit, AfterViewInit {
           Assertion.no(21),
           `Failed to update issue on server: ${error}`,
           'error',
-          5000
+          TOAST_DURATION_LONG
         );
       },
     });

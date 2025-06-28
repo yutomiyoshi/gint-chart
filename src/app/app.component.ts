@@ -10,6 +10,8 @@ import { ProjectTreeStoreService } from '@src/app/store/project-tree-store.servi
 import { ToastService } from '@src/app/utils/toast.service';
 import { GitLabApiService } from '@src/app/git-lab-api/git-lab-api.service';
 import { LabelStoreService } from '@src/app/store/label-store.service';
+import { TOAST_DURATION_LONG } from '@src/app/toast/toast.const';
+import { isDebug } from '@src/app/debug';
 
 @Component({
   selector: 'app-root',
@@ -100,7 +102,7 @@ export class AppComponent implements OnInit, OnDestroy {
             Assertion.no(31),
             `Failed to sync project, milestone, issue, and labels. error: ${error}`,
             'error',
-            5000
+            TOAST_DURATION_LONG
           );
           this.loadingOverlay = false;
         },
@@ -110,7 +112,7 @@ export class AppComponent implements OnInit, OnDestroy {
             Assertion.no(1),
             'Complete to pull issues and labels!!!',
             'success',
-            5000
+            TOAST_DURATION_LONG
           );
         },
       });
@@ -120,6 +122,15 @@ export class AppComponent implements OnInit, OnDestroy {
         this.isShowToast = isShow;
       },
     });
+
+    if (isDebug) {
+      this.toastService.show(
+        Assertion.no(2),
+        'This is Debuging Mode. Your fetch and update of issues is executed without GitLab Server, showing just dummy-data. So, it is waste of time to compare with GitLab Home Page and this page.',
+        'info',
+        TOAST_DURATION_LONG
+      );
+    }
 
     // if (isDebug) {
     //   setInterval(() => {

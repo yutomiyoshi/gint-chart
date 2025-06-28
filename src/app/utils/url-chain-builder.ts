@@ -11,6 +11,10 @@ const defaultOptions: RequestInit = {
   },
 };
 
+/**
+ * URL chainを構築するクラス
+ * メソッドチェーンでURL chainを構築する
+ */
 export class UrlChainBuilder {
   private isBuilding = false;
 
