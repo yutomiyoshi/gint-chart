@@ -6,6 +6,7 @@ import { GitLabApiIssue } from '@src/app/git-lab-api/git-lab-issue.model';
 import { Assertion } from '@src/app/utils/assertion';
 import { isNull } from '@src/app/utils/utils';
 import { LabelStoreService } from '@src/app/store/label-store.service';
+import { IssueLabelProcessorService } from '@src/app/service/issue-label-processor.service';
 import {
   buildDescriptionWithDates,
   buildLabelsWithClassified,
@@ -17,7 +18,8 @@ import {
 export class IssuesUpdateService {
   constructor(
     private gitLabApiService: GitLabApiService,
-    private labelStore: LabelStoreService
+    private labelStore: LabelStoreService,
+    private issueLabelProcessor: IssueLabelProcessorService
   ) {}
 
   /**
@@ -93,7 +95,8 @@ export class IssuesUpdateService {
           );
           return null;
         }
-        return convertedIssue;
+        // レスポンスのissueに対してラベル解析を実行
+        return this.issueLabelProcessor.processIssueLabels(convertedIssue);
       }
     );
   }
