@@ -366,19 +366,46 @@ export class ChartAreaComponent implements OnInit, AfterViewInit {
 
     issue.start_date = schedule.startDate;
     issue.end_date = schedule.endDate;
+
     if (isDebug) {
       return;
     }
-    this.updateIssueOnServer(issue);
+
+    this.issuesUpdateService.updateIssueDescription(issue).subscribe({
+      next: (updatedIssue) => {
+        Object.assign(issue, updatedIssue);
+        this.toastService.show(
+          Assertion.no(27),
+          `Issue ${issue.iid} updated`,
+          'success',
+          TOAST_DURATION_MEDIUM
+        );
+      },
+      error: (error) => {
+        this.toastService.show(
+          Assertion.no(21),
+          `Failed to update issue on server: ${error}`,
+          'error',
+          TOAST_DURATION_LONG
+        );
+      },
+    });
   }
 
   /**
-   * サーバーにissueの更新を送信する
+   * issueのステータスの変更の処理
    */
-  private updateIssueOnServer(issue: Issue): void {
-    this.issuesUpdateService.updateIssueDescription(issue).subscribe({
+  onIssueStatusChange(issue: Issue, status: number | undefined): void {
+    if (issue.status === status) {
+      return;
+    }
+
+    issue.status = status;
+    if (isDebug) {
+      return;
+    }
+    this.issuesUpdateService.updateIssueLabels(issue).subscribe({
       next: (updatedIssue) => {
-        // 更新されたissueで古いissueを置き換える
         Object.assign(issue, updatedIssue);
         this.toastService.show(
           Assertion.no(27),
