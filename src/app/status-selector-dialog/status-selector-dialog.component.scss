@@ -22,27 +22,6 @@
     font-weight: 600;
     color: #333;
   }
-
-  .close-button {
-    background: none;
-    border: none;
-    font-size: 24px;
-    cursor: pointer;
-    color: #666;
-    padding: 0;
-    width: 24px;
-    height: 24px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 4px;
-    transition: background-color 0.2s;
-
-    &:hover {
-      background-color: #e0e0e0;
-      color: #333;
-    }
-  }
 }
 
 .dialog-content {

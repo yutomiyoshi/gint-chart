@@ -34,7 +34,7 @@ export class StatusSelectorDialogComponent implements OnInit {
       this.statusSelectorDialogExpansionService.issueId,
       statusId
     );
-    this.closeDialog();
+    // ダイアログは閉じない
   }
 
   /**
