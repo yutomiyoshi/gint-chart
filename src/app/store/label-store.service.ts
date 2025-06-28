@@ -83,6 +83,7 @@ export class LabelStoreService {
         const category = extracted.category;
         if (FIXED_CATEGORIES.includes(category as FixedCategory)) {
           const fixedCategory = category as FixedCategory;
+          label.name = extracted.content;
           switch (fixedCategory) {
             case 'category':
               structuredLabels.category.push(label);
@@ -114,10 +115,83 @@ export class LabelStoreService {
   }
 
   /**
-   * 指定カテゴリの構造化ラベル一覧を取得
+   * ステータスラベルをIDから取得
+   * @param status ステータスID
+   * @returns ステータスラベル
    */
-  getStructuredLabelsByCategory(category: FixedCategory): Label[] {
+  findStatusLabel(status: number): Label | undefined {
     const current = this.structuredLabelsSubject.getValue();
-    return current[category] || [];
+    return current.status.find((label) => label.id === status);
+  }
+
+  /**
+   * ステータスラベルを名前から取得
+   * @param status ステータス名
+   * @returns ステータスラベル
+   */
+  findStatusLabelFromName(status: string): Label | undefined {
+    const current = this.structuredLabelsSubject.getValue();
+    return current.status.find((label) => label.name === status);
+  }
+
+  /**
+   * カテゴリラベルをIDから取得
+   * @param category カテゴリ
+   * @returns カテゴリラベル
+   */
+  findCategoryLabel(category: number): Label | undefined {
+    const current = this.structuredLabelsSubject.getValue();
+    return current.category.find((label) => label.id === category);
+  }
+
+  /**
+   * カテゴリラベルを名前から取得
+   * @param category カテゴリ名
+   * @returns カテゴリラベル
+   */
+  findCategoryLabelFromName(category: string): Label | undefined {
+    const current = this.structuredLabelsSubject.getValue();
+    console.log(current.category);
+    return current.category.find((label) => label.name === category);
+  }
+
+  /**
+   * 優先度ラベルをIDから取得
+   * @param priority 優先度
+   * @returns 優先度ラベル
+   */
+  findPriorityLabel(priority: number): Label | undefined {
+    const current = this.structuredLabelsSubject.getValue();
+    return current.priority.find((label) => label.id === priority);
+  }
+
+  /**
+   * 優先度ラベルを名前から取得
+   * @param priority 優先度名
+   * @returns 優先度ラベル
+   */
+  findPriorityLabelFromName(priority: string): Label | undefined {
+    const current = this.structuredLabelsSubject.getValue();
+    return current.priority.find((label) => label.name === priority);
+  }
+
+  /**
+   * リソースラベルをIDから取得
+   * @param resource リソース
+   * @returns リソースラベル
+   */
+  findResourceLabel(resource: number): Label | undefined {
+    const current = this.structuredLabelsSubject.getValue();
+    return current.resource.find((label) => label.id === resource);
+  }
+
+  /**
+   * リソースラベルを名前から取得
+   * @param resource リソース名
+   * @returns リソースラベル
+   */
+  findResourceLabelFromName(resource: string): Label | undefined {
+    const current = this.structuredLabelsSubject.getValue();
+    return current.resource.find((label) => label.name === resource);
   }
 }
