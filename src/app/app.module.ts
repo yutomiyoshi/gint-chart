@@ -14,6 +14,7 @@ import { ToastComponent } from '@src/app/toast/toast.component';
 import { ToastHistoryDialogComponent } from '@src/app/toast-history-dialog/toast-history-dialog.component';
 import { StatusSelectorDialogComponent } from '@src/app/status-selector-dialog/status-selector-dialog.component';
 import { AssigneeSelectorDialogComponent } from '@src/app/assignee-selector-dialog/assignee-selector-dialog.component';
+import { IssueIidPipe } from '@src/app/chart-area/issue-row/issue-iid.pipe';
 
 @NgModule({
   declarations: [
@@ -34,6 +35,7 @@ import { AssigneeSelectorDialogComponent } from '@src/app/assignee-selector-dial
     CommonModule,
     DragDropModule,
     SwitchToggleComponent,
+    IssueIidPipe,
   ],
   providers: [],
   bootstrap: [AppComponent],
