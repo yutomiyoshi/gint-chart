@@ -29,6 +29,7 @@
       assigneeWidth === 0 ? '0 0 0px' : '0 0 ' + assigneeWidth + 'px'
     "
     [style.display]="assigneeWidth === 0 ? 'none' : 'flex'"
+    (click)="onAssigneeClick()"
   >
     {{ getAssigneeName(assigneeId) }}
   </div>
