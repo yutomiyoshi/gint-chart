@@ -92,4 +92,34 @@ export const SAMPLE_LABELS: Label[] = [
     description: 'RTU側のブレーカーです。',
     color: '#f0ad4e',
   },
+  {
+    id: 16,
+    name: '$$status: 未着手',
+    description: '未着手のイシューです。',
+    color: '#f0ad4e',
+  },
+  {
+    id: 17,
+    name: '$$status: 進行中',
+    description: '進行中のイシューです。',
+    color: '#f0ad4e',
+  },
+  {
+    id: 18,
+    name: '$$status: 完了',
+    description: '完了のイシューです。',
+    color: '#f0ad4e',
+  },
+  {
+    id: 19,
+    name: '$$status: 保留',
+    description: '保留のイシューです。',
+    color: '#f0ad4e',
+  },
+  {
+    id: 20,
+    name: '$$status: キャンセル',
+    description: 'キャンセルのイシューです。',
+    color: '#f0ad4e',
+  },
 ];

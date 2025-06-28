@@ -67,7 +67,12 @@ export const SAMPLE_ISSUES: Issue[] = [
     category: [],
     priority: [],
     resource: [],
-    labels: ['docs', '$$category: 実装', '$$resource: CTチェッカー2'],
+    labels: [
+      'docs',
+      '$$category: 実装',
+      '$$resource: CTチェッカー2',
+      '$$status: 保留',
+    ],
     assignee: '山田次郎',
   },
   {
@@ -83,7 +88,13 @@ export const SAMPLE_ISSUES: Issue[] = [
     category: [],
     priority: [],
     resource: [],
-    labels: ['ci', 'devops', '$$category: 管理', '$$resource: D3チェッカー1'],
+    labels: [
+      'ci',
+      'devops',
+      '$$category: 管理',
+      '$$resource: D3チェッカー1',
+      '$$status: 進行中',
+    ],
     assignee: '高橋三郎',
   },
   {
@@ -99,7 +110,12 @@ export const SAMPLE_ISSUES: Issue[] = [
     category: [],
     priority: [],
     resource: [],
-    labels: ['bug', '$$category: 納品物確認', '$$resource: D3チェッカー2'],
+    labels: [
+      'bug',
+      '$$category: 納品物確認',
+      '$$resource: D3チェッカー2',
+      '$$status: 未着手',
+    ],
     assignee: '伊藤四郎',
   },
   {
@@ -115,7 +131,13 @@ export const SAMPLE_ISSUES: Issue[] = [
     category: [],
     priority: [],
     resource: [],
-    labels: ['feature', 'ui', '$$priority: 緊急', '$$resource: ITM'],
+    labels: [
+      'feature',
+      'ui',
+      '$$priority: 緊急',
+      '$$resource: ITM',
+      '$$status: 進行中',
+    ],
     assignee: '渡辺五郎',
   },
   {
@@ -131,7 +153,12 @@ export const SAMPLE_ISSUES: Issue[] = [
     category: [],
     priority: [],
     resource: [],
-    labels: ['performance', '$$priority: 遅延', '$$resource: ブレーカー1'],
+    labels: [
+      'performance',
+      '$$priority: 遅延',
+      '$$resource: ブレーカー1',
+      '$$status: 保留',
+    ],
     assignee: '小林六郎',
   },
   {
@@ -147,7 +174,12 @@ export const SAMPLE_ISSUES: Issue[] = [
     category: [],
     priority: [],
     resource: [],
-    labels: ['test', '$$category: テストケース作成', '$$resource: ブレーカー2'],
+    labels: [
+      'test',
+      '$$category: テストケース作成',
+      '$$resource: ブレーカー2',
+      '$$status: 完了',
+    ],
     assignee: '加藤七郎',
   },
   {
@@ -168,6 +200,7 @@ export const SAMPLE_ISSUES: Issue[] = [
       '$$category: 管理',
       '$$priority: 緊急',
       '$$resource: ITM',
+      '$$status: 保留',
     ],
     assignee: '吉田八郎',
   },
@@ -191,8 +224,14 @@ export const SAMPLE_ISSUES: Issue[] = [
       resource: [],
       labels: [
         idx % 2 === 0 ? 'feature' : 'bug',
-        idx % 5 === 0 ? 'urgent' : undefined,
-        idx % 7 === 0 ? 'test' : undefined,
+        idx % 5 === 0 ? '$$priority: 緊急' : undefined,
+        idx % 7 === 0 ? '$$category: テストケース作成' : undefined,
+        idx % 11 === 0 ? '$$resource: CTチェッカー1' : undefined,
+        idx % 13 === 0 ? '$$resource: CTチェッカー2' : undefined,
+        idx % 17 === 0 ? '$$resource: D3チェッカー1' : undefined,
+        idx % 19 === 0 ? '$$resource: D3チェッカー2' : undefined,
+        idx % 23 === 0 ? '$$resource: ITM' : undefined,
+        idx % 29 === 0 ? '$$resource: ブレーカー1' : undefined,
       ].filter(Boolean) as string[],
       assignee: `担当者${idx}`,
     };
