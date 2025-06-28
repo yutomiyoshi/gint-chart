@@ -97,4 +97,31 @@ export class IssuesUpdateService {
       }
     );
   }
+
+  /**
+   * issueの担当者を更新する
+   * @param issue 更新するissue
+   * @returns Observable<Issue> 更新されたissueデータを流すObservable
+   */
+  public updateIssueAssignee(issue: Issue): Observable<Issue | null> {
+    const projectId = issue.project_id.toString();
+
+    return this.gitLabApiService.put<GitLabApiIssue, Issue>(
+      projectId,
+      'issues',
+      issue.iid,
+      { assignee_id: issue.assignee_id },
+      (apiIssue) => {
+        const convertedIssue = convertJsonToIssue(apiIssue);
+        if (isNull(convertedIssue)) {
+          Assertion.assert(
+            'Failed to convert GitLab API response to Issue',
+            Assertion.no(41)
+          );
+          return null;
+        }
+        return convertedIssue;
+      }
+    );
+  }
 }
