@@ -39,15 +39,12 @@ export class MilestoneStoreService {
     }
     const config = this.gitlabConfigStore.getConfig();
     const projectIds = config.projectId || [];
-    const accessToken = config.accessToken || '';
     if (projectIds.length === 0) {
       this.milestonesSubject.next([]);
       return from([[]]);
     }
     return from(projectIds).pipe(
-      mergeMap((projectId) =>
-        this.fetchAllMilestonesForProject(projectId, config.url, accessToken)
-      ),
+      mergeMap((projectId) => this.fetchAllMilestonesForProject(projectId)),
       toArray(),
       map((milestonesArr) => milestonesArr.flat()),
       tap((allMilestones) => this.milestonesSubject.next(allMilestones))
@@ -65,21 +62,13 @@ export class MilestoneStoreService {
    * 指定されたプロジェクトの全milestonesをGitLab APIから取得します。
    *
    * @param projectId プロジェクトID
-   * @param url GitLabホストURL
-   * @param accessToken アクセストークン
    * @returns Observable<Milestone[]> 取得したmilestones配列を流すObservable
    */
   private fetchAllMilestonesForProject(
-    projectId: number,
-    url: string,
-    accessToken: string
+    projectId: number
   ): Observable<Milestone[]> {
-    const urlObj = new URL(url);
-    const host = urlObj.href;
     return this.gitlabApi.fetch<GitLabApiMilestone, Milestone>(
-      host,
       String(projectId),
-      accessToken,
       'milestones',
       convertJsonToMilestone
     );
