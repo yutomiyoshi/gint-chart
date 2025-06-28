@@ -8,7 +8,7 @@ export class OneResourceSemaphore {
   /**
    * 現在使われている数
    */
-  private isUsed: boolean = false;
+  private isUsed = false;
 
   /**
    * 待機中のタスク

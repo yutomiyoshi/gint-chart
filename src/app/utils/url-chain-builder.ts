@@ -12,9 +12,9 @@ const defaultOptions: RequestInit = {
 };
 
 export class UrlChainBuilder {
-  private isBuilding: boolean = false;
+  private isBuilding = false;
 
-  private url: string = '';
+  private url = '';
 
   private options: RequestInit = defaultOptions;
 
