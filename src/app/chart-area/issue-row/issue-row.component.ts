@@ -25,6 +25,7 @@ import {
 import { Assertion } from '@src/app/utils/assertion';
 import { CalendarRangeService } from '@src/app/chart-area/calendar-range.service';
 import { CalendarWidthService } from '@src/app/chart-area/calendar-width.service';
+import { LabelStoreService } from '@src/app/store/label-store.service';
 
 @Component({
   selector: 'app-issue-row',
@@ -116,7 +117,8 @@ export class IssueRowComponent implements OnDestroy {
   constructor(
     private readonly issueDetailDialogExpansionService: IssueDetailDialogExpansionService,
     private readonly calendarRangeService: CalendarRangeService,
-    private readonly calendarWidthService: CalendarWidthService
+    private readonly calendarWidthService: CalendarWidthService,
+    private readonly labelStore: LabelStoreService
   ) {}
 
   /**
@@ -381,5 +383,22 @@ export class IssueRowComponent implements OnDestroy {
    */
   get showEndDateCreateButton(): boolean {
     return isUndefined(this.startDate) && isUndefined(this.endDate);
+  }
+
+  /**
+   * ステータス名を取得する
+   */
+  getStatusName(status: number | undefined): string {
+    if (isUndefined(status)) {
+      return 'undefined';
+    }
+
+    const matchedLabel = this.labelStore.findStatusLabel(status);
+
+    if (isUndefined(matchedLabel)) {
+      return 'not found';
+    }
+
+    return matchedLabel.name;
   }
 }
