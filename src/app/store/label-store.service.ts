@@ -80,6 +80,7 @@ export class LabelStoreService {
     for (const label of labels) {
       const extracted = extractClassifiedLabel(label.name);
       if (extracted && isClassifiedCategory(extracted.category)) {
+        label.name = extracted.content;
         const classifiedCategory = extracted.category;
         switch (classifiedCategory) {
           case 'category':
