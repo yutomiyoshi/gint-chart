@@ -8,22 +8,11 @@ import { GitLabConfigStoreService } from './git-lab-config-store.service';
 import { isNull } from '../utils/utils';
 import { extractStructuredLabel } from '../utils/string';
 import { SAMPLE_LABELS } from '../model/sample-labels';
-
-// 固定カテゴリ
-const FIXED_CATEGORIES = [
-  'category',
-  'priority',
-  'resource',
-  'status',
-] as const;
-type FixedCategory = (typeof FIXED_CATEGORIES)[number];
-
-interface StructuredLabels {
-  category: Label[];
-  priority: Label[];
-  resource: Label[];
-  status: Label[];
-}
+import {
+  FIXED_CATEGORIES,
+  FixedCategory,
+  StructuredLabels,
+} from '../model/structured-labels.model';
 
 @Injectable({
   providedIn: 'root',
