@@ -14,6 +14,7 @@ import {
   FIXED_CATEGORIES,
   FixedCategory,
 } from '../model/structured-labels.model';
+import { Label } from '../model/label.model';
 
 @Injectable({
   providedIn: 'root',
@@ -92,44 +93,64 @@ export class IssuesStoreService {
       // 各ラベルを解析
       for (const labelName of issue.labels) {
         const extracted = extractStructuredLabel(labelName);
-        if (
-          !isNull(extracted) &&
-          FIXED_CATEGORIES.includes(extracted.category as FixedCategory)
-        ) {
-          const structuredLabels =
-            this.labelStore.getStructuredLabelsByCategory(
-              extracted.category as FixedCategory
-            );
-          const matchedLabel = structuredLabels.find(
-            (label) => label.name === labelName
-          );
 
-          if (!isUndefined(matchedLabel)) {
-            switch (extracted.category) {
-              case 'category':
-                categoryIds.push(matchedLabel.id);
-                break;
-              case 'priority':
-                priorityIds.push(matchedLabel.id);
-                break;
-              case 'resource':
-                resourceIds.push(matchedLabel.id);
-                break;
-              case 'status':
-                statusId = matchedLabel.id;
-                break;
-              default:
-                // 固定カテゴリに含まれない構造化ラベルは通常ラベルとして扱う
-                normalLabels.push(labelName);
-                break;
-            }
-          } else {
-            // ラベルが見つからない場合は通常ラベルとして扱う
-            normalLabels.push(labelName);
-          }
-        } else {
-          // 構造化ラベルでない場合は通常ラベル
+        if (isNull(extracted)) {
           normalLabels.push(labelName);
+          continue;
+        }
+
+        if (!FIXED_CATEGORIES.includes(extracted.category as FixedCategory)) {
+          normalLabels.push(labelName);
+          continue;
+        }
+
+        let matchedLabel: Label | undefined = undefined;
+
+        switch (extracted.category) {
+          case 'category':
+            matchedLabel = this.labelStore.findCategoryLabelFromName(
+              extracted.content
+            );
+            if (isUndefined(matchedLabel)) {
+              normalLabels.push(labelName);
+            } else {
+              categoryIds.push(matchedLabel.id);
+            }
+            break;
+          case 'priority':
+            matchedLabel = this.labelStore.findPriorityLabelFromName(
+              extracted.content
+            );
+            if (isUndefined(matchedLabel)) {
+              normalLabels.push(labelName);
+            } else {
+              priorityIds.push(matchedLabel.id);
+            }
+            break;
+          case 'resource':
+            matchedLabel = this.labelStore.findResourceLabelFromName(
+              extracted.content
+            );
+            if (isUndefined(matchedLabel)) {
+              normalLabels.push(labelName);
+            } else {
+              resourceIds.push(matchedLabel.id);
+            }
+            break;
+          case 'status':
+            matchedLabel = this.labelStore.findStatusLabelFromName(
+              extracted.content
+            );
+            if (isUndefined(matchedLabel)) {
+              normalLabels.push(labelName);
+            } else {
+              statusId = matchedLabel.id;
+            }
+            break;
+          default:
+            // 固定カテゴリに含まれない構造化ラベルは通常ラベルとして扱う
+            normalLabels.push(labelName);
+            break;
         }
       }
 
