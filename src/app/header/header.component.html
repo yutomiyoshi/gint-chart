@@ -26,6 +26,17 @@
     </label>
   </div>
   <div class="header-buttons">
+    <button
+      class="theme-toggle-button"
+      (click)="toggleTheme()"
+      [title]="
+        currentTheme === 'dark'
+          ? 'ライトモードに切り替え'
+          : 'ダークモードに切り替え'
+      "
+    >
+      <div class="theme-icon" [class.dark]="currentTheme === 'dark'"></div>
+    </button>
     <button class="today-button" (click)="jumpToToday()">Today</button>
     <button class="log-button" (click)="showLogs()">
       <div class="log-icon"></div>
