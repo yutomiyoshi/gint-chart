@@ -1,0 +1,63 @@
+@import "./variables.scss";
+
+%column-base {
+  height: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  background-color: var(--background-primary);
+  border-right: 1px solid var(--border-color);
+  z-index: 2;
+  cursor: pointer;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  transition: background-color 0.2s ease-out;
+
+  &:hover {
+    background-color: var(--background-secondary);
+  }
+
+  &:active {
+    background-color: var(--background-tertiary);
+  }
+}
+
+.title {
+  @extend %column-base;
+  width: 200px;
+  flex: 0 0 200px;
+  padding-left: 14px;
+  font-weight: 500;
+  font-size: 9pt;
+  color: var(--text-primary);
+  min-width: 0;
+
+  .issue-iid {
+    font-size: 8pt;
+    color: var(--text-muted);
+    margin-right: 8px;
+    font-weight: 500;
+    flex-shrink: 0;
+  }
+
+  .title-text {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    min-width: 0;
+    flex: 1;
+  }
+}
+
+.status,
+.assignee {
+  @extend %column-base;
+  width: 100px;
+  flex: 0 0 100px;
+  padding-left: 6px;
+  font-weight: 500;
+  font-size: 9pt;
+  color: var(--text-primary);
+}

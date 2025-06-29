@@ -450,6 +450,20 @@ export class IssueRowComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * 開始日が未設定の場合は、trueを返す
+   */
+  get isStartDateUnassigned(): boolean {
+    return isUndefined(this.startDate);
+  }
+
+  /**
+   * 終了日が未設定の場合は、trueを返す
+   */
+  get isEndDateUnassigned(): boolean {
+    return isUndefined(this.endDate);
+  }
+
+  /**
    * ステータスクリック時に呼ばれる関数
    */
   onStatusClick() {
