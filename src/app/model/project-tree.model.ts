@@ -138,15 +138,34 @@ export function sortProjectTree(projectTrees: ProjectTree[]): ProjectTree[] {
 
     // 各マイルストーン内のイシューをソート
     projectTree.milestones.forEach((milestoneTree) => {
-      // イシューを終了日（end_date）でソート（undefinedは最後に配置）
+      // イシューを開始日→終了日の順でソート（未設定は最後に配置）
       milestoneTree.issues.sort((a, b) => {
-        // end_dateがundefinedの場合の処理
-        if (a.end_date === undefined && b.end_date === undefined) return 0;
-        if (a.end_date === undefined) return 1; // aを後に配置
-        if (b.end_date === undefined) return -1; // bを後に配置
+        // 開始日と終了日の両方が未設定の場合の処理
+        const aHasDates =
+          a.start_date !== undefined || a.end_date !== undefined;
+        const bHasDates =
+          b.start_date !== undefined || b.end_date !== undefined;
 
-        // 両方とも日付がある場合は昇順でソート（古い日付が先に来る）
-        return a.end_date.getTime() - b.end_date.getTime();
+        // 両方とも日付が未設定の場合は順序を保持
+        if (!aHasDates && !bHasDates) return 0;
+
+        // 片方だけ日付が未設定の場合は、未設定を後に配置
+        if (!aHasDates) return 1;
+        if (!bHasDates) return -1;
+
+        // 開始日での比較（第1優先）
+        const aStartTime = a.start_date?.getTime() ?? Infinity;
+        const bStartTime = b.start_date?.getTime() ?? Infinity;
+
+        if (aStartTime !== bStartTime) {
+          return aStartTime - bStartTime;
+        }
+
+        // 開始日が同じ場合は終了日で比較（第2優先）
+        const aEndTime = a.end_date?.getTime() ?? Infinity;
+        const bEndTime = b.end_date?.getTime() ?? Infinity;
+
+        return aEndTime - bEndTime;
       });
     });
 

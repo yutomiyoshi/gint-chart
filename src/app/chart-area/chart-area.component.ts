@@ -9,6 +9,7 @@ import {
 } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { ProjectTreeStoreService } from '@src/app/store/project-tree-store.service';
+import { IssuesStoreService } from '@src/app/store/issues-store.service';
 import { ProjectTree } from '@src/app/model/project-tree.model';
 import {
   calendarEndDateOffset,
@@ -133,6 +134,7 @@ export class ChartAreaComponent implements OnInit, AfterViewInit {
 
   constructor(
     private readonly projectTreeStore: ProjectTreeStoreService,
+    private readonly issuesStore: IssuesStoreService,
     private readonly calendarDisplayService: CalendarDisplayService,
     private readonly calendarPositionService: CalendarPositionService,
     private readonly calendarRangeService: CalendarRangeService,
@@ -373,7 +375,9 @@ export class ChartAreaComponent implements OnInit, AfterViewInit {
 
     this.issuesUpdateService.updateIssueDescription(issue).subscribe({
       next: (updatedIssue) => {
-        Object.assign(issue, updatedIssue);
+        if (updatedIssue) {
+          this.issuesStore.updateIssue(updatedIssue);
+        }
         this.toastService.show(
           Assertion.no(27),
           `Issue ${issue.iid} updated`,
@@ -406,7 +410,9 @@ export class ChartAreaComponent implements OnInit, AfterViewInit {
     }
     this.issuesUpdateService.updateIssueLabels(issue).subscribe({
       next: (updatedIssue) => {
-        Object.assign(issue, updatedIssue);
+        if (updatedIssue) {
+          this.issuesStore.updateIssue(updatedIssue);
+        }
         this.toastService.show(
           Assertion.no(27),
           `Issue ${issue.iid} updated`,
@@ -439,7 +445,9 @@ export class ChartAreaComponent implements OnInit, AfterViewInit {
     }
     this.issuesUpdateService.updateIssueAssignee(issue).subscribe({
       next: (updatedIssue) => {
-        Object.assign(issue, updatedIssue);
+        if (updatedIssue) {
+          this.issuesStore.updateIssue(updatedIssue);
+        }
         this.toastService.show(
           Assertion.no(27),
           `Issue ${issue.iid} updated`,

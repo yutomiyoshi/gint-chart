@@ -61,6 +61,24 @@ export class IssuesStoreService {
   }
 
   /**
+   * 単一のissueを更新してストアに反映する
+   * @param updatedIssue 更新されたissue
+   */
+  updateIssue(updatedIssue: Issue): void {
+    const currentIssues = this.issuesSubject.getValue();
+    const index = currentIssues.findIndex(
+      (issue) => issue.id === updatedIssue.id
+    );
+
+    if (index !== -1) {
+      // 新しい配列を作成して更新されたissueを配置
+      const newIssues = [...currentIssues];
+      newIssues[index] = updatedIssue;
+      this.issuesSubject.next(newIssues);
+    }
+  }
+
+  /**
    * 指定されたプロジェクトの全issuesをGitLab APIから取得します。
    *
    * @param project GitLabプロジェクト情報
