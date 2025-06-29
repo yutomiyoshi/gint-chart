@@ -65,11 +65,11 @@ export class CalendarRangeService {
    * カレンダー範囲を設定
    */
   setRange(startDate: Date, endDate: Date): void {
+    this._totalDays = DateHandler.countDateBetween(startDate, endDate);
     this._calendarRange.next({
       startDate: startDate,
       endDate: endDate,
     });
-    this._totalDays = DateHandler.countDateBetween(startDate, endDate);
   }
 
   /**
