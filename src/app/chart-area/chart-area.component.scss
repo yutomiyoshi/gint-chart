@@ -9,13 +9,16 @@ $issue-row-margin-left: 5px;
   height: 100%;
   width: 100%;
   position: relative;
+  background-color: var(--background-primary);
 }
 
 .calendar-area {
   height: $calendar-area-height;
   flex: 0 0 $calendar-area-height;
   overflow: hidden;
-  border-bottom: 2px solid rgb(176, 176, 176);
+  border-bottom: 2px solid var(--border-color-dark);
+  background-color: var(--background-secondary);
+  box-shadow: var(--shadow-sm);
 }
 
 .issue-row-area {
@@ -25,6 +28,7 @@ $issue-row-margin-left: 5px;
   overflow-x: hidden;
   overflow-y: auto;
   position: relative;
+  background-color: var(--background-primary);
 
   &::-webkit-scrollbar {
     width: $scroll-bar-width;
@@ -47,20 +51,21 @@ $issue-row-margin-left: 5px;
 }
 
 .project-row {
-  background-color: #f8f9fa;
-  border-bottom: 2px solid #dee2e6;
-  padding: 6px calc($issue-row-margin-left + 16px);
-  font-weight: bold;
-  font-size: 16px;
+  background-color: var(--background-secondary);
+  border-bottom: 2px solid var(--border-color-dark);
+  padding: 8px calc($issue-row-margin-left + 20px);
+  font-weight: 700;
+  font-size: 14pt;
   z-index: 3;
   position: relative;
-  border-bottom-left-radius: 2px;
-  border-bottom-right-radius: 2px;
+  border-bottom-left-radius: var(--border-radius-sm);
+  border-bottom-right-radius: var(--border-radius-sm);
+  box-shadow: var(--shadow-sm);
 
   .project-header {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 16px;
   }
 
   .project-info {
@@ -69,34 +74,37 @@ $issue-row-margin-left: 5px;
   }
 
   .project-title {
-    color: #495057;
-    font-size: 1.2rem;
-    font-weight: bold;
+    color: var(--text-primary);
+    font-size: 14pt;
+    font-weight: 700;
+    line-height: 1.3;
   }
 
   .project-description {
-    color: #6c757d;
-    font-size: 0.8rem;
-    font-weight: normal;
-    margin-top: 2px;
+    color: var(--text-secondary);
+    font-size: 10pt;
+    font-weight: 500;
+    margin-top: 4px;
+    line-height: 1.4;
   }
 }
 
 .milestone-row {
-  background-color: #e9ecef;
-  border-bottom: 1px solid #ced4da;
-  padding: 3px 16px;
+  background-color: var(--background-tertiary);
+  border-bottom: 1px solid var(--border-color);
+  padding: 6px 20px;
   font-weight: 600;
-  font-size: 14px;
+  font-size: 12pt;
   z-index: 3;
   position: relative;
-  border-bottom-left-radius: 2px;
+  border-bottom-left-radius: var(--border-radius-sm);
   margin-left: $issue-row-margin-left;
+  box-shadow: var(--shadow-sm);
 
   .milestone-header {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 16px;
   }
 
   .milestone-info {
@@ -106,26 +114,30 @@ $issue-row-margin-left: 5px;
   }
 
   .milestone-title {
-    color: #495057;
-    font-size: 1.2rem;
-    font-weight: bold;
+    color: var(--text-primary);
+    font-size: 12pt;
+    font-weight: 600;
+    line-height: 1.3;
   }
 
   .milestone-state {
-    color: #6c757d;
-    font-size: 0.8rem;
-    font-weight: normal;
+    color: var(--text-secondary);
+    font-size: 9pt;
+    font-weight: 500;
     margin-left: auto;
-    background-color: #f8f9fa;
-    padding: 2px 6px;
-    border-radius: 4px;
+    background-color: var(--background-primary);
+    padding: 4px 8px;
+    border-radius: var(--border-radius-sm);
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-sm);
   }
 
   .milestone-due-date {
-    color: #6c757d;
-    font-size: 0.8rem;
-    font-weight: normal;
-    margin-top: 2px;
+    color: var(--text-secondary);
+    font-size: 9pt;
+    font-weight: 500;
+    margin-top: 4px;
+    line-height: 1.4;
   }
 }
 
@@ -145,17 +157,17 @@ $issue-row-margin-left: 5px;
 
   // 土曜日の背景色（薄い水色）
   &.saturday {
-    background-color: rgba(173, 216, 230, 0.3); // lightblue with transparency
+    background-color: rgba(173, 216, 230, 0.2); // lightblue with transparency
   }
 
   // 日曜日の背景色（薄いピンク色）
   &.sunday {
-    background-color: rgba(255, 182, 193, 0.3); // lightpink with transparency
+    background-color: rgba(255, 182, 193, 0.2); // lightpink with transparency
   }
 
   // 今日の背景色（薄いグレー）
   &.today {
-    background-color: rgba(136, 136, 136, 0.3); // lightgray with transparency
+    background-color: rgba(136, 136, 136, 0.2); // lightgray with transparency
   }
 }
 
@@ -166,7 +178,7 @@ $issue-row-margin-left: 5px;
   top: $calendar-area-height;
   bottom: 0;
   width: 1px;
-  background-color: #e0e0e0;
+  background-color: var(--border-color);
 
   // カレンダーの縦線はissue-barの全面にあるので、ツールチップイベントに反応する
   z-index: 2;
@@ -175,12 +187,18 @@ $issue-row-margin-left: 5px;
 .toggle-wrapper {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
 }
 
 .child-count {
-  font-size: 12px;
-  font-weight: 500;
-  color: #6c757d;
-  min-width: 24px;
+  font-size: 11pt;
+  font-weight: 600;
+  color: var(--text-secondary);
+  min-width: 28px;
+  background-color: var(--background-primary);
+  padding: 2px 6px;
+  border-radius: var(--border-radius-sm);
+  border: 1px solid var(--border-color);
+  text-align: center;
+  box-shadow: var(--shadow-sm);
 }

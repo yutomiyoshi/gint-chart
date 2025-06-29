@@ -3,10 +3,42 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-size: 8pt;
-  color: rgb(62, 62, 62);
+  font-size: 9pt;
+  color: #2c3e50;
 }
 
 body {
-  font-family: "Roboto", sans-serif;
+  font-family: "Inter", "Segoe UI", "Roboto", "Helvetica Neue", sans-serif;
+  font-weight: 400;
+  line-height: 1.5;
+  background-color: #fafbfc;
+}
+
+/* エッジの効いたデザイン用のカスタムプロパティ */
+:root {
+  --primary-color: #1a73e8;
+  --primary-dark: #0d47a1;
+  --secondary-color: #5f6368;
+  --accent-color: #34a853;
+  --warning-color: #fbbc04;
+  --error-color: #ea4335;
+  --text-primary: #202124;
+  --text-secondary: #5f6368;
+  --text-muted: #9aa0a6;
+  --border-color: #dadce0;
+  --border-color-dark: #bdc1c6;
+  --background-primary: #ffffff;
+  --background-secondary: #f8f9fa;
+  --background-tertiary: #f1f3f4;
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  --border-radius-sm: 4px;
+  --border-radius-md: 6px;
+  --border-radius-lg: 8px;
+  --border-radius-xl: 12px;
 }

@@ -6,38 +6,46 @@ $dialog-animation-duration: 0.3s;
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(0, 0, 0, 0.4);
+  background: rgba(0, 0, 0, 0.6);
   z-index: 9999;
   display: flex;
   align-items: center;
   justify-content: center;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 }
+
 .spinner {
   position: relative;
   width: 80px;
   height: 80px;
 }
+
 .ring {
   box-sizing: border-box;
   position: absolute;
   width: 80px;
   height: 80px;
-  border: 8px solid #fff;
-  border-top: 8px solid #1976d2;
+  border: 8px solid var(--background-primary);
+  border-top: 8px solid var(--primary-color);
   border-radius: 50%;
   animation: spin 1.2s linear infinite;
-  opacity: 0.8;
+  opacity: 0.9;
+  box-shadow: var(--shadow-lg);
 }
+
 .ring2 {
-  border: 8px solid #fff;
-  border-bottom: 8px solid #90caf9;
+  border: 8px solid var(--background-primary);
+  border-bottom: 8px solid var(--accent-color);
   width: 60px;
   height: 60px;
   top: 10px;
   left: 10px;
   animation: spin-reverse 1.2s linear infinite;
-  opacity: 0.6;
+  opacity: 0.7;
+  box-shadow: var(--shadow-md);
 }
+
 @keyframes spin {
   0% {
     transform: rotate(0deg);
@@ -46,6 +54,7 @@ $dialog-animation-duration: 0.3s;
     transform: rotate(360deg);
   }
 }
+
 @keyframes spin-reverse {
   0% {
     transform: rotate(360deg);
@@ -61,10 +70,10 @@ $dialog-animation-duration: 0.3s;
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.7);
   z-index: 9999;
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 }
 
 .toast-history-dialog-overlay {
@@ -73,10 +82,10 @@ $dialog-animation-duration: 0.3s;
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.7);
   z-index: 9999;
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 }
 
 .status-selector-dialog-overlay {
@@ -85,10 +94,10 @@ $dialog-animation-duration: 0.3s;
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.7);
   z-index: 9999;
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 }
 
 .assignee-selector-dialog-overlay {
@@ -97,13 +106,13 @@ $dialog-animation-duration: 0.3s;
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.7);
   z-index: 9999;
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 }
 
-$toast-width: 300px;
+$toast-width: 320px;
 $toast-bottom: 40px;
 $toast-right: 40px;
 
@@ -135,20 +144,24 @@ $header-height: 40px;
   width: 60vw;
   height: 80vh;
   animation: slideIn $dialog-animation-duration ease-out forwards;
+  background-color: var(--background-primary);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-xl);
+  border: 1px solid var(--border-color);
 }
 
 .toast-history-dialog-overlay .dialog-slide-in-animation {
-  width: 300px;
+  width: 320px;
   height: 80vh;
 }
 
 .status-selector-dialog-overlay .dialog-slide-in-animation {
-  width: 300px;
+  width: 320px;
   height: 80vh;
 }
 
 .assignee-selector-dialog-overlay .dialog-slide-in-animation {
-  width: 300px;
+  width: 320px;
   height: 80vh;
 }
 
