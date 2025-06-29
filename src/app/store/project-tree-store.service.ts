@@ -5,6 +5,7 @@ import {
   ProjectTree,
   MilestoneTree,
   buildProjectTree,
+  sortProjectTree,
   extractFlatData,
 } from '@src/app/model/project-tree.model';
 import { Project } from '@src/app/model/project.model';
@@ -41,9 +42,10 @@ export class ProjectTreeStoreService {
       this.issuesStore.issues$,
     ])
       .pipe(
-        map(([projects, milestones, issues]) =>
-          buildProjectTree(projects, milestones, issues)
-        )
+        map(([projects, milestones, issues]) => {
+          const tree = buildProjectTree(projects, milestones, issues);
+          return sortProjectTree(tree);
+        })
       )
       .subscribe((tree) => {
         this.projectTreeSubject.next(tree);
@@ -59,9 +61,10 @@ export class ProjectTreeStoreService {
       this.milestoneStore.syncMilestones(),
       this.issuesStore.syncIssues(),
     ]).pipe(
-      map(([projects, milestones, issues]) =>
-        buildProjectTree(projects, milestones, issues)
-      ),
+      map(([projects, milestones, issues]) => {
+        const tree = buildProjectTree(projects, milestones, issues);
+        return sortProjectTree(tree);
+      }),
       tap((tree) => this.projectTreeSubject.next(tree))
     );
   }
