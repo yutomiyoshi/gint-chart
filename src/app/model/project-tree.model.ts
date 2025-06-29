@@ -112,6 +112,49 @@ export function buildProjectTree(
 }
 
 /**
+ * プロジェクトツリーをソートする関数
+ * マイルストーンを期限日（due_date）でソート、イシューを終了日（end_date）でソートする
+ * ※ツリーに対して破壊的な変更を行うが、ツリーの要素自体は変更しない
+ *
+ * @param projectTrees ソート対象のプロジェクトツリー配列
+ * @returns ソートされたプロジェクトツリー配列
+ */
+export function sortProjectTree(projectTrees: ProjectTree[]): ProjectTree[] {
+  return projectTrees.map((projectTree) => {
+    // マイルストーンを期限日（due_date）でソート（undefinedは最後に配置）
+    projectTree.milestones.sort((a, b) => {
+      // due_dateがundefinedの場合の処理
+      if (
+        a.milestone.due_date === undefined &&
+        b.milestone.due_date === undefined
+      )
+        return 0;
+      if (a.milestone.due_date === undefined) return 1; // aを後に配置
+      if (b.milestone.due_date === undefined) return -1; // bを後に配置
+
+      // 両方とも日付がある場合は昇順でソート（古い日付が先に来る）
+      return a.milestone.due_date.getTime() - b.milestone.due_date.getTime();
+    });
+
+    // 各マイルストーン内のイシューをソート
+    projectTree.milestones.forEach((milestoneTree) => {
+      // イシューを終了日（end_date）でソート（undefinedは最後に配置）
+      milestoneTree.issues.sort((a, b) => {
+        // end_dateがundefinedの場合の処理
+        if (a.end_date === undefined && b.end_date === undefined) return 0;
+        if (a.end_date === undefined) return 1; // aを後に配置
+        if (b.end_date === undefined) return -1; // bを後に配置
+
+        // 両方とも日付がある場合は昇順でソート（古い日付が先に来る）
+        return a.end_date.getTime() - b.end_date.getTime();
+      });
+    });
+
+    return projectTree;
+  });
+}
+
+/**
  * ツリー構造からフラットなデータを抽出する関数
  */
 export function extractFlatData(tree: ProjectTree[]): {
