@@ -4,9 +4,47 @@
   padding: 0;
   box-sizing: border-box;
   font-size: 8pt;
-  color: rgb(62, 62, 62);
+  color: var(--text-primary);
 }
 
 body {
-  font-family: "Roboto", sans-serif;
+  font-family: "Inter", "Segoe UI", "Roboto", "Helvetica Neue", sans-serif;
+  font-weight: 400;
+  line-height: 1.5;
+  background-color: var(--background-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* エッジの効いたデザイン用のカスタムプロパティ */
+:root {
+  /* デフォルトはダークテーマ */
+  --primary-color: #3b82f6;
+  --primary-dark: #1d4ed8;
+  --secondary-color: #64748b;
+  --accent-color: #10b981;
+  --warning-color: #f59e0b;
+  --error-color: #ef4444;
+  --text-primary: #f8fafc;
+  --text-secondary: #cbd5e1;
+  --text-muted: #94a3b8;
+  --border-color: #475569;
+  --border-color-dark: #334155;
+  --background-primary: #1e293b;
+  --background-secondary: #334155;
+  --background-tertiary: #475569;
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4),
+    0 2px 4px -1px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5),
+    0 4px 6px -2px rgba(0, 0, 0, 0.3);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.6),
+    0 10px 10px -5px rgba(0, 0, 0, 0.4);
+  --border-radius-sm: 4px;
+  --border-radius-md: 6px;
+  --border-radius-lg: 8px;
+  --border-radius-xl: 12px;
+  /* カレンダーの背景色（デフォルト） */
+  --calendar-saturday: rgba(59, 130, 246, 0.3);
+  --calendar-sunday: rgba(239, 68, 68, 0.3);
+  --calendar-today: rgba(245, 158, 11, 0.4);
 }

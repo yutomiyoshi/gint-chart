@@ -1,0 +1,12 @@
+@import "./variables.scss";
+
+.issue-row-container {
+  width: 100%;
+  height: $issue-row-height;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  position: relative;
+  border-bottom: 1px solid var(--border-color);
+  background-color: transparent;
+}

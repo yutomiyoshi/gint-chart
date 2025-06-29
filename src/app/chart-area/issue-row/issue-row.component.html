@@ -8,7 +8,7 @@
     (click)="onTitleClick()"
   >
     <span class="issue-iid">{{ id | issueIid }}</span>
-    {{ title }}
+    <span class="title-text">{{ title }}</span>
   </div>
 
   <!-- Status -->
@@ -47,6 +47,14 @@
 
     <!-- Issue Bar -->
     <div class="issue-bar" [ngStyle]="barStyle">
+      <!-- 開始日の未設定マーク -->
+      <div class="start-date-unassigned-mark" *ngIf="isStartDateUnassigned">
+        ?
+      </div>
+
+      <!-- 終了日の未設定マーク -->
+      <div class="end-date-unassigned-mark" *ngIf="isEndDateUnassigned">?</div>
+
       <!-- 
       ** Start Date調整ハンドル
       - ドラッグアンドドロップで日付の調整
