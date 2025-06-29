@@ -450,40 +450,6 @@ export class IssueRowComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * ステータス名を取得する
-   */
-  getStatusName(status: number | undefined): string {
-    if (isUndefined(status)) {
-      return 'undefined';
-    }
-
-    const matchedLabel = this.labelStore.findStatusLabel(status);
-
-    if (isUndefined(matchedLabel)) {
-      return 'not found';
-    }
-
-    return matchedLabel.name;
-  }
-
-  /**
-   * 担当者名を取得する
-   */
-  getAssigneeName(assigneeId: number | undefined): string {
-    if (isUndefined(assigneeId)) {
-      return 'undefined';
-    }
-
-    const assignee = this.memberStore.findMemberById(assigneeId);
-
-    if (isUndefined(assignee)) {
-      return 'not found';
-    }
-
-    return assignee.name;
-  }
-
-  /**
    * ステータスクリック時に呼ばれる関数
    */
   onStatusClick() {

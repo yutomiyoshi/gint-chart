@@ -6,9 +6,21 @@
 
     <section class="issue-meta" aria-label="課題の基本情報">
       <div class="meta-item">
+        <span class="label">IID</span>
+        <span class="value">{{ issue.iid }}</span>
+      </div>
+
+      <div class="meta-item">
         <span class="label">ステータス</span>
         <span class="value">
-          {{ issue.status }}
+          {{ getStatusName(issue.status) }}
+        </span>
+      </div>
+
+      <div class="meta-item">
+        <span class="label">担当者</span>
+        <span class="value">
+          {{ getAssigneeName(issue.assignee_id) }}
         </span>
       </div>
 
@@ -33,42 +45,49 @@
       </div>
     </section>
 
-    <section class="issue-labels" aria-label="ラベル">
-      <span class="label">ラベル</span>
+    <section class="issue-category" aria-label="カテゴリ">
+      <span class="label">カテゴリ</span>
       <div class="label-tags">
         <span
-          *ngFor="let label of issue.labels; trackBy: trackByLabel"
-          class="label-tag"
+          *ngFor="
+            let label of getCategoryLabels(issue.category);
+            trackBy: trackByLabel
+          "
+          class="label-tag category-tag"
+          [style.background-color]="label.color"
+          [style.color]="getContrastColor(label.color)"
         >
-          {{ label }}
+          {{ label.name }}
         </span>
         <span
-          *ngIf="!issue.labels || issue.labels.length === 0"
+          *ngIf="!issue.category || issue.category.length === 0"
           class="no-labels"
         >
-          ラベルが設定されていません
+          カテゴリが設定されていません
         </span>
       </div>
     </section>
 
-    <section class="issue-milestone" aria-label="マイルストーン">
-      <span class="label">マイルストーン</span>
-      <div class="milestone-content">
-        <div class="milestone-info">
-          <span class="milestone-title" [ngClass]="{ unset: !milestone }">
-            {{ milestone ? milestone.title : "未設定" }}
-          </span>
-          <span
-            class="milestone-date"
-            [ngClass]="{ unset: !milestone || !milestone.due_date }"
-          >
-            {{
-              milestone && milestone.due_date
-                ? (milestone.due_date | date : "yyyy/MM/dd")
-                : "期限なし"
-            }}
-          </span>
-        </div>
+    <section class="issue-resource" aria-label="リソース">
+      <span class="label">リソース</span>
+      <div class="label-tags">
+        <span
+          *ngFor="
+            let label of getResourceLabels(issue.resource);
+            trackBy: trackByLabel
+          "
+          class="label-tag resource-tag"
+          [style.background-color]="label.color"
+          [style.color]="getContrastColor(label.color)"
+        >
+          {{ label.name }}
+        </span>
+        <span
+          *ngIf="!issue.resource || issue.resource.length === 0"
+          class="no-labels"
+        >
+          リソースが設定されていません
+        </span>
       </div>
     </section>
 
