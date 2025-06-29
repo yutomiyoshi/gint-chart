@@ -28,7 +28,7 @@ $issue-row-margin-left: 5px;
   overflow-x: hidden;
   overflow-y: auto;
   position: relative;
-  background-color: var(--background-primary);
+  background-color: transparent;
 
   &::-webkit-scrollbar {
     width: $scroll-bar-width;
@@ -48,6 +48,7 @@ $issue-row-margin-left: 5px;
 .chart-row {
   position: relative;
   z-index: 1;
+  background-color: transparent;
 }
 
 .project-row {
@@ -155,19 +156,19 @@ $issue-row-margin-left: 5px;
   // カレンダーの背景はissue-barの背後にあるので、いかなるイベントも発生しない
   z-index: 0;
 
-  // 土曜日の背景色（薄い水色）
+  // 土曜日の背景色
   &.saturday {
-    background-color: rgba(173, 216, 230, 0.2); // lightblue with transparency
+    background-color: var(--calendar-saturday, rgba(173, 216, 230, 0.6));
   }
 
-  // 日曜日の背景色（薄いピンク色）
+  // 日曜日の背景色
   &.sunday {
-    background-color: rgba(255, 182, 193, 0.2); // lightpink with transparency
+    background-color: var(--calendar-sunday, rgba(255, 182, 193, 0.6));
   }
 
-  // 今日の背景色（薄いグレー）
+  // 今日の背景色
   &.today {
-    background-color: rgba(136, 136, 136, 0.2); // lightgray with transparency
+    background-color: var(--calendar-today, rgba(136, 136, 136, 0.6));
   }
 }
 

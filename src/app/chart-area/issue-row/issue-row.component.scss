@@ -16,7 +16,7 @@ $activate-opacity-transition-duration: 0.2s;
   position: relative;
 
   border-bottom: 1px solid var(--border-color);
-  background-color: var(--background-primary);
+  background-color: transparent;
 }
 
 // 共通のカラムスタイル
@@ -89,6 +89,7 @@ $activate-opacity-transition-duration: 0.2s;
   flex: 1 1 auto;
   height: 100%;
   z-index: 1;
+  background-color: transparent;
 
   display: flex;
   flex-direction: row;

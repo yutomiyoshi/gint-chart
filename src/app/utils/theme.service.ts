@@ -73,6 +73,10 @@ export class ThemeService {
       '--shadow-xl',
       '0 20px 25px -5px rgba(0, 0, 0, 0.6), 0 10px 10px -5px rgba(0, 0, 0, 0.4)'
     );
+    // カレンダーの背景色（ダークテーマ）
+    root.style.setProperty('--calendar-saturday', 'rgba(59, 130, 246, 0.3)');
+    root.style.setProperty('--calendar-sunday', 'rgba(239, 68, 68, 0.3)');
+    root.style.setProperty('--calendar-today', 'rgba(245, 158, 11, 0.4)');
   }
 
   private applyLightTheme(root: HTMLElement): void {
@@ -103,5 +107,9 @@ export class ThemeService {
       '--shadow-xl',
       '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)'
     );
+    // カレンダーの背景色（ライトテーマ）
+    root.style.setProperty('--calendar-saturday', 'rgba(173, 216, 230, 0.4)');
+    root.style.setProperty('--calendar-sunday', 'rgba(255, 182, 193, 0.4)');
+    root.style.setProperty('--calendar-today', 'rgba(136, 136, 136, 0.4)');
   }
 }
