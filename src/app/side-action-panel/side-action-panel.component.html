@@ -7,31 +7,40 @@
   <div class="action-menu" [class.expanded]="isExpanded">
     <!-- アクションボタン群 -->
     <div class="action-buttons">
-      <!-- 表示設定 -->
+      <!-- ビューの編集ページ -->
       <button
-        class="action-button display-settings"
-        (click)="onDisplaySettingsClick()"
-        title="表示設定"
+        class="action-button view-edit"
+        (click)="onViewEditClick()"
+        title="ビューの編集"
       >
-        <span class="icon">📊</span>
+        <span class="icon">⚙</span>
       </button>
 
-      <!-- ログ履歴 -->
+      <!-- ログダイアログの展開 -->
       <button
-        class="action-button log-history"
-        (click)="onLogHistoryClick()"
-        title="ログ履歴"
+        class="action-button log-dialog"
+        (click)="onLogDialogClick()"
+        title="ログダイアログ"
       >
-        <span class="icon">📝</span>
+        <span class="icon">≡</span>
       </button>
 
-      <!-- データ更新 -->
+      <!-- 今日の日付までジャンプ -->
       <button
-        class="action-button refresh-data"
-        (click)="onRefreshDataClick()"
-        title="データ更新"
+        class="action-button jump-today"
+        (click)="onJumpTodayClick()"
+        title="今日の日付へジャンプ"
       >
-        <span class="icon">🔄</span>
+        <span class="icon">◉</span>
+      </button>
+
+      <!-- ヘルプガイドページ -->
+      <button
+        class="action-button help-guide"
+        (click)="onHelpGuideClick()"
+        title="ヘルプガイド"
+      >
+        <span class="icon">ⓘ</span>
       </button>
     </div>
   </div>

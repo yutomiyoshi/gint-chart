@@ -13,19 +13,24 @@ export class SideActionPanelComponent {
   isExpanded = false;
 
   /**
-   * 表示設定アクションのイベント
+   * ビューの編集ページアクションのイベント
    */
-  @Output() displaySettingsClick = new EventEmitter<void>();
+  @Output() viewEditClick = new EventEmitter<void>();
 
   /**
-   * ログ履歴アクションのイベント
+   * ログダイアログの展開アクションのイベント
    */
-  @Output() logHistoryClick = new EventEmitter<void>();
+  @Output() logDialogClick = new EventEmitter<void>();
 
   /**
-   * データ更新アクションのイベント
+   * 今日の日付ジャンプアクションのイベント
    */
-  @Output() refreshDataClick = new EventEmitter<void>();
+  @Output() jumpTodayClick = new EventEmitter<void>();
+
+  /**
+   * ヘルプガイドページアクションのイベント
+   */
+  @Output() helpGuideClick = new EventEmitter<void>();
 
   /**
    * プルボタンをクリックして展開/収納を切り替え
@@ -35,26 +40,34 @@ export class SideActionPanelComponent {
   }
 
   /**
-   * 表示設定ボタンクリック
+   * ビューの編集ページボタンクリック
    */
-  onDisplaySettingsClick(): void {
-    this.displaySettingsClick.emit();
+  onViewEditClick(): void {
+    this.viewEditClick.emit();
     this.isExpanded = false; // アクション後は自動で閉じる
   }
 
   /**
-   * ログ履歴ボタンクリック
+   * ログダイアログの展開ボタンクリック
    */
-  onLogHistoryClick(): void {
-    this.logHistoryClick.emit();
+  onLogDialogClick(): void {
+    this.logDialogClick.emit();
     this.isExpanded = false;
   }
 
   /**
-   * データ更新ボタンクリック
+   * 今日の日付ジャンプボタンクリック
    */
-  onRefreshDataClick(): void {
-    this.refreshDataClick.emit();
+  onJumpTodayClick(): void {
+    this.jumpTodayClick.emit();
+    this.isExpanded = false;
+  }
+
+  /**
+   * ヘルプガイドページボタンクリック
+   */
+  onHelpGuideClick(): void {
+    this.helpGuideClick.emit();
     this.isExpanded = false;
   }
 
