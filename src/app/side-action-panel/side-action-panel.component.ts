@@ -4,6 +4,7 @@ import { ToastHistoryDialogExpansionService } from '@src/app/toast-history-dialo
 import { Assertion } from '../utils/assertion';
 import { TOAST_DURATION_LONG } from '@src/app/toast/toast.const';
 import { ToastService } from '@src/app/utils/toast.service';
+import { ThemeService } from '@src/app/utils/theme.service';
 
 @Component({
   selector: 'app-side-action-panel',
@@ -15,13 +16,21 @@ export class SideActionPanelComponent {
   constructor(
     private readonly dateJumpService: DateJumpService,
     private readonly toastHistoryDialogExpansionService: ToastHistoryDialogExpansionService,
-    private readonly toastService: ToastService
+    private readonly toastService: ToastService,
+    private readonly themeService: ThemeService
   ) {}
 
   /**
    * パネルの展開状態
    */
   isExpanded = false;
+
+  /**
+   * 現在のテーマを取得
+   */
+  get currentTheme() {
+    return this.themeService.getCurrentTheme();
+  }
 
   /**
    * プルボタンをクリックして展開/収納を切り替え
@@ -78,6 +87,14 @@ export class SideActionPanelComponent {
    * オーバーレイクリックで閉じる
    */
   onOverlayClick(): void {
+    this.isExpanded = false;
+  }
+
+  /**
+   * テーマ切り替えボタンクリック
+   */
+  onThemeToggleClick(): void {
+    this.themeService.toggleTheme();
     this.isExpanded = false;
   }
 }
