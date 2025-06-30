@@ -81,16 +81,10 @@
   <app-toast></app-toast>
 </div>
 
-<!-- 以下、メインコンテンツ -->
-<!-- Header -->
-<div class="header">
-  <app-header
-    [(isShowTitle)]="isShowTitle"
-    [(isShowStatus)]="isShowStatus"
-    [(isShowAssignee)]="isShowAssignee"
-  ></app-header>
-</div>
+<!-- サイドアクションパネル -->
+<app-side-action-panel></app-side-action-panel>
 
+<!-- 以下、メインコンテンツ -->
 <!-- Chart Area -->
 <div class="chart-area">
   <app-chart-area

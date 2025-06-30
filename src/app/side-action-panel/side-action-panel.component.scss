@@ -1,0 +1,217 @@
+/* サイドパネルコンテナ */
+.side-panel-container {
+  position: fixed;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1000;
+  pointer-events: none; /* 子要素でのみイベントを受け取る */
+}
+
+/* オーバーレイ */
+.panel-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.3);
+  z-index: 999;
+  pointer-events: all;
+  animation: fade-in 0.2s ease-out;
+}
+
+/* プルボタン */
+.pull-button {
+  pointer-events: all;
+  width: 20px;
+  height: 100px;
+  background: #64748b;
+  border-radius: 0 10px 10px 0;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  user-select: none;
+  position: relative;
+  z-index: 1002;
+
+  &:hover:not(.expanded) {
+    background: #334155;
+  }
+
+  &:hover,
+  &.expanded {
+    width: 24px;
+  }
+}
+
+.pull-indicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+.pull-arrow {
+  width: 0;
+  height: 0;
+  border-top: 4px solid transparent;
+  border-bottom: 4px solid transparent;
+  border-left: 6px solid rgba(255, 255, 255, 0.9);
+  transition: all ease;
+
+  &.expanded {
+    border-left: none;
+    border-right: 6px solid rgba(255, 255, 255, 0.9);
+  }
+}
+
+/* プルボタンのホバー時にアローを強調 */
+.pull-button:hover .pull-arrow {
+  border-left-color: white;
+  transform: translateX(1px);
+
+  &.expanded {
+    border-right-color: white;
+    transform: translateX(-1px);
+  }
+}
+
+/* アクションメニュー */
+.action-menu {
+  pointer-events: all;
+  background: #64748b;
+  border-radius: 40px;
+  border: none;
+  transform: translateY(-50%) translateX(calc(-100% - 10px));
+  transition: transform 0.3s ease;
+  transform-origin: left center;
+  position: absolute;
+  top: 50%;
+  left: 10px;
+  min-width: 80px;
+  z-index: 1001;
+
+  &.expanded {
+    transform: translateY(-50%) translateX(0);
+  }
+}
+
+/* アクションボタン群 */
+.action-buttons {
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+  gap: 8px;
+}
+
+/* アクションボタン */
+.action-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all ease;
+  user-select: none;
+  width: 48px;
+  height: 48px;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: scale(1.1);
+  }
+
+  .icon {
+    font-size: 20px;
+    color: rgba(255, 255, 255, 0.9);
+  }
+
+  &:hover .icon {
+    color: white;
+  }
+}
+
+/* ダークモード対応 */
+@media (prefers-color-scheme: dark) {
+  .pull-button {
+    background: #374151;
+
+    &:hover:not(.expanded) {
+      background: #1f2937;
+    }
+  }
+
+  .action-menu {
+    background: #374151;
+  }
+}
+
+/* アニメーション */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 0.8;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 768px) {
+  .pull-button {
+    width: 18px;
+    height: 80px;
+
+    &:hover,
+    &.expanded {
+      width: 22px;
+    }
+  }
+
+  .action-menu {
+    min-width: 70px;
+    left: 8px;
+  }
+
+  .action-buttons {
+    padding: 12px;
+    gap: 6px;
+  }
+
+  .action-button {
+    padding: 10px;
+    width: 40px;
+    height: 40px;
+
+    .icon {
+      font-size: 18px;
+    }
+  }
+
+  .pull-arrow {
+    border-left-width: 5px;
+    border-top-width: 3px;
+    border-bottom-width: 3px;
+
+    &.expanded {
+      border-right-width: 5px;
+      border-top-width: 3px;
+      border-bottom-width: 3px;
+    }
+  }
+}

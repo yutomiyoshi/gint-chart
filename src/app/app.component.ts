@@ -287,4 +287,21 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
       }, DIALOG_ANIMATION_DURATION);
     }
   }
+
+  /**
+   * 表示設定ダイアログを開く
+   */
+  onDisplaySettingsClick(): void {}
+
+  /**
+   * 表示設定ダイアログを閉じる
+   */
+  onDisplaySettingsDialogClose(): void {}
+
+  /**
+   * ログ履歴ダイアログを開く
+   */
+  onLogHistoryClick(): void {
+    this.toastHistoryDialogExpansionService.setExpanded(true);
+  }
 }

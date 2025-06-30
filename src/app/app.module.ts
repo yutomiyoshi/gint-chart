@@ -3,8 +3,9 @@ import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { MatIconModule } from '@angular/material/icon';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppComponent } from '@src/app/app.component';
-import { HeaderComponent } from '@src/app/header/header.component';
 import { ChartAreaComponent } from '@src/app/chart-area/chart-area.component';
 import { IssueRowComponent } from '@src/app/chart-area/issue-row/issue-row.component';
 import { IssueColumnComponent } from '@src/app/chart-area/issue-column/issue-column.component';
@@ -17,11 +18,11 @@ import { AssigneeSelectorDialogComponent } from '@src/app/assignee-selector-dial
 import { IssueIidPipe } from '@src/app/chart-area/issue-row/issue-iid.pipe';
 import { IssueStatusNamePipe } from '@src/app/chart-area/issue-row/issue-status-name.pipe';
 import { IssueAssigneeNamePipe } from '@src/app/chart-area/issue-row/issue-assignee-name.pipe';
+import { SideActionPanelComponent } from '@src/app/side-action-panel/side-action-panel.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    HeaderComponent,
     ChartAreaComponent,
     IssueRowComponent,
     IssueColumnComponent,
@@ -30,12 +31,15 @@ import { IssueAssigneeNamePipe } from '@src/app/chart-area/issue-row/issue-assig
     ToastHistoryDialogComponent,
     StatusSelectorDialogComponent,
     AssigneeSelectorDialogComponent,
+    SideActionPanelComponent,
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     FormsModule,
     CommonModule,
     DragDropModule,
+    MatIconModule,
     SwitchToggleComponent,
     IssueIidPipe,
     IssueStatusNamePipe,

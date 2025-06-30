@@ -1,0 +1,82 @@
+<!-- オーバーレイ（展開時のみ表示） -->
+<div *ngIf="isExpanded" class="panel-overlay" (click)="onOverlayClick()"></div>
+
+<!-- サイドアクションパネルコンテナ -->
+<div class="side-panel-container">
+  <!-- 展開されたアクションメニュー -->
+  <div class="action-menu" [class.expanded]="isExpanded">
+    <!-- アクションボタン群 -->
+    <div class="action-buttons">
+      <!-- ビューの編集ページ -->
+      <button
+        class="action-button view-edit"
+        (click)="onViewEditClick()"
+        title="ビューの編集"
+      >
+        <mat-icon class="icon">visibility</mat-icon>
+      </button>
+
+      <!-- ログダイアログの展開 -->
+      <button
+        class="action-button log-dialog"
+        (click)="onLogDialogClick()"
+        title="ログダイアログ"
+      >
+        <mat-icon class="icon">list_alt</mat-icon>
+      </button>
+
+      <!-- 今日の日付までジャンプ -->
+      <button
+        class="action-button jump-today"
+        (click)="onJumpTodayClick()"
+        title="今日の日付へジャンプ"
+      >
+        <mat-icon class="icon">today</mat-icon>
+      </button>
+
+      <!-- テーマ切り替え -->
+      <button
+        class="action-button theme-toggle"
+        (click)="onThemeToggleClick()"
+        [title]="
+          currentTheme === 'dark'
+            ? 'ライトモードに切り替え'
+            : 'ダークモードに切り替え'
+        "
+      >
+        <mat-icon class="icon">{{
+          currentTheme === "dark" ? "light_mode" : "dark_mode"
+        }}</mat-icon>
+      </button>
+
+      <!-- ヘルプガイドページ -->
+      <button
+        class="action-button help-guide"
+        (click)="onHelpGuideClick()"
+        title="ヘルプガイド"
+      >
+        <mat-icon class="icon">help_outline</mat-icon>
+      </button>
+
+      <!-- 設定 -->
+      <button
+        class="action-button settings"
+        (click)="onSettingsClick()"
+        title="設定"
+      >
+        <mat-icon class="icon">settings</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  <!-- プルボタン（常時表示） -->
+  <div
+    class="pull-button"
+    (click)="onToggleExpansion()"
+    [class.expanded]="isExpanded"
+  >
+    <div class="pull-indicator">
+      <div class="pull-arrow" [class.expanded]="isExpanded"></div>
+    </div>
+  </div>
+</div>

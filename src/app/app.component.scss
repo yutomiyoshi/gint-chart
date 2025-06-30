@@ -124,16 +124,9 @@ $toast-right: 40px;
   z-index: 9999;
 }
 
-$header-height: 40px;
-
-.header {
-  width: 100%;
-  height: $header-height;
-}
-
 .chart-area {
   width: 100%;
-  height: calc(100vh - $header-height);
+  height: 100vh;
 }
 
 .dialog-slide-in-animation {
