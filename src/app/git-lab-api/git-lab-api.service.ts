@@ -13,7 +13,13 @@ import { GitLabConfigStoreService } from '@src/app/store/git-lab-config-store.se
  * 'labels': ラベル
  * 'members': メンバー
  */
-type EndPoint = 'issues' | 'milestones' | '' | 'labels' | 'members';
+/**
+ * XXX miyoshi
+ * labelsとmemberは一回に100件ずつしか取得できない
+ * さしあたりは大丈夫だが、ラベルの数が増えてきて、一度に取得できるに限界がきたときは、
+ * リクエストパラメータの扱いを工夫することによって、この障害を乗り越えたい。
+ */
+type EndPoint = 'issues' | 'milestones' | '' | 'labels?per_page=100' | 'members?per_page=100';
 
 @Injectable({
   providedIn: 'root',
