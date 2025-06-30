@@ -84,6 +84,20 @@ export class SideActionPanelComponent {
   }
 
   /**
+   * 設定ボタンクリック
+   */
+  onSettingsClick(): void {
+    // TODO: 設定ページを表示
+    this.toastService.show(
+      Assertion.no(38),
+      '設定ページは現在開発中です。🤗',
+      'info',
+      TOAST_DURATION_LONG
+    );
+    this.isExpanded = false;
+  }
+
+  /**
    * オーバーレイクリックで閉じる
    */
   onOverlayClick(): void {
