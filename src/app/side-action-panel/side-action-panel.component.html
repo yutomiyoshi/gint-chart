@@ -13,7 +13,7 @@
         (click)="onViewEditClick()"
         title="ビューの編集"
       >
-        <span class="icon">⚙</span>
+        <mat-icon class="icon">settings</mat-icon>
       </button>
 
       <!-- ログダイアログの展開 -->
@@ -22,7 +22,7 @@
         (click)="onLogDialogClick()"
         title="ログダイアログ"
       >
-        <span class="icon">≡</span>
+        <mat-icon class="icon">list_alt</mat-icon>
       </button>
 
       <!-- 今日の日付までジャンプ -->
@@ -31,7 +31,7 @@
         (click)="onJumpTodayClick()"
         title="今日の日付へジャンプ"
       >
-        <span class="icon">◉</span>
+        <mat-icon class="icon">today</mat-icon>
       </button>
 
       <!-- テーマ切り替え -->
@@ -44,7 +44,9 @@
             : 'ダークモードに切り替え'
         "
       >
-        <span class="icon">{{ currentTheme === "dark" ? "☀" : "☾" }}</span>
+        <mat-icon class="icon">{{
+          currentTheme === "dark" ? "light_mode" : "dark_mode"
+        }}</mat-icon>
       </button>
 
       <!-- ヘルプガイドページ -->
@@ -53,7 +55,7 @@
         (click)="onHelpGuideClick()"
         title="ヘルプガイド"
       >
-        <span class="icon">ⓘ</span>
+        <mat-icon class="icon">help_outline</mat-icon>
       </button>
     </div>
   </div>

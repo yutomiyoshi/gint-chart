@@ -3,6 +3,8 @@ import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { MatIconModule } from '@angular/material/icon';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppComponent } from '@src/app/app.component';
 import { ChartAreaComponent } from '@src/app/chart-area/chart-area.component';
 import { IssueRowComponent } from '@src/app/chart-area/issue-row/issue-row.component';
@@ -33,9 +35,11 @@ import { SideActionPanelComponent } from '@src/app/side-action-panel/side-action
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     FormsModule,
     CommonModule,
     DragDropModule,
+    MatIconModule,
     SwitchToggleComponent,
     IssueIidPipe,
     IssueStatusNamePipe,
