@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
+import { isUndefined } from '../utils/utils';
+import { Assertion } from '../utils/assertion';
 
 export interface AssigneeData {
   issueId: number;
@@ -45,5 +47,57 @@ export class AssigneeSelectorDialogExpansionService {
     if (!isExpanded) {
       this.assigneeSubject.next(undefined);
     }
+  }
+
+  /**
+   * 現在の展開状態を取得
+   */
+  get isExpanded(): boolean {
+    return this.isExpandedSubject.value;
+  }
+
+  /**
+   * イシューIDを取得
+   */
+  get issueId(): number {
+    if (isUndefined(this.assigneeSubject.value)) {
+      Assertion.assert(
+        "issueId is called before issueId is set.",
+        Assertion.no(19)
+      );
+      return -1;
+    } 
+    return this.assigneeSubject.value.issueId;
+  }
+
+  /**
+   * 担当者IDを取得
+   */
+  get assigneeId(): number | undefined {
+    if (isUndefined(this.assigneeSubject.value)) {
+      Assertion.assert(
+        'assigneeId is called before assignee is set.',
+        Assertion.no(20)
+      );
+      return -1;
+    }
+    return this.assigneeSubject.value.assigneeId;
+  }
+
+  /**
+   * 担当者を更新する
+   * @param issueId イシューID
+   * @param assigneeId 担当者ID
+   */
+  updateAssignee(issueId: number, assigneeId: number | undefined): void {
+    this.assigneeSubject.next({issueId, assigneeId});
+  }
+
+  /**
+   * 担当者をクリアする（未設定にする）
+   * @param issueId イシューID
+   */
+  clearAssignee(issueId: number): void {
+    this.assigneeSubject.next({issueId, assigneeId: undefined});
   }
 }
