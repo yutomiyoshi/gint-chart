@@ -7,7 +7,7 @@
   </div>
 
   <div class="dialog-content">
-    <div class="assignee-option" (click)="selectAssignee(undefined)">
+    <div class="assignee-option" (click)="onAssigneeSelect(undefined)">
       <span class="assignee-name">未設定</span>
       <span class="assignee-indicator" *ngIf="isSelected(undefined)">✓</span>
     </div>
@@ -15,7 +15,7 @@
     <div
       class="assignee-option"
       *ngFor="let member of members"
-      (click)="selectAssignee(member.id)"
+      (click)="onAssigneeSelect(member.id)"
     >
       <span class="assignee-name">{{ member.name }}</span>
       <span class="assignee-indicator" *ngIf="isSelected(member.id)">✓</span>

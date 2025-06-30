@@ -74,22 +74,7 @@ export class AssigneeSelectorDialogComponent implements OnInit, OnDestroy {
     }
     return this.currentIssue.title;
   }
-
-  /**
-   * 担当者を選択する
-   * @param assigneeId 選択された担当者ID
-   */
-  selectAssignee(assigneeId: number | undefined): void {
-    this.selectedAssigneeId = assigneeId;
-
-    // 選択時に即座に確定してダイアログを閉じる
-    if (!isUndefined(this.currentIssueId)) {
-      // ここでイシューの担当者を更新する処理を実装
-      // 例: this.issueService.updateAssignee(this.currentIssueId, this.selectedAssigneeId);
-    }
-    this.assigneeSelectorDialogExpansionService.collapse();
-  }
-
+  
   /**
    * 担当者が選択されているかどうかを判定
    * @param assigneeId 担当者ID
@@ -98,4 +83,16 @@ export class AssigneeSelectorDialogComponent implements OnInit, OnDestroy {
   isSelected(assigneeId: number | undefined): boolean {
     return this.selectedAssigneeId === assigneeId;
   }
+
+  /**
+   * 担当者を選択する
+   * @param assigneeId 選択された担当者ID
+   */
+  onAssigneeSelect(assigneeId: number | undefined): void {
+    this.assigneeSelectorDialogExpansionService.updateAssignee(
+      this.assigneeSelectorDialogExpansionService.issueId,
+      assigneeId
+    );
+  }
+
 }
