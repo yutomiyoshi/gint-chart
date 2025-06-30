@@ -55,7 +55,8 @@ export class IssuesUpdateService {
           );
           return null;
         }
-        return convertedIssue;
+        // レスポンスのissueに対してラベル解析を実行
+        return this.issueLabelProcessor.processIssueLabels(convertedIssue);
       }
     );
   }
