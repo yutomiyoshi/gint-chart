@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { DateHandler } from '@src/app/utils/time';
-import { DateJumpService } from '@src/app/chart-area/date-jump.service';
+import { DateJumpService } from '@src/app/service/date-jump.service';
 
 export interface CalendarRange {
   startDate: Date;
