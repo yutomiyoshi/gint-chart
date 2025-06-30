@@ -4,7 +4,6 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { AppComponent } from '@src/app/app.component';
-import { HeaderComponent } from '@src/app/header/header.component';
 import { ChartAreaComponent } from '@src/app/chart-area/chart-area.component';
 import { IssueRowComponent } from '@src/app/chart-area/issue-row/issue-row.component';
 import { IssueColumnComponent } from '@src/app/chart-area/issue-column/issue-column.component';
@@ -21,7 +20,6 @@ import { IssueAssigneeNamePipe } from '@src/app/chart-area/issue-row/issue-assig
 @NgModule({
   declarations: [
     AppComponent,
-    HeaderComponent,
     ChartAreaComponent,
     IssueRowComponent,
     IssueColumnComponent,
