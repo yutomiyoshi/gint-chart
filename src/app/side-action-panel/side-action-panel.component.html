@@ -1,0 +1,49 @@
+<!-- オーバーレイ（展開時のみ表示） -->
+<div *ngIf="isExpanded" class="panel-overlay" (click)="onOverlayClick()"></div>
+
+<!-- サイドアクションパネルコンテナ -->
+<div class="side-panel-container">
+  <!-- 展開されたアクションメニュー -->
+  <div class="action-menu" [class.expanded]="isExpanded">
+    <!-- アクションボタン群 -->
+    <div class="action-buttons">
+      <!-- 表示設定 -->
+      <button
+        class="action-button display-settings"
+        (click)="onDisplaySettingsClick()"
+        title="表示設定"
+      >
+        <span class="icon">📊</span>
+      </button>
+
+      <!-- ログ履歴 -->
+      <button
+        class="action-button log-history"
+        (click)="onLogHistoryClick()"
+        title="ログ履歴"
+      >
+        <span class="icon">📝</span>
+      </button>
+
+      <!-- データ更新 -->
+      <button
+        class="action-button refresh-data"
+        (click)="onRefreshDataClick()"
+        title="データ更新"
+      >
+        <span class="icon">🔄</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- プルボタン（常時表示） -->
+  <div
+    class="pull-button"
+    (click)="onToggleExpansion()"
+    [class.expanded]="isExpanded"
+  >
+    <div class="pull-indicator">
+      <div class="pull-arrow" [class.expanded]="isExpanded"></div>
+    </div>
+  </div>
+</div>

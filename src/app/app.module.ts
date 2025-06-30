@@ -16,6 +16,7 @@ import { AssigneeSelectorDialogComponent } from '@src/app/assignee-selector-dial
 import { IssueIidPipe } from '@src/app/chart-area/issue-row/issue-iid.pipe';
 import { IssueStatusNamePipe } from '@src/app/chart-area/issue-row/issue-status-name.pipe';
 import { IssueAssigneeNamePipe } from '@src/app/chart-area/issue-row/issue-assignee-name.pipe';
+import { SideActionPanelComponent } from '@src/app/side-action-panel/side-action-panel.component';
 
 @NgModule({
   declarations: [
@@ -28,6 +29,7 @@ import { IssueAssigneeNamePipe } from '@src/app/chart-area/issue-row/issue-assig
     ToastHistoryDialogComponent,
     StatusSelectorDialogComponent,
     AssigneeSelectorDialogComponent,
+    SideActionPanelComponent,
   ],
   imports: [
     BrowserModule,
