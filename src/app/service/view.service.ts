@@ -48,4 +48,18 @@ export class ViewService {
    */
   private _isHighlightedToday = true;
   private _isHighlightedHoliday = true;
+
+  /**
+   * 見た目にかかわる設定をjsonから読み込む
+   */
+  readViewConfig() {
+    // TODO: ここにjsonの読み込みを書く
+  }
+
+  /**
+   * 見た目にかかわる設定をjsonに反映する
+   */
+  writeViewConfig() {
+    // TODO: ここにjsonの上書きを書く
+  }
 }
