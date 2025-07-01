@@ -48,6 +48,27 @@ export class IssueDetailDialogComponent implements OnInit {
   }
 
   /**
+   * GitLabのIssue URLを取得
+   */
+  getIssueUrl(): string | null {
+    return this.issue?.web_url || null;
+  }
+
+  /**
+   * GitLabのIssue URLを新しいタブで開く
+   */
+  openIssueUrl(): void {
+    if (isUndefined(this.issue)) {
+      Assertion.assert(
+        "issue' url is open before issue is defined.",
+        Assertion.no(42)
+      );
+      return;
+    }
+    window.electronAPI.shell.openExternal(this.issue.web_url);
+  }
+
+  /**
    * ステータス名を取得
    */
   getStatusName(statusId: number | undefined): string {

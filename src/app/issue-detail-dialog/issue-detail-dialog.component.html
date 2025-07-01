@@ -1,8 +1,21 @@
 <div class="issue-detail-dialog" role="dialog" aria-labelledby="issue-title">
   <div *ngIf="issue" class="issue-content">
-    <h1 id="issue-title" class="issue-title">
-      {{ issue.title }}
-    </h1>
+    <div class="title-section">
+      <h1 id="issue-title" class="issue-title">
+        {{ issue.title }}
+      </h1>
+      <button
+        *ngIf="getIssueUrl()"
+        mat-icon-button
+        class="url-button"
+        [attr.href]="getIssueUrl()"
+        (click)="openIssueUrl()"
+        title="GitLabでIssueを開く"
+        aria-label="GitLabでIssueを開く"
+      >
+        <mat-icon>open_in_new</mat-icon>
+      </button>
+    </div>
 
     <section class="issue-meta" aria-label="課題の基本情報">
       <div class="meta-item">
