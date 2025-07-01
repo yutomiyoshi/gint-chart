@@ -19,6 +19,7 @@
     [style.display]="statusWidth === 0 ? 'none' : 'flex'"
     (click)="onStatusClick()"
   >
+  <span class="status-circle" [style.background-color]="getIssueStatusColor(status)"></span>
     {{ status | issueStatusName }}
   </div>
 
