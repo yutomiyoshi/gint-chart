@@ -1,5 +1,5 @@
 // main.js (TypeScriptで書く場合は、tscでJavaScriptにトランスパイルする必要があります)
-const { app, BrowserWindow, ipcMain } = require("electron");
+const { app, BrowserWindow, ipcMain, shell } = require("electron");
 const path = require("path");
 const url = require("url");
 const fs = require("fs"); // Node.jsのファイルシステムモジュール
@@ -55,4 +55,8 @@ ipcMain.handle('read-config', async () => {
   const configPath = path.join(__dirname, 'gitlab.config.json');
   const data = fs.readFileSync(configPath, 'utf-8');
   return JSON.parse(data);
+});
+
+ipcMain.handle('open-external', async (event, url) => {
+  await shell.openExternal(url);
 });
