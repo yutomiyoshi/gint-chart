@@ -6,43 +6,38 @@ $spacing-xxl: 20px;
 $border-radius: 4px;
 $border-radius-lg: 6px;
 $border-radius-xl: 8px;
-$font-size-sm: 12px;
-$font-size-md: 14px;
-$font-size-lg: 16px;
-$font-size-xl: 24px;
 
 %section-base {
-  margin-bottom: $spacing-xxl;
+  margin-bottom: 20px;
   .label {
     color: var(--text-secondary);
     font-weight: 500;
-    font-size: $font-size-sm;
+    font-size: 12px;
     text-transform: uppercase;
-    margin-bottom: $spacing-md;
+    margin-bottom: 8px;
     display: block;
   }
 }
 
 %value-base {
-  font-size: $font-size-md;
+  font-size: 14px;
   font-weight: 500;
   color: var(--text-primary);
-  padding: 6px $spacing-md;
+  padding: 6px 8px;
   background: var(--background-primary);
-  border-radius: $border-radius;
+  border-radius: 4px;
   border: 1px solid var(--border-color);
   &.unset {
     color: var(--text-muted);
     background: var(--background-tertiary);
-    border-color: var(--border-color);
     font-style: italic;
   }
 }
 
 %label-tag-base {
-  padding: $spacing-sm $spacing-md;
-  border-radius: $border-radius;
-  font-size: $font-size-sm;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
   font-weight: 500;
   border: 1px solid rgba(255, 255, 255, 0.1);
   box-shadow: var(--shadow-sm);
@@ -57,8 +52,8 @@ $font-size-xl: 24px;
   height: 100%;
   width: 100%;
   background: var(--background-primary);
-  border-radius: $border-radius-xl;
-  padding: $spacing-xxl;
+  border-radius: 8px;
+  padding: 20px;
   max-width: 800px;
   margin: 0 auto;
   border: 1px solid var(--border-color);
@@ -66,33 +61,65 @@ $font-size-xl: 24px;
   box-shadow: var(--shadow-lg);
 
   .issue-content {
-    .issue-title {
-      margin-bottom: $spacing-xxl;
-      color: var(--text-primary);
-      font-size: $font-size-xl;
-      font-weight: 600;
+    .title-section {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 20px;
       border-bottom: 1px solid var(--border-color);
-      padding-bottom: $spacing-lg;
+      padding-bottom: 12px;
+
+      .issue-title {
+        margin: 0;
+        color: var(--text-primary);
+        font-size: 24px;
+        font-weight: 600;
+        flex: 1;
+        line-height: 1.3;
+      }
+
+      .url-button {
+        flex-shrink: 0;
+        margin-left: 12px;
+        width: 40px;
+        height: 40px;
+        background: transparent;
+        color: var(--text-primary);
+        border-radius: 4px;
+        border: none;
+        cursor: pointer;
+        transition: color 0.2s ease;
+
+        &:hover {
+          color: var(--text-secondary);
+        }
+
+        mat-icon {
+          font-size: 20px;
+          width: 20px;
+          height: 20px;
+        }
+      }
     }
 
     .issue-meta {
       display: grid;
       grid-template-columns: 1fr 1fr 1fr;
-      gap: $spacing-xl;
-      margin-bottom: $spacing-xxl;
-      padding: $spacing-xl;
+      gap: 16px;
+      margin-bottom: 20px;
+      padding: 16px;
       background: var(--background-secondary);
-      border-radius: $border-radius-lg;
+      border-radius: 6px;
       border: 1px solid var(--border-color);
 
       .meta-item {
         display: flex;
         flex-direction: column;
-        gap: $spacing-sm;
+        gap: 4px;
         .label {
           color: var(--text-secondary);
           font-weight: 500;
-          font-size: $font-size-sm;
+          font-size: 12px;
           text-transform: uppercase;
         }
         .value {
@@ -107,7 +134,7 @@ $font-size-xl: 24px;
       .label-tags {
         display: flex;
         flex-wrap: wrap;
-        gap: $spacing-md;
+        gap: 8px;
         .label-tag {
           @extend %label-tag-base;
           color: white;
@@ -121,25 +148,25 @@ $font-size-xl: 24px;
         .no-labels {
           color: var(--text-muted);
           font-style: italic;
-          font-size: $font-size-sm;
+          font-size: 12px;
         }
       }
     }
 
     .issue-description {
       .description-title {
-        font-size: $font-size-lg;
+        font-size: 16px;
         font-weight: 600;
-        margin-bottom: $spacing-lg;
+        margin-bottom: 12px;
         color: var(--text-primary);
       }
       .description-content {
         background: var(--background-secondary);
-        padding: $spacing-xl;
-        border-radius: $border-radius-lg;
+        padding: 16px;
+        border-radius: 6px;
         white-space: pre-wrap;
         line-height: 1.5;
-        font-size: $font-size-md;
+        font-size: 14px;
         color: var(--text-primary);
         border: 1px solid var(--border-color);
         &.empty-description {
@@ -157,6 +184,6 @@ $font-size-xl: 24px;
     height: 100%;
     min-height: 200px;
     color: var(--text-muted);
-    font-size: $font-size-lg;
+    font-size: 16px;
   }
 }

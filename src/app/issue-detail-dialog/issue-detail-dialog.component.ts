@@ -48,6 +48,23 @@ export class IssueDetailDialogComponent implements OnInit {
   }
 
   /**
+   * GitLabのIssue URLを取得
+   */
+  getIssueUrl(): string | null {
+    return this.issue?.web_url || null;
+  }
+
+  /**
+   * GitLabのIssue URLを新しいタブで開く
+   */
+  openIssueUrl(): void {
+    const url = this.getIssueUrl();
+    if (url) {
+      window.open(url, '_blank', 'noopener,noreferrer');
+    }
+  }
+
+  /**
    * ステータス名を取得
    */
   getStatusName(statusId: number | undefined): string {
