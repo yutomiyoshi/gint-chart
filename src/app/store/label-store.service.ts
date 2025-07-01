@@ -68,7 +68,7 @@ export class LabelStoreService {
     return this.gitlabApi
       .fetchGroup<GitLabLabel, Label>(
         groupId,
-        'labels?per_page=100',
+        'labels',
         convertGitLabLabelToLabel
       )
       .pipe(

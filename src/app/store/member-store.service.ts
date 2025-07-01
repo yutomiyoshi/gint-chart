@@ -44,7 +44,7 @@ export class MemberStoreService {
     return this.gitlabApi
       .fetchGroup<GitLabMember, Member>(
         groupId,
-        'members?per_page=100',
+        'members',
         convertGitLabMemberToMember
       )
       .pipe(
