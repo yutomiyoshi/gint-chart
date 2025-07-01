@@ -88,7 +88,7 @@ export class IssuesStoreService {
   private fetchIssuesForProject(projectId: number): Observable<Issue[]> {
     return this.gitlabApi.fetch<GitLabApiIssue, Issue>(
       String(projectId),
-      'issues',
+      'issues?per_page=100',
       convertJsonToIssue
     );
   }
