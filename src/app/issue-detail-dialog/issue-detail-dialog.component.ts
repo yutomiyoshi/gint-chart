@@ -58,10 +58,14 @@ export class IssueDetailDialogComponent implements OnInit {
    * GitLabのIssue URLを新しいタブで開く
    */
   openIssueUrl(): void {
-    const url = this.getIssueUrl();
-    if (url) {
-      window.open(url, '_blank', 'noopener,noreferrer');
+    if (isUndefined(this.issue)) {
+      Assertion.assert(
+        "issue' url is open before issue is defined.",
+        Assertion.no(42)
+      );
+      return;
     }
+    window.electronAPI.shell.openExternal(this.issue.web_url);
   }
 
   /**
