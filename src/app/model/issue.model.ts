@@ -43,6 +43,12 @@ export interface Issue {
   description: string;
 
   /**
+   * web_url
+   * @type {string}
+   */
+  web_url: string;
+
+  /**
    * start_date
    * @type {Date | undefined}
    */
@@ -99,6 +105,7 @@ export function convertJsonToIssue(apiIssue: GitLabApiIssue): Issue | null {
     typeof apiIssue.iid !== 'number' ||
     typeof apiIssue.project_id !== 'number' ||
     typeof apiIssue.title !== 'string' ||
+    typeof apiIssue.web_url !== 'string' ||
     !Array.isArray(apiIssue.labels)
   ) {
     return null;
@@ -150,6 +157,7 @@ export function convertJsonToIssue(apiIssue: GitLabApiIssue): Issue | null {
     milestone_id,
     title: apiIssue.title,
     description: description,
+    web_url: apiIssue.web_url,
     start_date,
     end_date,
     labels: apiIssue.labels,
