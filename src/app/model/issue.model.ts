@@ -140,6 +140,10 @@ export function convertJsonToIssue(apiIssue: GitLabApiIssue): Issue | null {
       description = description.replace(endDatePattern, '');
     }
   }
+
+  // 開始日と終了日の処理後、descriptionの先頭から最初の文字までの改行やスペースを削除
+  description = description.trimStart();
+
   if (
     !isUndefined(start_date) &&
     !isUndefined(end_date) &&
