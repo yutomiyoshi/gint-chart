@@ -183,35 +183,50 @@ export class ViewService {
     return this._issueRowHeight;
   }
   set issueRowHeight(value: number) {
-    this._issueRowHeight = value;
+    if (this._issueRowHeight !== value) {
+      this._issueRowHeight = value;
+      this.notifyViewConfigChange();
+    }
   }
 
   get isHighlightedToday(): boolean {
     return this._isHighlightedToday;
   }
   set isHighlightedToday(value: boolean) {
-    this._isHighlightedToday = value;
+    if (this._isHighlightedToday !== value) {
+      this._isHighlightedToday = value;
+      this.notifyViewConfigChange();
+    }
   }
 
   get isHighlightedHoliday(): boolean {
     return this._isHighlightedHoliday;
   }
   set isHighlightedHoliday(value: boolean) {
-    this._isHighlightedHoliday = value;
+    if (this._isHighlightedHoliday !== value) {
+      this._isHighlightedHoliday = value;
+      this.notifyViewConfigChange();
+    }
   }
 
   get isMilestoneShowOnlyWithIssue(): boolean {
     return this._isMilestoneShowOnlyWithIssue;
   }
   set isMilestoneShowOnlyWithIssue(value: boolean) {
-    this._isMilestoneShowOnlyWithIssue = value;
+    if (this._isMilestoneShowOnlyWithIssue !== value) {
+      this._isMilestoneShowOnlyWithIssue = value;
+      this.notifyViewConfigChange();
+    }
   }
 
   get isMilestoneInlineMode(): boolean {
     return this._isMilestoneInlineMode;
   }
   set isMilestoneInlineMode(value: boolean) {
-    this._isMilestoneInlineMode = value;
+    if (this._isMilestoneInlineMode !== value) {
+      this._isMilestoneInlineMode = value;
+      this.notifyViewConfigChange();
+    }
   }
 
   /**

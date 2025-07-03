@@ -290,6 +290,20 @@ export class ChartAreaComponent implements OnInit, AfterViewInit {
   }
 
   /**
+   * 今日の強調表示が有効かどうか
+   */
+  get isHighlightedToday(): boolean {
+    return this.viewService.isHighlightedToday;
+  }
+
+  /**
+   * 祝日（土日）の強調表示が有効かどうか
+   */
+  get isHighlightedHoliday(): boolean {
+    return this.viewService.isHighlightedHoliday;
+  }
+
+  /**
    * タイトルの幅を取得
    */
   get titleWidth() {

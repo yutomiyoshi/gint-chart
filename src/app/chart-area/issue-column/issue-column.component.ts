@@ -30,6 +30,7 @@ import {
 import { CalendarRangeService } from '@src/app/chart-area/calendar-range.service';
 import { CalendarWidthService } from '@src/app/chart-area/calendar-width.service';
 import { CalendarPositionService } from '@src/app/chart-area/calendar-position.service';
+import { ViewService } from '@src/app/service/view.service';
 
 @Component({
   selector: 'app-issue-column',
@@ -84,22 +85,13 @@ export class IssueColumnComponent implements OnInit, OnDestroy, AfterViewInit {
    */
   private updateTitleWidth: ((distance: number) => void) | undefined;
 
-  /**
-   * 1日あたりの幅を取得
-   */
-  get dayPerWidth(): number {
-    return (
-      this.calendarWidthService.currentWidth /
-      this.calendarRangeService.totalDays
-    );
-  }
-
   constructor(
     private readonly calendarDisplayService: CalendarDisplayService,
     private readonly calendarRangeService: CalendarRangeService,
     private readonly calendarWidthService: CalendarWidthService,
     private readonly calendarPositionService: CalendarPositionService,
-    private readonly cdr: ChangeDetectorRef
+    private readonly cdr: ChangeDetectorRef,
+    private readonly viewService: ViewService
   ) {}
 
   /**
@@ -344,5 +336,29 @@ export class IssueColumnComponent implements OnInit, OnDestroy, AfterViewInit {
       newStart.setDate(newStart.getDate() + 1);
       newEnd.setDate(newEnd.getDate() + 1);
     }
+  }
+
+  /**
+   * 1日あたりの幅を取得
+   */
+  get dayPerWidth(): number {
+    return (
+      this.calendarWidthService.currentWidth /
+      this.calendarRangeService.totalDays
+    );
+  }
+
+  /**
+   * 今日の強調表示が有効かどうか
+   */
+  get isHighlightedToday(): boolean {
+    return this.viewService.isHighlightedToday;
+  }
+
+  /**
+   * 祝日（土日）の強調表示が有効かどうか
+   */
+  get isHighlightedHoliday(): boolean {
+    return this.viewService.isHighlightedHoliday;
   }
 }
