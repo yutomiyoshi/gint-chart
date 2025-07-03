@@ -1,5 +1,8 @@
 import { Component } from '@angular/core';
-import { ViewService } from '../service/view.service';
+import { ViewService } from '@src/app/service/view.service';
+import { ToastService } from '@src/app/utils/toast.service';
+import { TOAST_DURATION_MEDIUM } from '../toast/toast.const';
+import { Assertion } from '../utils/assertion';
 
 @Component({
   selector: 'app-view-settings-dialog',
@@ -8,7 +11,10 @@ import { ViewService } from '../service/view.service';
   styleUrl: './view-settings-dialog.component.scss',
 })
 export class ViewSettingsDialogComponent {
-  constructor(private readonly viewService: ViewService) {}
+  constructor(
+    private readonly viewService: ViewService,
+    private readonly toastService: ToastService
+  ) {}
 
   /**
    * タイトル表示状態を取得
@@ -99,6 +105,12 @@ export class ViewSettingsDialogComponent {
    */
   onMilestoneShowOnlyWithIssueChange(checked: boolean) {
     this.viewService.isMilestoneShowOnlyWithIssue = checked;
+    this.toastService.show(
+      Assertion.no(27),
+      `issueのあるマイルストーンだけを表示する機能は開発中です。🤗`,
+      'info',
+      TOAST_DURATION_MEDIUM
+    );
   }
 
   /**
@@ -106,5 +118,11 @@ export class ViewSettingsDialogComponent {
    */
   onMilestoneInlineModeChange(checked: boolean) {
     this.viewService.isMilestoneInlineMode = checked;
+    this.toastService.show(
+      Assertion.no(27),
+      `マイルストーンインラインモードは開発中です。🤗`,
+      'info',
+      TOAST_DURATION_MEDIUM
+    );
   }
 }
