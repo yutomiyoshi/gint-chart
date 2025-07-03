@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Subject } from 'rxjs';
 import {
   assigneeWidthDefault,
   statusWidthDefault,
@@ -10,6 +11,16 @@ import {
   providedIn: 'root',
 })
 export class ViewService {
+  /**
+   * 設定変更を通知するSubject
+   */
+  private viewConfigChange$ = new Subject<void>();
+
+  /**
+   * 設定変更通知のObservable
+   */
+  public readonly viewConfigChanged$ = this.viewConfigChange$.asObservable();
+
   /**
    * カラムの選択
    */
@@ -56,42 +67,60 @@ export class ViewService {
     return this._isTitleShow;
   }
   set isTitleShow(value: boolean) {
-    this._isTitleShow = value;
+    if (this._isTitleShow !== value) {
+      this._isTitleShow = value;
+      this.notifyViewConfigChange();
+    }
   }
 
   get titleWidth(): number {
     return this._titleWidth;
   }
   set titleWidth(value: number) {
-    this._titleWidth = value;
+    if (this._titleWidth !== value) {
+      this._titleWidth = value;
+      this.notifyViewConfigChange();
+    }
   }
 
   get isStatusShow(): boolean {
     return this._isStatusShow;
   }
   set isStatusShow(value: boolean) {
-    this._isStatusShow = value;
+    if (this._isStatusShow !== value) {
+      this._isStatusShow = value;
+      this.notifyViewConfigChange();
+    }
   }
 
   get statusWidth(): number {
     return this._statusWidth;
   }
   set statusWidth(value: number) {
-    this._statusWidth = value;
+    if (this._statusWidth !== value) {
+      this._statusWidth = value;
+      this.notifyViewConfigChange();
+    }
   }
 
   get isAssigneeShow(): boolean {
     return this._isAssigneeShow;
   }
   set isAssigneeShow(value: boolean) {
-    this._isAssigneeShow = value;
+    if (this._isAssigneeShow !== value) {
+      this._isAssigneeShow = value;
+      this.notifyViewConfigChange();
+    }
   }
 
   get assigneeWidth(): number {
     return this._assigneeWidth;
   }
   set assigneeWidth(value: number) {
-    this._assigneeWidth = value;
+    if (this._assigneeWidth !== value) {
+      this._assigneeWidth = value;
+      this.notifyViewConfigChange();
+    }
   }
 
   get isFilteredByStatus(): boolean {
@@ -197,5 +226,12 @@ export class ViewService {
    */
   writeViewConfig() {
     // TODO: ここにjsonの上書きを書く
+  }
+
+  /**
+   * 設定変更を通知
+   */
+  private notifyViewConfigChange(): void {
+    this.viewConfigChange$.next();
   }
 }

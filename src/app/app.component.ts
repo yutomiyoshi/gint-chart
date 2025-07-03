@@ -31,9 +31,6 @@ import { ViewSettingsDialogExpansionService } from './view-settings-dialog/view-
 })
 export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
   loadingOverlay = true;
-  isShowTitle = true;
-  isShowStatus = true;
-  isShowAssignee = true;
   isIssueDetailDialogExpanded = false;
   isToastHistoryDialogExpanded = false;
   isStatusSelectorDialogExpanded = false;

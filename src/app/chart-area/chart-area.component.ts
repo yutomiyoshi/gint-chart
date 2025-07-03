@@ -40,6 +40,7 @@ import {
   TOAST_DURATION_MEDIUM,
   TOAST_DURATION_LONG,
 } from '@src/app/toast/toast.const';
+import { ViewService } from '@src/app/service/view.service';
 
 /**
  * チャート行のアイテムを表現するインターフェース
@@ -70,21 +71,6 @@ export type ChartRowItem =
   providers: [DatePipe],
 })
 export class ChartAreaComponent implements OnInit, AfterViewInit {
-  /**
-   * タイトルの表示状態
-   */
-  @Input() isShowTitle = true;
-
-  /**
-   * ステータスの表示状態
-   */
-  @Input() isShowStatus = true;
-
-  /**
-   * 担当者の表示状態
-   */
-  @Input() isShowAssignee = true;
-
   /**
    * プロジェクトツリー
    */
@@ -117,21 +103,6 @@ export class ChartAreaComponent implements OnInit, AfterViewInit {
    */
   private subscription = new Subscription();
 
-  /**
-   * タイトルの幅
-   */
-  private _titleWidth: number = titleWidthDefault;
-
-  /**
-   * ステータスの幅
-   */
-  private _statusWidth: number = statusWidthDefault;
-
-  /**
-   * 担当者の幅
-   */
-  private _assigneeWidth: number = assigneeWidthDefault;
-
   constructor(
     private readonly projectTreeStore: ProjectTreeStoreService,
     private readonly issuesStore: IssuesStoreService,
@@ -141,10 +112,18 @@ export class ChartAreaComponent implements OnInit, AfterViewInit {
     private readonly calendarWidthService: CalendarWidthService,
     private readonly issuesUpdateService: IssuesUpdateService,
     private readonly toastService: ToastService,
-    private readonly cdr: ChangeDetectorRef
+    private readonly cdr: ChangeDetectorRef,
+    private readonly viewService: ViewService
   ) {}
 
   ngOnInit(): void {
+    // ViewServiceの設定変更を監視
+    this.subscription.add(
+      this.viewService.viewConfigChanged$.subscribe(() => {
+        this.cdr.detectChanges();
+      })
+    );
+
     this.subscription.add(
       this.projectTreeStore.projectTree$.subscribe((projectTrees) => {
         this.projectTrees = projectTrees;
@@ -314,42 +293,48 @@ export class ChartAreaComponent implements OnInit, AfterViewInit {
    * タイトルの幅を取得
    */
   get titleWidth() {
-    return this.isShowTitle ? this._titleWidth : 0;
+    // ViewServiceの設定を反映
+    return this.viewService.isTitleShow ? this.viewService.titleWidth : 0;
   }
 
   /**
    * タイトルの幅を設定
    */
   set titleWidth(value: number) {
-    this._titleWidth = value;
+    // ViewServiceに設定を反映
+    this.viewService.titleWidth = value;
   }
 
   /**
    * ステータスの幅を取得
    */
   get statusWidth() {
-    return this.isShowStatus ? this._statusWidth : 0;
+    // ViewServiceの設定を反映
+    return this.viewService.isStatusShow ? this.viewService.statusWidth : 0;
   }
 
   /**
    * ステータスの幅を設定
    */
   set statusWidth(value: number) {
-    this._statusWidth = value;
+    // ViewServiceに設定を反映
+    this.viewService.statusWidth = value;
   }
 
   /**
    * 担当者の幅を取得
    */
   get assigneeWidth() {
-    return this.isShowAssignee ? this._assigneeWidth : 0;
+    // ViewServiceの設定を反映
+    return this.viewService.isAssigneeShow ? this.viewService.assigneeWidth : 0;
   }
 
   /**
    * 担当者の幅を設定
    */
   set assigneeWidth(value: number) {
-    this._assigneeWidth = value;
+    // ViewServiceに設定を反映
+    this.viewService.assigneeWidth = value;
   }
 
   /**
