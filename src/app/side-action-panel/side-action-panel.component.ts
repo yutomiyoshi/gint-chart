@@ -5,7 +5,7 @@ import { Assertion } from '../utils/assertion';
 import { TOAST_DURATION_LONG } from '@src/app/toast/toast.const';
 import { ToastService } from '@src/app/utils/toast.service';
 import { ThemeService } from '@src/app/utils/theme.service';
-import { ViewSettingsDialogExpansionService } from '../view-settings/view-settings-dialog-expansion.service';
+import { ViewSettingsDialogExpansionService } from '../view-settings-dialog/view-settings-dialog-expansion.service';
 
 @Component({
   selector: 'app-side-action-panel',

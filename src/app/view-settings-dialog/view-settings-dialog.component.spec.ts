@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ViewSettingsComponent } from './view-settings.component';
+import { ViewSettingsComponent } from './view-settings-dialog.component';
 
 describe('ViewSettingsComponent', () => {
   let component: ViewSettingsComponent;
@@ -8,9 +8,8 @@ describe('ViewSettingsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ViewSettingsComponent]
-    })
-    .compileComponents();
+      imports: [ViewSettingsComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(ViewSettingsComponent);
     component = fixture.componentInstance;
