@@ -12,7 +12,7 @@
         <label class="compact-label">タイトル</label>
         <div class="setting-controls">
           <app-switch-toggle
-            [checked]="viewService.isTitleShow"
+            [checked]="isTitleShow"
             (checkedChange)="onTitleShowChange($event)"
             [width]="36"
             [height]="20"
@@ -25,7 +25,7 @@
         <label class="compact-label">ステータス</label>
         <div class="setting-controls">
           <app-switch-toggle
-            [checked]="viewService.isStatusShow"
+            [checked]="isStatusShow"
             (checkedChange)="onStatusShowChange($event)"
             [width]="36"
             [height]="20"
@@ -38,7 +38,7 @@
         <label class="compact-label">担当者</label>
         <div class="setting-controls">
           <app-switch-toggle
-            [checked]="viewService.isAssigneeShow"
+            [checked]="isAssigneeShow"
             (checkedChange)="onAssigneeShowChange($event)"
             [width]="36"
             [height]="20"
@@ -56,7 +56,7 @@
         <label class="compact-label">今日</label>
         <div class="setting-controls">
           <app-switch-toggle
-            [checked]="viewService.isHighlightedToday"
+            [checked]="isHighlightedToday"
             (checkedChange)="onHighlightedTodayChange($event)"
             [width]="36"
             [height]="20"
@@ -69,7 +69,7 @@
         <label class="compact-label">祝日</label>
         <div class="setting-controls">
           <app-switch-toggle
-            [checked]="viewService.isHighlightedHoliday"
+            [checked]="isHighlightedHoliday"
             (checkedChange)="onHighlightedHolidayChange($event)"
             [width]="36"
             [height]="20"
@@ -87,7 +87,7 @@
         <label class="compact-label">Issueありのみ表示</label>
         <div class="setting-controls">
           <app-switch-toggle
-            [checked]="viewService.isMilestoneShowOnlyWithIssue"
+            [checked]="isMilestoneShowOnlyWithIssue"
             (checkedChange)="onMilestoneShowOnlyWithIssueChange($event)"
             [width]="36"
             [height]="20"
@@ -100,7 +100,7 @@
         <label class="compact-label">インラインモード</label>
         <div class="setting-controls">
           <app-switch-toggle
-            [checked]="viewService.isMilestoneInlineMode"
+            [checked]="isMilestoneInlineMode"
             (checkedChange)="onMilestoneInlineModeChange($event)"
             [width]="36"
             [height]="20"

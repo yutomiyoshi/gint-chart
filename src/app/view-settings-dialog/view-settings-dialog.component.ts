@@ -8,7 +8,56 @@ import { ViewService } from '../service/view.service';
   styleUrl: './view-settings-dialog.component.scss',
 })
 export class ViewSettingsDialogComponent {
-  constructor(public viewService: ViewService) {}
+  constructor(private readonly viewService: ViewService) {}
+
+  /**
+   * タイトル表示状態を取得
+   */
+  get isTitleShow(): boolean {
+    return this.viewService.isTitleShow;
+  }
+
+  /**
+   * ステータス表示状態を取得
+   */
+  get isStatusShow(): boolean {
+    return this.viewService.isStatusShow;
+  }
+
+  /**
+   * 担当者表示状態を取得
+   */
+  get isAssigneeShow(): boolean {
+    return this.viewService.isAssigneeShow;
+  }
+
+  /**
+   * 今日の強調表示状態を取得
+   */
+  get isHighlightedToday(): boolean {
+    return this.viewService.isHighlightedToday;
+  }
+
+  /**
+   * 祝日の強調表示状態を取得
+   */
+  get isHighlightedHoliday(): boolean {
+    return this.viewService.isHighlightedHoliday;
+  }
+
+  /**
+   * マイルストーンのissue有り表示状態を取得
+   */
+  get isMilestoneShowOnlyWithIssue(): boolean {
+    return this.viewService.isMilestoneShowOnlyWithIssue;
+  }
+
+  /**
+   * マイルストーンインラインモード状態を取得
+   */
+  get isMilestoneInlineMode(): boolean {
+    return this.viewService.isMilestoneInlineMode;
+  }
 
   /**
    * タイトル表示の切り替え
