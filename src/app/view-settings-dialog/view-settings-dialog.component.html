@@ -18,16 +18,6 @@
             [height]="20"
           >
           </app-switch-toggle>
-          <input
-            *ngIf="viewService.isTitleShow"
-            type="number"
-            class="compact-input"
-            [value]="viewService.titleWidth"
-            (input)="onTitleWidthChange($event)"
-            min="50"
-            max="500"
-            placeholder="幅"
-          />
         </div>
       </div>
 
@@ -41,16 +31,6 @@
             [height]="20"
           >
           </app-switch-toggle>
-          <input
-            *ngIf="viewService.isStatusShow"
-            type="number"
-            class="compact-input"
-            [value]="viewService.statusWidth"
-            (input)="onStatusWidthChange($event)"
-            min="50"
-            max="200"
-            placeholder="幅"
-          />
         </div>
       </div>
 
@@ -64,31 +44,6 @@
             [height]="20"
           >
           </app-switch-toggle>
-          <input
-            *ngIf="viewService.isAssigneeShow"
-            type="number"
-            class="compact-input"
-            [value]="viewService.assigneeWidth"
-            (input)="onAssigneeWidthChange($event)"
-            min="50"
-            max="200"
-            placeholder="幅"
-          />
-        </div>
-      </div>
-
-      <div class="compact-setting">
-        <label class="compact-label">行の高さ</label>
-        <div class="setting-controls">
-          <input
-            type="number"
-            class="compact-input"
-            [value]="viewService.issueRowHeight"
-            (input)="onIssueRowHeightChange($event)"
-            min="20"
-            max="100"
-            placeholder="px"
-          />
         </div>
       </div>
     </section>

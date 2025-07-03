@@ -56,12 +56,19 @@
   .compact-setting {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     margin-bottom: 8px;
     min-height: 32px;
-    padding: 4px 0;
+    padding: 4px 6px;
+    transition: background-color 0.2s ease;
+    border-radius: 4px;
 
     &:last-child {
       margin-bottom: 0;
+    }
+
+    &:hover {
+      background-color: #f8f9fa;
     }
   }
 
@@ -71,83 +78,13 @@
     color: #495057;
     font-weight: 500;
     line-height: 1.2;
-    margin-right: 8px;
     text-align: left;
   }
 
   .setting-controls {
     display: flex;
     align-items: center;
-    gap: 6px;
     flex-shrink: 0;
-  }
-
-  .compact-input {
-    width: 50px;
-    height: 24px;
-    padding: 2px 4px;
-    border: 1px solid #ced4da;
-    border-radius: 3px;
-    font-size: 0.75rem;
-    text-align: center;
-    background: #fff;
-    transition: all 0.2s ease;
-
-    &:focus {
-      outline: none;
-      border-color: #007bff;
-      box-shadow: 0 0 0 1px rgba(0, 123, 255, 0.25);
-    }
-
-    &:hover {
-      border-color: #adb5bd;
-    }
-
-    &::placeholder {
-      color: #6c757d;
-      font-size: 0.7rem;
-    }
-  }
-
-  // レスポンシブ対応 - 小さい画面では縦並び
-  @media (max-width: 900px) {
-    .dialog-content {
-      grid-template-columns: repeat(2, 1fr);
-    }
-  }
-
-  @media (max-width: 600px) {
-    .dialog-content {
-      grid-template-columns: 1fr;
-      gap: 1px;
-    }
-
-    .compact-setting {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 4px;
-    }
-
-    .compact-label {
-      margin-right: 0;
-      margin-bottom: 2px;
-    }
-
-    .setting-controls {
-      width: 100%;
-      justify-content: flex-start;
-    }
-  }
-
-  // ホバー効果
-  .compact-setting {
-    transition: background-color 0.2s ease;
-    border-radius: 4px;
-    padding: 4px 6px;
-
-    &:hover {
-      background-color: #f8f9fa;
-    }
   }
 
   // スイッチのカスタマイズ
@@ -170,6 +107,35 @@
 
   .settings-column:nth-child(4) {
     border-left: 3px solid #dc3545;
+  }
+
+  // レスポンシブ対応 - 小さい画面では縦並び
+  @media (max-width: 900px) {
+    .dialog-content {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 600px) {
+    .dialog-content {
+      grid-template-columns: 1fr;
+      gap: 1px;
+    }
+
+    .compact-setting {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 4px;
+    }
+
+    .compact-label {
+      margin-bottom: 2px;
+    }
+
+    .setting-controls {
+      width: 100%;
+      justify-content: flex-start;
+    }
   }
 
   // ダークモード対応
@@ -202,25 +168,6 @@
 
     .compact-label {
       color: #bdc3c7;
-    }
-
-    .compact-input {
-      background: #34495e;
-      border-color: #4a5f7a;
-      color: #ecf0f1;
-
-      &:focus {
-        border-color: #3498db;
-        box-shadow: 0 0 0 1px rgba(52, 152, 219, 0.25);
-      }
-
-      &:hover {
-        border-color: #5a6f8a;
-      }
-
-      &::placeholder {
-        color: #7f8c8d;
-      }
     }
 
     .compact-setting:hover {

@@ -18,16 +18,6 @@ export class ViewSettingsDialogComponent {
   }
 
   /**
-   * タイトル幅の変更
-   */
-  onTitleWidthChange(event: Event) {
-    const value = parseInt((event.target as HTMLInputElement).value, 10);
-    if (!isNaN(value) && value > 0) {
-      this.viewService.titleWidth = value;
-    }
-  }
-
-  /**
    * ステータス表示の切り替え
    */
   onStatusShowChange(checked: boolean) {
@@ -35,40 +25,10 @@ export class ViewSettingsDialogComponent {
   }
 
   /**
-   * ステータス幅の変更
-   */
-  onStatusWidthChange(event: Event) {
-    const value = parseInt((event.target as HTMLInputElement).value, 10);
-    if (!isNaN(value) && value > 0) {
-      this.viewService.statusWidth = value;
-    }
-  }
-
-  /**
    * 担当者表示の切り替え
    */
   onAssigneeShowChange(checked: boolean) {
     this.viewService.isAssigneeShow = checked;
-  }
-
-  /**
-   * 担当者幅の変更
-   */
-  onAssigneeWidthChange(event: Event) {
-    const value = parseInt((event.target as HTMLInputElement).value, 10);
-    if (!isNaN(value) && value > 0) {
-      this.viewService.assigneeWidth = value;
-    }
-  }
-
-  /**
-   * 行の高さの変更
-   */
-  onIssueRowHeightChange(event: Event) {
-    const value = parseInt((event.target as HTMLInputElement).value, 10);
-    if (!isNaN(value) && value > 0) {
-      this.viewService.issueRowHeight = value;
-    }
   }
 
   /**
