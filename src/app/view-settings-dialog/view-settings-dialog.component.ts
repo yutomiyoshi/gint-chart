@@ -6,4 +6,4 @@ import { Component } from '@angular/core';
   templateUrl: './view-settings-dialog.component.html',
   styleUrl: './view-settings-dialog.component.scss',
 })
-export class ViewSettingsComponent {}
+export class ViewSettingsDialogComponent {}
