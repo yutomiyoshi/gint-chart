@@ -66,6 +66,20 @@ export class SideActionPanelComponent {
   }
 
   /**
+   * フィルターボタンクリック
+   */
+  onFilterClick(): void {
+    // TODO: フィルター機能を実装
+    this.toastService.show(
+      Assertion.no(44),
+      'フィルター機能は現在開発中です。🤗',
+      'info',
+      TOAST_DURATION_LONG
+    );
+    this.isExpanded = false;
+  }
+
+  /**
    * ヘルプガイドページボタンクリック
    */
   onHelpGuideClick(): void {
