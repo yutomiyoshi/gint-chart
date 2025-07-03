@@ -1,10 +1,13 @@
 import { Injectable } from '@angular/core';
 import {
   BehaviorSubject,
+  concatMap,
+  expand,
   from,
   map,
   mergeMap,
   Observable,
+  of,
   tap,
   toArray,
 } from 'rxjs';
@@ -70,10 +73,31 @@ export class MilestoneStoreService {
   private fetchMilestonesForProject(
     projectId: number
   ): Observable<Milestone[]> {
-    return this.gitlabApi.fetch<GitLabApiMilestone, Milestone>(
-      String(projectId),
-      'milestones',
-      convertJsonToMilestone
-    );
+    let currentPage = 0;
+        return this.gitlabApi.fetch<GitLabApiMilestone, Milestone>(
+          String(projectId),
+          'milestones',
+          convertJsonToMilestone,
+          currentPage
+        )
+        .pipe(
+          expand((result) => {
+            if (result.hasNextPage == false) {
+              return of();
+            }
+            currentPage++;
+            return this.gitlabApi.fetch<GitLabApiMilestone, Milestone>(
+              String(projectId),
+              'milestones',
+              convertJsonToMilestone,
+              currentPage
+            )
+          }),
+          concatMap(result => result.data),
+          toArray(),
+          tap((milestones) => {
+            this.milestonesSubject.next(milestones);
+          })
+        )
   }
 }

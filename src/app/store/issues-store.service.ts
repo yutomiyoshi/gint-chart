@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, from } from 'rxjs';
-import { mergeMap, map, toArray, tap } from 'rxjs/operators';
+import { BehaviorSubject, Observable, from, of } from 'rxjs';
+import { mergeMap, map, toArray, tap, expand, concatMap } from 'rxjs/operators';
 import { GitLabApiService } from '@src/app/git-lab-api/git-lab-api.service';
 import { Issue, convertJsonToIssue } from '@src/app/model/issue.model';
 import { GitLabConfigStoreService } from '@src/app/store/git-lab-config-store.service';
@@ -86,10 +86,31 @@ export class IssuesStoreService {
    * @returns Observable<Issue[]> 取得したissues配列を流すObservable
    */
   private fetchIssuesForProject(projectId: number): Observable<Issue[]> {
+    let currentPage = 0;
     return this.gitlabApi.fetch<GitLabApiIssue, Issue>(
       String(projectId),
-      'issues?per_page=100',
-      convertJsonToIssue
-    );
+      'issues',
+      convertJsonToIssue,
+      currentPage
+    )
+    .pipe(
+      expand((result) => {
+        if (result.hasNextPage == false) {
+          return of();
+        }
+        currentPage++;
+        return this.gitlabApi.fetch<GitLabApiIssue, Issue>(
+          String(projectId),
+          'issues',
+          convertJsonToIssue,
+          currentPage
+        )
+      }),
+      concatMap(result => result.data),
+      toArray(),
+      tap((issues) => {
+        this.issuesSubject.next(issues);
+      })
+    )
   }
 }

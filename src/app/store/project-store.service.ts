@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, from, Observable } from 'rxjs';
-import { map, mergeMap, tap, toArray } from 'rxjs/operators';
+import { concatMap, map, mergeMap, tap, toArray } from 'rxjs/operators';
 import { GitLabProject } from '@src/app/git-lab-api/git-lab-project.model';
 import { GitLabApiService } from '@src/app/git-lab-api/git-lab-api.service';
 import { Project, convertJsonToProject } from '@src/app/model/project.model';
@@ -35,14 +35,21 @@ export class ProjectStoreService {
       return from([[]]);
     }
 
+    /**
+     * XXX 仮
+     * プロジェクトにはページネーションを実装しない
+     * 現実的に100件のプロジェクトを抱えることはないと考える
+     */
     return from(projectIds).pipe(
       mergeMap((projectId) => {
         return this.gitlabApi.fetch<GitLabProject, Project>(
           String(projectId),
           '',
-          convertJsonToProject
+          convertJsonToProject,
+          1
         );
       }),
+      concatMap((result) => result.data),
       toArray(),
       map((projectsArr) => projectsArr.flat()),
       tap((allProjects) => this.projectsSubject.next(allProjects))

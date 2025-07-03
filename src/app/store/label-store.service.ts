@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { GitLabApiService } from '@src/app/git-lab-api/git-lab-api.service';
 import { Label, convertGitLabLabelToLabel } from '@src/app/model/label.model';
 import { GitLabLabel } from '@src/app/git-lab-api/git-lab-label.model';
-import { BehaviorSubject, from, Observable, tap } from 'rxjs';
+import { BehaviorSubject, concatMap, expand, from, Observable, of, tap, toArray } from 'rxjs';
 import { isDebug } from '@src/app/debug';
 import { GitLabConfigStoreService } from '@src/app/store/git-lab-config-store.service';
 import { isNull } from '@src/app/utils/utils';
@@ -64,14 +64,31 @@ export class LabelStoreService {
       return from([[]]);
     }
 
+    let currentPage = 0;
+
     // グループラベル取得
     return this.gitlabApi
       .fetchGroup<GitLabLabel, Label>(
         groupId,
-        'labels?per_page=100',
-        convertGitLabLabelToLabel
+        'labels',
+        convertGitLabLabelToLabel,
+        currentPage
       )
       .pipe(
+        expand((result) => {
+          if (result.hasNextPage == false) {
+            return of();
+          }
+          currentPage++;
+          return this.gitlabApi.fetchGroup<GitLabLabel, Label>(
+            groupId,
+            'labels',
+            convertGitLabLabelToLabel,
+            currentPage
+          )
+        }),
+        concatMap(result => result.data),
+        toArray(),
         tap((labels) => {
           this.labelsSubject.next(labels);
           this.processLabels(labels);

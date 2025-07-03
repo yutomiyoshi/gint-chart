@@ -5,7 +5,7 @@ import {
   convertGitLabMemberToMember,
 } from '@src/app/model/member.model';
 import { GitLabMember } from '@src/app/git-lab-api/git-lab-member.model';
-import { BehaviorSubject, from, Observable, tap } from 'rxjs';
+import { BehaviorSubject, concatMap, expand, from, Observable, of, tap, toArray } from 'rxjs';
 import { isDebug } from '@src/app/debug';
 import { GitLabConfigStoreService } from '@src/app/store/git-lab-config-store.service';
 import { isNull } from '@src/app/utils/utils';
@@ -40,14 +40,31 @@ export class MemberStoreService {
       return from([[]]);
     }
 
+    let currentPage = 0;
+
     // グループメンバー取得
     return this.gitlabApi
       .fetchGroup<GitLabMember, Member>(
         groupId,
-        'members?per_page=100',
-        convertGitLabMemberToMember
+        'members',
+        convertGitLabMemberToMember,
+        currentPage
       )
       .pipe(
+        expand((result) => {
+          if (result.hasNextPage == false) {
+            return of();
+          }
+          currentPage++;
+          return this.gitlabApi.fetchGroup<GitLabMember, Member>(
+            groupId,
+            'members',
+            convertGitLabMemberToMember,
+            currentPage
+          )
+        }),
+        concatMap(result => result.data),
+        toArray(),
         tap((members) => {
           this.membersSubject.next(members);
         })
