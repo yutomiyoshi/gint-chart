@@ -19,6 +19,15 @@
           </app-switch-toggle>
         </div>
       </div>
+      <div *ngIf="isLabelFilterEnabled" class="filter-items">
+        <div *ngFor="let label of labels$ | async" class="filter-item">
+          <span
+            class="filter-item-color"
+            [style.background-color]="'#' + label.color"
+          ></span>
+          <span class="filter-item-name">{{ label.name }}</span>
+        </div>
+      </div>
     </section>
 
     <!-- 担当者フィルター -->
@@ -36,6 +45,15 @@
           </app-switch-toggle>
         </div>
       </div>
+      <div *ngIf="isAssigneeFilterEnabled" class="filter-items">
+        <div *ngFor="let member of members$ | async" class="filter-item">
+          <span
+            class="filter-item-color"
+            [style.background-color]="getMemberColor(member)"
+          ></span>
+          <span class="filter-item-name">{{ member.name }}</span>
+        </div>
+      </div>
     </section>
 
     <!-- ステータスフィルター -->
@@ -51,6 +69,15 @@
             [height]="20"
           >
           </app-switch-toggle>
+        </div>
+      </div>
+      <div *ngIf="isStatusFilterEnabled" class="filter-items">
+        <div *ngFor="let label of statusLabels" class="filter-item">
+          <span
+            class="filter-item-color"
+            [style.background-color]="'#' + label.color"
+          ></span>
+          <span class="filter-item-name">{{ label.name }}</span>
         </div>
       </div>
     </section>
