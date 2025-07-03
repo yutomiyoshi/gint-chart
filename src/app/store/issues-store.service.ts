@@ -80,15 +80,15 @@ export class IssuesStoreService {
 
   /**
    * 指定されたプロジェクトの全issuesをGitLab APIから取得します。
-   * ページネーションを使用して全てのissuesを取得します。
    *
-   * @param projectId プロジェクトID
+   * @param project GitLabプロジェクト情報
+   * @param accessToken アクセストークン
    * @returns Observable<Issue[]> 取得したissues配列を流すObservable
    */
   private fetchIssuesForProject(projectId: number): Observable<Issue[]> {
     return this.gitlabApi.fetch<GitLabApiIssue, Issue>(
       String(projectId),
-      'issues',
+      'issues?per_page=100',
       convertJsonToIssue
     );
   }
