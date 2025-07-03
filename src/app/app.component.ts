@@ -21,6 +21,7 @@ import { LabelStoreService } from '@src/app/store/label-store.service';
 import { MemberStoreService } from '@src/app/store/member-store.service';
 import { TOAST_DURATION_LONG } from '@src/app/toast/toast.const';
 import { isDebug } from '@src/app/debug';
+import { ViewSettingsDialogExpansionService } from './view-settings-dialog/view-settings-dialog-expansion.service';
 
 @Component({
   selector: 'app-root',
@@ -37,10 +38,12 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
   isToastHistoryDialogExpanded = false;
   isStatusSelectorDialogExpanded = false;
   isAssigneeSelectorDialogExpanded = false;
+  isViewSettingsDialogExpanded = false;
   isDialogClosing = false;
   isToastHistoryDialogClosing = false;
   isStatusSelectorDialogClosing = false;
   isAssigneeSelectorDialogClosing = false;
+  isViewSettingsDialogClosing = false;
   private destroy$ = new Subject<void>();
 
   /**
@@ -59,7 +62,8 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
     private readonly gitLabApiService: GitLabApiService,
     private readonly labelStore: LabelStoreService,
     private readonly memberStore: MemberStoreService,
-    private readonly cdr: ChangeDetectorRef
+    private readonly cdr: ChangeDetectorRef,
+    private readonly viewSettingsDialogExpansionService: ViewSettingsDialogExpansionService
   ) {}
 
   ngOnInit() {
@@ -120,6 +124,21 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
             Assertion.no(34)
           );
           this.isAssigneeSelectorDialogExpanded = false;
+        },
+      });
+
+    this.viewSettingsDialogExpansionService.dialog$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (isExpanded: boolean) => {
+          this.isViewSettingsDialogExpanded = isExpanded;
+        },
+        error: (error) => {
+          Assertion.assert(
+            'View settings dialog expansion error: ' + error,
+            Assertion.no(43)
+          );
+          this.isViewSettingsDialogExpanded = false;
         },
       });
 
@@ -289,14 +308,19 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   /**
-   * 表示設定ダイアログを開く
+   * ビュー設定ダイアログを開く
    */
-  onDisplaySettingsClick(): void {}
-
-  /**
-   * 表示設定ダイアログを閉じる
-   */
-  onDisplaySettingsDialogClose(): void {}
+  onViewSettingsDialogOverlayClick(event: MouseEvent): void {
+    // クリックされた要素がオーバーレイ自体の場合のみダイアログを閉じる
+    if (event.target === event.currentTarget) {
+      this.isViewSettingsDialogClosing = true;
+      // アニメーション完了後にダイアログを閉じる
+      setTimeout(() => {
+        this.viewSettingsDialogExpansionService.collapse();
+        this.isViewSettingsDialogClosing = false;
+      }, DIALOG_ANIMATION_DURATION);
+    }
+  }
 
   /**
    * ログ履歴ダイアログを開く

@@ -20,7 +20,7 @@
   [class.closing]="isDialogClosing"
   (click)="onIssueDetailDialogOverlayClick($event)"
 >
-  <div class="dialog-slide-in-animation">
+  <div class="issue-detail-dialog dialog-slide-in-animation">
     <app-issue-detail-dialog></app-issue-detail-dialog>
   </div>
 </div>
@@ -36,7 +36,7 @@
   [class.closing]="isToastHistoryDialogClosing"
   (click)="onToastHistoryDialogOverlayClick($event)"
 >
-  <div class="dialog-slide-in-animation">
+  <div class="toast-history-dialog dialog-slide-in-animation">
     <app-toast-history-dialog></app-toast-history-dialog>
   </div>
 </div>
@@ -52,7 +52,7 @@
   [class.closing]="isStatusSelectorDialogClosing"
   (click)="onStatusSelectorDialogOverlayClick($event)"
 >
-  <div class="dialog-slide-in-animation">
+  <div class="status-selector-dialog dialog-slide-in-animation">
     <app-status-selector-dialog></app-status-selector-dialog>
   </div>
 </div>
@@ -68,8 +68,24 @@
   [class.closing]="isAssigneeSelectorDialogClosing"
   (click)="onAssigneeSelectorDialogOverlayClick($event)"
 >
-  <div class="dialog-slide-in-animation">
+  <div class="assignee-selector-dialog dialog-slide-in-animation">
     <app-assignee-selector-dialog></app-assignee-selector-dialog>
+  </div>
+</div>
+
+<!--
+** View Settings Dialog Overlay
+- ビュー設定ダイアログを表示するオーバーレイ
+- ダイアログの外側をクリックするとダイアログを閉じる
+ -->
+<div
+  *ngIf="isViewSettingsDialogExpanded"
+  class="view-settings-dialog-overlay"
+  [class.closing]="isViewSettingsDialogClosing"
+  (click)="onViewSettingsDialogOverlayClick($event)"
+>
+  <div class="view-settings-dialog dialog-slide-in-animation">
+    <app-view-settings-dialog></app-view-settings-dialog>
   </div>
 </div>
 
