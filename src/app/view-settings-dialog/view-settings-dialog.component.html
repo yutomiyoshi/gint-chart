@@ -1,1 +1,215 @@
-<p>view-settings works!</p>
+<div class="view-settings-dialog">
+  <div class="dialog-header">
+    <h2>表示設定</h2>
+  </div>
+
+  <div class="dialog-content">
+    <!-- カラム表示設定 -->
+    <section class="settings-column">
+      <h3>カラム表示</h3>
+
+      <div class="compact-setting">
+        <label class="compact-label">タイトル</label>
+        <div class="setting-controls">
+          <app-switch-toggle
+            [checked]="viewService.isTitleShow"
+            (checkedChange)="onTitleShowChange($event)"
+            [width]="36"
+            [height]="20"
+          >
+          </app-switch-toggle>
+          <input
+            *ngIf="viewService.isTitleShow"
+            type="number"
+            class="compact-input"
+            [value]="viewService.titleWidth"
+            (input)="onTitleWidthChange($event)"
+            min="50"
+            max="500"
+            placeholder="幅"
+          />
+        </div>
+      </div>
+
+      <div class="compact-setting">
+        <label class="compact-label">ステータス</label>
+        <div class="setting-controls">
+          <app-switch-toggle
+            [checked]="viewService.isStatusShow"
+            (checkedChange)="onStatusShowChange($event)"
+            [width]="36"
+            [height]="20"
+          >
+          </app-switch-toggle>
+          <input
+            *ngIf="viewService.isStatusShow"
+            type="number"
+            class="compact-input"
+            [value]="viewService.statusWidth"
+            (input)="onStatusWidthChange($event)"
+            min="50"
+            max="200"
+            placeholder="幅"
+          />
+        </div>
+      </div>
+
+      <div class="compact-setting">
+        <label class="compact-label">担当者</label>
+        <div class="setting-controls">
+          <app-switch-toggle
+            [checked]="viewService.isAssigneeShow"
+            (checkedChange)="onAssigneeShowChange($event)"
+            [width]="36"
+            [height]="20"
+          >
+          </app-switch-toggle>
+          <input
+            *ngIf="viewService.isAssigneeShow"
+            type="number"
+            class="compact-input"
+            [value]="viewService.assigneeWidth"
+            (input)="onAssigneeWidthChange($event)"
+            min="50"
+            max="200"
+            placeholder="幅"
+          />
+        </div>
+      </div>
+
+      <div class="compact-setting">
+        <label class="compact-label">行の高さ</label>
+        <div class="setting-controls">
+          <input
+            type="number"
+            class="compact-input"
+            [value]="viewService.issueRowHeight"
+            (input)="onIssueRowHeightChange($event)"
+            min="20"
+            max="100"
+            placeholder="px"
+          />
+        </div>
+      </div>
+    </section>
+
+    <!-- フィルター設定 -->
+    <section class="settings-column">
+      <h3>フィルター</h3>
+
+      <div class="compact-setting">
+        <label class="compact-label">ステータス</label>
+        <div class="setting-controls">
+          <app-switch-toggle
+            [checked]="viewService.isFilteredByStatus"
+            (checkedChange)="onFilteredByStatusChange($event)"
+            [width]="36"
+            [height]="20"
+          >
+          </app-switch-toggle>
+        </div>
+      </div>
+
+      <div class="compact-setting">
+        <label class="compact-label">担当者</label>
+        <div class="setting-controls">
+          <app-switch-toggle
+            [checked]="viewService.isFilteredByAssignee"
+            (checkedChange)="onFilteredByAssigneeChange($event)"
+            [width]="36"
+            [height]="20"
+          >
+          </app-switch-toggle>
+        </div>
+      </div>
+
+      <div class="compact-setting">
+        <label class="compact-label">リソース</label>
+        <div class="setting-controls">
+          <app-switch-toggle
+            [checked]="viewService.isFilteredByResource"
+            (checkedChange)="onFilteredByResourceChange($event)"
+            [width]="36"
+            [height]="20"
+          >
+          </app-switch-toggle>
+        </div>
+      </div>
+
+      <div class="compact-setting">
+        <label class="compact-label">ラベル</label>
+        <div class="setting-controls">
+          <app-switch-toggle
+            [checked]="viewService.isFilteredByLabel"
+            (checkedChange)="onFilteredByLabelChange($event)"
+            [width]="36"
+            [height]="20"
+          >
+          </app-switch-toggle>
+        </div>
+      </div>
+    </section>
+
+    <!-- 強調表示設定 -->
+    <section class="settings-column">
+      <h3>強調表示</h3>
+
+      <div class="compact-setting">
+        <label class="compact-label">今日</label>
+        <div class="setting-controls">
+          <app-switch-toggle
+            [checked]="viewService.isHighlightedToday"
+            (checkedChange)="onHighlightedTodayChange($event)"
+            [width]="36"
+            [height]="20"
+          >
+          </app-switch-toggle>
+        </div>
+      </div>
+
+      <div class="compact-setting">
+        <label class="compact-label">祝日</label>
+        <div class="setting-controls">
+          <app-switch-toggle
+            [checked]="viewService.isHighlightedHoliday"
+            (checkedChange)="onHighlightedHolidayChange($event)"
+            [width]="36"
+            [height]="20"
+          >
+          </app-switch-toggle>
+        </div>
+      </div>
+    </section>
+
+    <!-- マイルストーン設定 -->
+    <section class="settings-column">
+      <h3>マイルストーン</h3>
+
+      <div class="compact-setting">
+        <label class="compact-label">Issueあり<br />のみ表示</label>
+        <div class="setting-controls">
+          <app-switch-toggle
+            [checked]="viewService.isMilestoneShowOnlyWithIssue"
+            (checkedChange)="onMilestoneShowOnlyWithIssueChange($event)"
+            [width]="36"
+            [height]="20"
+          >
+          </app-switch-toggle>
+        </div>
+      </div>
+
+      <div class="compact-setting">
+        <label class="compact-label">インライン<br />モード</label>
+        <div class="setting-controls">
+          <app-switch-toggle
+            [checked]="viewService.isMilestoneInlineMode"
+            (checkedChange)="onMilestoneInlineModeChange($event)"
+            [width]="36"
+            [height]="20"
+          >
+          </app-switch-toggle>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
