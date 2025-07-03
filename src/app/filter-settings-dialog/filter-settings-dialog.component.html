@@ -7,27 +7,51 @@
     <!-- ラベルフィルター -->
     <section class="settings-column">
       <h3>ラベル</h3>
-      <div class="filter-section">
-        <!-- TODO: ラベルフィルターを実装予定 -->
-        <p class="placeholder-text">ラベルフィルターは開発中です...</p>
+      <div class="compact-setting">
+        <label class="compact-label">適用する</label>
+        <div class="setting-controls">
+          <app-switch-toggle
+            [checked]="isLabelFilterEnabled"
+            (checkedChange)="onLabelFilterChange($event)"
+            [width]="36"
+            [height]="20"
+          >
+          </app-switch-toggle>
+        </div>
       </div>
     </section>
 
     <!-- 担当者フィルター -->
     <section class="settings-column">
       <h3>担当者</h3>
-      <div class="filter-section">
-        <!-- TODO: 担当者フィルターを実装予定 -->
-        <p class="placeholder-text">担当者フィルターは開発中です...</p>
+      <div class="compact-setting">
+        <label class="compact-label">適用する</label>
+        <div class="setting-controls">
+          <app-switch-toggle
+            [checked]="isAssigneeFilterEnabled"
+            (checkedChange)="onAssigneeFilterChange($event)"
+            [width]="36"
+            [height]="20"
+          >
+          </app-switch-toggle>
+        </div>
       </div>
     </section>
 
     <!-- ステータスフィルター -->
     <section class="settings-column">
       <h3>ステータス</h3>
-      <div class="filter-section">
-        <!-- TODO: ステータスフィルターを実装予定 -->
-        <p class="placeholder-text">ステータスフィルターは開発中です...</p>
+      <div class="compact-setting">
+        <label class="compact-label">適用する</label>
+        <div class="setting-controls">
+          <app-switch-toggle
+            [checked]="isStatusFilterEnabled"
+            (checkedChange)="onStatusFilterChange($event)"
+            [width]="36"
+            [height]="20"
+          >
+          </app-switch-toggle>
+        </div>
       </div>
     </section>
   </div>

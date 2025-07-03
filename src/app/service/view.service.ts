@@ -127,7 +127,10 @@ export class ViewService {
     return this._isFilteredByStatus;
   }
   set isFilteredByStatus(value: boolean) {
-    this._isFilteredByStatus = value;
+    if (this._isFilteredByStatus !== value) {
+      this._isFilteredByStatus = value;
+      this.notifyViewConfigChange();
+    }
   }
 
   get filteredStatusIDs(): number[] {
@@ -141,7 +144,10 @@ export class ViewService {
     return this._isFilteredByAssignee;
   }
   set isFilteredByAssignee(value: boolean) {
-    this._isFilteredByAssignee = value;
+    if (this._isFilteredByAssignee !== value) {
+      this._isFilteredByAssignee = value;
+      this.notifyViewConfigChange();
+    }
   }
 
   get filteredAssigneeIDs(): number[] {
@@ -169,7 +175,10 @@ export class ViewService {
     return this._isFilteredByLabel;
   }
   set isFilteredByLabel(value: boolean) {
-    this._isFilteredByLabel = value;
+    if (this._isFilteredByLabel !== value) {
+      this._isFilteredByLabel = value;
+      this.notifyViewConfigChange();
+    }
   }
 
   get filteredLabelIDs(): number[] {
