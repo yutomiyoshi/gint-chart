@@ -19,6 +19,7 @@ import { IssueIidPipe } from '@src/app/chart-area/issue-row/issue-iid.pipe';
 import { IssueStatusNamePipe } from '@src/app/chart-area/issue-row/issue-status-name.pipe';
 import { IssueAssigneeNamePipe } from '@src/app/chart-area/issue-row/issue-assignee-name.pipe';
 import { SideActionPanelComponent } from '@src/app/side-action-panel/side-action-panel.component';
+import { ViewSettingsDialogComponent } from '@src/app/view-settings-dialog/view-settings-dialog.component';
 
 @NgModule({
   declarations: [
@@ -32,6 +33,7 @@ import { SideActionPanelComponent } from '@src/app/side-action-panel/side-action
     StatusSelectorDialogComponent,
     AssigneeSelectorDialogComponent,
     SideActionPanelComponent,
+    ViewSettingsDialogComponent,
   ],
   imports: [
     BrowserModule,
