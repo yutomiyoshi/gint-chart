@@ -6,6 +6,7 @@ import { TOAST_DURATION_LONG } from '@src/app/toast/toast.const';
 import { ToastService } from '@src/app/utils/toast.service';
 import { ThemeService } from '@src/app/utils/theme.service';
 import { ViewSettingsDialogExpansionService } from '../view-settings-dialog/view-settings-dialog-expansion.service';
+import { FilterSettingsDialogExpansionService } from '../filter-settings-dialog/filter-settings-dialog-expansion.service';
 
 @Component({
   selector: 'app-side-action-panel',
@@ -19,7 +20,8 @@ export class SideActionPanelComponent {
     private readonly toastHistoryDialogExpansionService: ToastHistoryDialogExpansionService,
     private readonly toastService: ToastService,
     private readonly themeService: ThemeService,
-    private readonly viewSettingsDialogExpansionService: ViewSettingsDialogExpansionService
+    private readonly viewSettingsDialogExpansionService: ViewSettingsDialogExpansionService,
+    private readonly filterSettingsDialogExpansionService: FilterSettingsDialogExpansionService
   ) {}
 
   /**
@@ -69,13 +71,7 @@ export class SideActionPanelComponent {
    * フィルターボタンクリック
    */
   onFilterClick(): void {
-    // TODO: フィルター機能を実装
-    this.toastService.show(
-      Assertion.no(44),
-      'フィルター機能は現在開発中です。🤗',
-      'info',
-      TOAST_DURATION_LONG
-    );
+    this.filterSettingsDialogExpansionService.expand();
     this.isExpanded = false;
   }
 

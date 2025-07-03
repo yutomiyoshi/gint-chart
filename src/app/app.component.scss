@@ -124,6 +124,18 @@ $dialog-animation-duration: 0.3s;
   -webkit-backdrop-filter: blur(8px);
 }
 
+.filter-settings-dialog-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.8);
+  z-index: 9999;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
 $toast-width: 320px;
 $toast-bottom: 40px;
 $toast-right: 40px;
@@ -170,6 +182,11 @@ $toast-right: 40px;
   height: 80vh;
 }
 
+.filter-settings-dialog {
+  width: 320px;
+  height: 80vh;
+}
+
 .issue-detail-dialog-overlay.closing .dialog-slide-in-animation {
   animation: slideOut $dialog-animation-duration ease-in forwards;
 }
@@ -187,6 +204,10 @@ $toast-right: 40px;
 }
 
 .view-settings-dialog-overlay.closing .dialog-slide-in-animation {
+  animation: slideOut $dialog-animation-duration ease-in forwards;
+}
+
+.filter-settings-dialog-overlay.closing .dialog-slide-in-animation {
   animation: slideOut $dialog-animation-duration ease-in forwards;
 }
 

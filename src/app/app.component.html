@@ -90,6 +90,22 @@
 </div>
 
 <!--
+** Filter Settings Dialog Overlay
+- フィルター設定ダイアログを表示するオーバーレイ
+- ダイアログの外側をクリックするとダイアログを閉じる
+ -->
+<div
+  *ngIf="isFilterSettingsDialogExpanded"
+  class="filter-settings-dialog-overlay"
+  [class.closing]="isFilterSettingsDialogClosing"
+  (click)="onFilterSettingsDialogOverlayClick($event)"
+>
+  <div class="filter-settings-dialog dialog-slide-in-animation">
+    <app-filter-settings-dialog></app-filter-settings-dialog>
+  </div>
+</div>
+
+<!--
 ** Toast
 - 通信成否などを右下に表示するポップアップのこと
  -->
