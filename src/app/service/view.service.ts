@@ -38,16 +38,18 @@ export class ViewService {
   private _issueRowHeight = 30; //px
 
   /**
-   * マイルストーンカレンダー内表示
-   * マイルストーンを行としてではなく、カレンダーの縦線として表示する
-   */
-  private _isMilestoneInlineMode = false;
-
-  /**
    * 強調表示
    */
   private _isHighlightedToday = true;
   private _isHighlightedHoliday = true;
+
+  /**
+   * 特殊な表示
+   * - issueのあるマイルストーンだけ表示する
+   * - マイルストーンの縦線をカレンダーの縦線として表示する
+   */
+  private _isMilestoneShowOnlyWithIssue = false;
+  private _isMilestoneInlineMode = false;
 
   /**
    * 見た目にかかわる設定をjsonから読み込む
