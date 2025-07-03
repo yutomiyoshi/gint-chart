@@ -21,11 +21,14 @@
   animation: fade-in 0.2s ease-out;
 }
 
+$pull-button-width: 16px;
+$pull-button-height: 100px;
+
 /* プルボタン */
 .pull-button {
   pointer-events: all;
-  width: 20px;
-  height: 100px;
+  width: $pull-button-width;
+  height: $pull-button-height;
   background: #64748b;
   border-radius: 0 10px 10px 0;
   cursor: pointer;
@@ -40,7 +43,7 @@
 
   &:hover,
   &.expanded {
-    width: 24px;
+    width: calc($pull-button-width + 4px);
   }
 }
 
