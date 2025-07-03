@@ -48,63 +48,6 @@
       </div>
     </section>
 
-    <!-- フィルター設定 -->
-    <section class="settings-column">
-      <h3>フィルター</h3>
-
-      <div class="compact-setting">
-        <label class="compact-label">ステータス</label>
-        <div class="setting-controls">
-          <app-switch-toggle
-            [checked]="viewService.isFilteredByStatus"
-            (checkedChange)="onFilteredByStatusChange($event)"
-            [width]="36"
-            [height]="20"
-          >
-          </app-switch-toggle>
-        </div>
-      </div>
-
-      <div class="compact-setting">
-        <label class="compact-label">担当者</label>
-        <div class="setting-controls">
-          <app-switch-toggle
-            [checked]="viewService.isFilteredByAssignee"
-            (checkedChange)="onFilteredByAssigneeChange($event)"
-            [width]="36"
-            [height]="20"
-          >
-          </app-switch-toggle>
-        </div>
-      </div>
-
-      <div class="compact-setting">
-        <label class="compact-label">リソース</label>
-        <div class="setting-controls">
-          <app-switch-toggle
-            [checked]="viewService.isFilteredByResource"
-            (checkedChange)="onFilteredByResourceChange($event)"
-            [width]="36"
-            [height]="20"
-          >
-          </app-switch-toggle>
-        </div>
-      </div>
-
-      <div class="compact-setting">
-        <label class="compact-label">ラベル</label>
-        <div class="setting-controls">
-          <app-switch-toggle
-            [checked]="viewService.isFilteredByLabel"
-            (checkedChange)="onFilteredByLabelChange($event)"
-            [width]="36"
-            [height]="20"
-          >
-          </app-switch-toggle>
-        </div>
-      </div>
-    </section>
-
     <!-- 強調表示設定 -->
     <section class="settings-column">
       <h3>強調表示</h3>

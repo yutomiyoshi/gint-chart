@@ -32,34 +32,6 @@ export class ViewSettingsDialogComponent {
   }
 
   /**
-   * ステータスフィルターの切り替え
-   */
-  onFilteredByStatusChange(checked: boolean) {
-    this.viewService.isFilteredByStatus = checked;
-  }
-
-  /**
-   * 担当者フィルターの切り替え
-   */
-  onFilteredByAssigneeChange(checked: boolean) {
-    this.viewService.isFilteredByAssignee = checked;
-  }
-
-  /**
-   * リソースフィルターの切り替え
-   */
-  onFilteredByResourceChange(checked: boolean) {
-    this.viewService.isFilteredByResource = checked;
-  }
-
-  /**
-   * ラベルフィルターの切り替え
-   */
-  onFilteredByLabelChange(checked: boolean) {
-    this.viewService.isFilteredByLabel = checked;
-  }
-
-  /**
    * 今日の強調表示の切り替え
    */
   onHighlightedTodayChange(checked: boolean) {
