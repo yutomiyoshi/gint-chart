@@ -5,6 +5,7 @@ import { Assertion } from '../utils/assertion';
 import { TOAST_DURATION_LONG } from '@src/app/toast/toast.const';
 import { ToastService } from '@src/app/utils/toast.service';
 import { ThemeService } from '@src/app/utils/theme.service';
+import { ViewSettingsDialogExpansionService } from '../view-settings/view-settings-dialog-expansion.service';
 
 @Component({
   selector: 'app-side-action-panel',
@@ -17,7 +18,8 @@ export class SideActionPanelComponent {
     private readonly dateJumpService: DateJumpService,
     private readonly toastHistoryDialogExpansionService: ToastHistoryDialogExpansionService,
     private readonly toastService: ToastService,
-    private readonly themeService: ThemeService
+    private readonly themeService: ThemeService,
+    private readonly viewSettingsDialogExpansionService: ViewSettingsDialogExpansionService
   ) {}
 
   /**
@@ -43,13 +45,7 @@ export class SideActionPanelComponent {
    * ビューの編集ページボタンクリック
    */
   onViewEditClick(): void {
-    // TODO: ビューの編集ページを表示
-    this.toastService.show(
-      Assertion.no(37),
-      'ビューの編集ページは現在開発中です。🤗',
-      'info',
-      TOAST_DURATION_LONG
-    );
+    this.viewSettingsDialogExpansionService.expand();
     this.isExpanded = false;
   }
 
