@@ -1,0 +1,113 @@
+<div class="view-settings-dialog">
+  <div class="dialog-header">
+    <h2>表示設定</h2>
+  </div>
+
+  <div class="dialog-content">
+    <!-- カラム表示設定 -->
+    <section class="settings-column">
+      <h3>カラム表示</h3>
+
+      <div class="compact-setting">
+        <label class="compact-label">タイトル</label>
+        <div class="setting-controls">
+          <app-switch-toggle
+            [checked]="isTitleShow"
+            (checkedChange)="onTitleShowChange($event)"
+            [width]="36"
+            [height]="20"
+          >
+          </app-switch-toggle>
+        </div>
+      </div>
+
+      <div class="compact-setting">
+        <label class="compact-label">ステータス</label>
+        <div class="setting-controls">
+          <app-switch-toggle
+            [checked]="isStatusShow"
+            (checkedChange)="onStatusShowChange($event)"
+            [width]="36"
+            [height]="20"
+          >
+          </app-switch-toggle>
+        </div>
+      </div>
+
+      <div class="compact-setting">
+        <label class="compact-label">担当者</label>
+        <div class="setting-controls">
+          <app-switch-toggle
+            [checked]="isAssigneeShow"
+            (checkedChange)="onAssigneeShowChange($event)"
+            [width]="36"
+            [height]="20"
+          >
+          </app-switch-toggle>
+        </div>
+      </div>
+    </section>
+
+    <!-- 強調表示設定 -->
+    <section class="settings-column">
+      <h3>強調表示</h3>
+
+      <div class="compact-setting">
+        <label class="compact-label">今日</label>
+        <div class="setting-controls">
+          <app-switch-toggle
+            [checked]="isHighlightedToday"
+            (checkedChange)="onHighlightedTodayChange($event)"
+            [width]="36"
+            [height]="20"
+          >
+          </app-switch-toggle>
+        </div>
+      </div>
+
+      <div class="compact-setting">
+        <label class="compact-label">祝日</label>
+        <div class="setting-controls">
+          <app-switch-toggle
+            [checked]="isHighlightedHoliday"
+            (checkedChange)="onHighlightedHolidayChange($event)"
+            [width]="36"
+            [height]="20"
+          >
+          </app-switch-toggle>
+        </div>
+      </div>
+    </section>
+
+    <!-- マイルストーン設定 -->
+    <section class="settings-column">
+      <h3>マイルストーン</h3>
+
+      <div class="compact-setting">
+        <label class="compact-label">Issueありのみ表示</label>
+        <div class="setting-controls">
+          <app-switch-toggle
+            [checked]="isMilestoneShowOnlyWithIssue"
+            (checkedChange)="onMilestoneShowOnlyWithIssueChange($event)"
+            [width]="36"
+            [height]="20"
+          >
+          </app-switch-toggle>
+        </div>
+      </div>
+
+      <div class="compact-setting">
+        <label class="compact-label">インラインモード</label>
+        <div class="setting-controls">
+          <app-switch-toggle
+            [checked]="isMilestoneInlineMode"
+            (checkedChange)="onMilestoneInlineModeChange($event)"
+            [width]="36"
+            [height]="20"
+          >
+          </app-switch-toggle>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>

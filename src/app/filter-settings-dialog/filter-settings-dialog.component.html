@@ -1,0 +1,85 @@
+<div class="filter-settings-dialog">
+  <div class="dialog-header">
+    <h2>フィルター設定</h2>
+  </div>
+
+  <div class="dialog-content">
+    <!-- ラベルフィルター -->
+    <section class="settings-column">
+      <h3>ラベル</h3>
+      <div class="compact-setting">
+        <label class="compact-label">適用する</label>
+        <div class="setting-controls">
+          <app-switch-toggle
+            [checked]="isLabelFilterEnabled"
+            (checkedChange)="onLabelFilterChange($event)"
+            [width]="36"
+            [height]="20"
+          >
+          </app-switch-toggle>
+        </div>
+      </div>
+      <div *ngIf="isLabelFilterEnabled" class="filter-items">
+        <div *ngFor="let label of labels$ | async" class="filter-item">
+          <span
+            class="filter-item-color"
+            [style.background-color]="'#' + label.color"
+          ></span>
+          <span class="filter-item-name">{{ label.name }}</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 担当者フィルター -->
+    <section class="settings-column">
+      <h3>担当者</h3>
+      <div class="compact-setting">
+        <label class="compact-label">適用する</label>
+        <div class="setting-controls">
+          <app-switch-toggle
+            [checked]="isAssigneeFilterEnabled"
+            (checkedChange)="onAssigneeFilterChange($event)"
+            [width]="36"
+            [height]="20"
+          >
+          </app-switch-toggle>
+        </div>
+      </div>
+      <div *ngIf="isAssigneeFilterEnabled" class="filter-items">
+        <div *ngFor="let member of members$ | async" class="filter-item">
+          <span
+            class="filter-item-color"
+            [style.background-color]="getMemberColor(member)"
+          ></span>
+          <span class="filter-item-name">{{ member.name }}</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ステータスフィルター -->
+    <section class="settings-column">
+      <h3>ステータス</h3>
+      <div class="compact-setting">
+        <label class="compact-label">適用する</label>
+        <div class="setting-controls">
+          <app-switch-toggle
+            [checked]="isStatusFilterEnabled"
+            (checkedChange)="onStatusFilterChange($event)"
+            [width]="36"
+            [height]="20"
+          >
+          </app-switch-toggle>
+        </div>
+      </div>
+      <div *ngIf="isStatusFilterEnabled" class="filter-items">
+        <div *ngFor="let label of statusLabels" class="filter-item">
+          <span
+            class="filter-item-color"
+            [style.background-color]="'#' + label.color"
+          ></span>
+          <span class="filter-item-name">{{ label.name }}</span>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>

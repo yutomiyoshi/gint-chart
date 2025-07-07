@@ -5,6 +5,8 @@ import { Assertion } from '../utils/assertion';
 import { TOAST_DURATION_LONG } from '@src/app/toast/toast.const';
 import { ToastService } from '@src/app/utils/toast.service';
 import { ThemeService } from '@src/app/utils/theme.service';
+import { ViewSettingsDialogExpansionService } from '../view-settings-dialog/view-settings-dialog-expansion.service';
+import { FilterSettingsDialogExpansionService } from '../filter-settings-dialog/filter-settings-dialog-expansion.service';
 
 @Component({
   selector: 'app-side-action-panel',
@@ -17,7 +19,9 @@ export class SideActionPanelComponent {
     private readonly dateJumpService: DateJumpService,
     private readonly toastHistoryDialogExpansionService: ToastHistoryDialogExpansionService,
     private readonly toastService: ToastService,
-    private readonly themeService: ThemeService
+    private readonly themeService: ThemeService,
+    private readonly viewSettingsDialogExpansionService: ViewSettingsDialogExpansionService,
+    private readonly filterSettingsDialogExpansionService: FilterSettingsDialogExpansionService
   ) {}
 
   /**
@@ -43,13 +47,7 @@ export class SideActionPanelComponent {
    * ビューの編集ページボタンクリック
    */
   onViewEditClick(): void {
-    // TODO: ビューの編集ページを表示
-    this.toastService.show(
-      Assertion.no(37),
-      'ビューの編集ページは現在開発中です。🤗',
-      'info',
-      TOAST_DURATION_LONG
-    );
+    this.viewSettingsDialogExpansionService.expand();
     this.isExpanded = false;
   }
 
@@ -66,6 +64,14 @@ export class SideActionPanelComponent {
    */
   onJumpTodayClick(): void {
     this.dateJumpService.requestTodayJump();
+    this.isExpanded = false;
+  }
+
+  /**
+   * フィルターボタンクリック
+   */
+  onFilterClick(): void {
+    this.filterSettingsDialogExpansionService.expand();
     this.isExpanded = false;
   }
 

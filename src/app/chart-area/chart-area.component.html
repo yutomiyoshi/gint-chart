@@ -91,9 +91,9 @@
     *ngFor="let line of calendarVerticalLines"
     class="calendar-day-per-block"
     [ngClass]="{
-      saturday: line.isSaturday,
-      sunday: line.isSunday,
-      today: line.isToday,
+      saturday: line.isSaturday && isHighlightedHoliday,
+      sunday: line.isSunday && isHighlightedHoliday,
+      today: line.isToday && isHighlightedToday,
     }"
     [style.left.px]="line.left + calendarOffset"
     [style.width.px]="dayPerWidth"

@@ -21,6 +21,8 @@ import { LabelStoreService } from '@src/app/store/label-store.service';
 import { MemberStoreService } from '@src/app/store/member-store.service';
 import { TOAST_DURATION_LONG } from '@src/app/toast/toast.const';
 import { isDebug } from '@src/app/debug';
+import { ViewSettingsDialogExpansionService } from './view-settings-dialog/view-settings-dialog-expansion.service';
+import { FilterSettingsDialogExpansionService } from './filter-settings-dialog/filter-settings-dialog-expansion.service';
 
 @Component({
   selector: 'app-root',
@@ -30,17 +32,18 @@ import { isDebug } from '@src/app/debug';
 })
 export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
   loadingOverlay = true;
-  isShowTitle = true;
-  isShowStatus = true;
-  isShowAssignee = true;
   isIssueDetailDialogExpanded = false;
   isToastHistoryDialogExpanded = false;
   isStatusSelectorDialogExpanded = false;
   isAssigneeSelectorDialogExpanded = false;
+  isViewSettingsDialogExpanded = false;
+  isFilterSettingsDialogExpanded = false;
   isDialogClosing = false;
   isToastHistoryDialogClosing = false;
   isStatusSelectorDialogClosing = false;
   isAssigneeSelectorDialogClosing = false;
+  isViewSettingsDialogClosing = false;
+  isFilterSettingsDialogClosing = false;
   private destroy$ = new Subject<void>();
 
   /**
@@ -59,7 +62,9 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
     private readonly gitLabApiService: GitLabApiService,
     private readonly labelStore: LabelStoreService,
     private readonly memberStore: MemberStoreService,
-    private readonly cdr: ChangeDetectorRef
+    private readonly cdr: ChangeDetectorRef,
+    private readonly viewSettingsDialogExpansionService: ViewSettingsDialogExpansionService,
+    private readonly filterSettingsDialogExpansionService: FilterSettingsDialogExpansionService
   ) {}
 
   ngOnInit() {
@@ -120,6 +125,36 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
             Assertion.no(34)
           );
           this.isAssigneeSelectorDialogExpanded = false;
+        },
+      });
+
+    this.viewSettingsDialogExpansionService.dialog$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (isExpanded: boolean) => {
+          this.isViewSettingsDialogExpanded = isExpanded;
+        },
+        error: (error) => {
+          Assertion.assert(
+            'View settings dialog expansion error: ' + error,
+            Assertion.no(43)
+          );
+          this.isViewSettingsDialogExpanded = false;
+        },
+      });
+
+    this.filterSettingsDialogExpansionService.dialog$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (isExpanded: boolean) => {
+          this.isFilterSettingsDialogExpanded = isExpanded;
+        },
+        error: (error) => {
+          Assertion.assert(
+            'Filter settings dialog expansion error: ' + error,
+            Assertion.no(45)
+          );
+          this.isFilterSettingsDialogExpanded = false;
         },
       });
 
@@ -289,14 +324,34 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   /**
-   * 表示設定ダイアログを開く
+   * ビュー設定ダイアログを開く
    */
-  onDisplaySettingsClick(): void {}
+  onViewSettingsDialogOverlayClick(event: MouseEvent): void {
+    // クリックされた要素がオーバーレイ自体の場合のみダイアログを閉じる
+    if (event.target === event.currentTarget) {
+      this.isViewSettingsDialogClosing = true;
+      // アニメーション完了後にダイアログを閉じる
+      setTimeout(() => {
+        this.viewSettingsDialogExpansionService.collapse();
+        this.isViewSettingsDialogClosing = false;
+      }, DIALOG_ANIMATION_DURATION);
+    }
+  }
 
   /**
-   * 表示設定ダイアログを閉じる
+   * フィルター設定ダイアログのオーバーレイクリック
    */
-  onDisplaySettingsDialogClose(): void {}
+  onFilterSettingsDialogOverlayClick(event: MouseEvent): void {
+    // クリックされた要素がオーバーレイ自体の場合のみダイアログを閉じる
+    if (event.target === event.currentTarget) {
+      this.isFilterSettingsDialogClosing = true;
+      // アニメーション完了後にダイアログを閉じる
+      setTimeout(() => {
+        this.filterSettingsDialogExpansionService.collapse();
+        this.isFilterSettingsDialogClosing = false;
+      }, DIALOG_ANIMATION_DURATION);
+    }
+  }
 
   /**
    * ログ履歴ダイアログを開く

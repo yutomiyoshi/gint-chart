@@ -112,6 +112,30 @@ $dialog-animation-duration: 0.3s;
   -webkit-backdrop-filter: blur(8px);
 }
 
+.view-settings-dialog-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.8);
+  z-index: 9999;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.filter-settings-dialog-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.8);
+  z-index: 9999;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
 $toast-width: 320px;
 $toast-bottom: 40px;
 $toast-right: 40px;
@@ -134,8 +158,6 @@ $toast-right: 40px;
   top: 50%;
   right: 5vw;
   transform: translateY(-50%);
-  width: 60vw;
-  height: 80vh;
   animation: slideIn $dialog-animation-duration ease-out forwards;
   background-color: var(--background-primary);
   border-radius: var(--border-radius-lg);
@@ -143,17 +165,24 @@ $toast-right: 40px;
   border: 1px solid var(--border-color);
 }
 
-.toast-history-dialog-overlay .dialog-slide-in-animation {
+.issue-detail-dialog {
+  width: 60vw;
+  height: 80vh;
+}
+
+.toast-history-dialog,
+.status-selector-dialog,
+.assignee-selector-dialog {
   width: 320px;
   height: 80vh;
 }
 
-.status-selector-dialog-overlay .dialog-slide-in-animation {
+.view-settings-dialog {
   width: 320px;
   height: 80vh;
 }
 
-.assignee-selector-dialog-overlay .dialog-slide-in-animation {
+.filter-settings-dialog {
   width: 320px;
   height: 80vh;
 }
@@ -171,6 +200,14 @@ $toast-right: 40px;
 }
 
 .assignee-selector-dialog-overlay.closing .dialog-slide-in-animation {
+  animation: slideOut $dialog-animation-duration ease-in forwards;
+}
+
+.view-settings-dialog-overlay.closing .dialog-slide-in-animation {
+  animation: slideOut $dialog-animation-duration ease-in forwards;
+}
+
+.filter-settings-dialog-overlay.closing .dialog-slide-in-animation {
   animation: slideOut $dialog-animation-duration ease-in forwards;
 }
 
