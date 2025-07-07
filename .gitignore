@@ -41,4 +41,7 @@ testem.log
 .DS_Store
 Thumbs.db
 
+# Electron
+/out
+
 gitlab.config.json
