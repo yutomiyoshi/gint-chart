@@ -87,22 +87,6 @@
   cursor: pointer;
   transition: background-color 0.2s ease;
 
-  &:hover {
-    background-color: var(--background-secondary);
-    border-radius: 4px;
-    padding-left: 8px;
-    padding-right: 8px;
-  }
-
-  .filter-item-color {
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    margin-right: 8px;
-    border: 1px solid rgba(var(--border-color-rgb, 0, 0, 0), 0.2);
-    flex-shrink: 0;
-  }
-
   .filter-item-name {
     font-size: 13px;
     color: var(--text-primary);
@@ -111,6 +95,10 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+  }
+
+  .filter-item-check-box {
+    margin: 0 10px 0 0;
   }
 }
 

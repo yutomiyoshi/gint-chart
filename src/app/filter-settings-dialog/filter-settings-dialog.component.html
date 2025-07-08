@@ -47,10 +47,7 @@
       </div>
       <div *ngIf="isAssigneeFilterEnabled" class="filter-items">
         <div *ngFor="let member of members$ | async" class="filter-item">
-          <span
-            class="filter-item-color"
-            [style.background-color]="getMemberColor(member)"
-          ></span>
+          <input type="checkbox" class="filter-item-check-box"/>
           <span class="filter-item-name">{{ member.name }}</span>
         </div>
       </div>
@@ -73,10 +70,7 @@
       </div>
       <div *ngIf="isStatusFilterEnabled" class="filter-items">
         <div *ngFor="let label of statusLabels" class="filter-item">
-          <span
-            class="filter-item-color"
-            [style.background-color]="'#' + label.color"
-          ></span>
+          <input type="checkbox" class="filter-item-check-box"/>
           <span class="filter-item-name">{{ label.name }}</span>
         </div>
       </div>
