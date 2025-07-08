@@ -3,8 +3,6 @@ import { ViewService } from '@src/app/service/view.service';
 import { LabelStoreService } from '@src/app/store/label-store.service';
 import { MemberStoreService } from '@src/app/store/member-store.service';
 import { Label } from '@src/app/model/label.model';
-import { Member } from '@src/app/model/member.model';
-import { generateColorFromString } from '@src/app/utils/color-utils';
 
 @Component({
   selector: 'app-filter-settings-dialog',
@@ -80,12 +78,5 @@ export class FilterSettingsDialogComponent {
    */
   get statusLabels(): Label[] {
     return this.labelStoreService.statusLabels;
-  }
-
-  /**
-   * 担当者の色を生成（名前のハッシュ値から）
-   */
-  getMemberColor(member: Member): string {
-    return generateColorFromString(member.name);
   }
 }
