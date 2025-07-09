@@ -5,12 +5,19 @@ import {
   statusWidthDefault,
   titleWidthDefault,
 } from '../chart-area/issue-column/issue-column-view.const';
+import { MemberStoreService } from '../store/member-store.service';
 // XXX ↑　ここら辺のマネジメントもサービスの管轄としたい
 
 @Injectable({
   providedIn: 'root',
 })
 export class ViewService {
+  constructor(private readonly memberStore: MemberStoreService) {
+    this.memberStore.members$.subscribe(members => {
+      // メンバーの数が変わったときはとりあえず、全部表示する状態にする
+      this._filteredAssigneeIDs = members.map(member => member.id);
+    });
+  }
   /**
    * 設定変更を通知するSubject
    */
@@ -35,12 +42,13 @@ export class ViewService {
    * フィルターの選択
    */
   private _isFilteredByStatus = false;
-  private _filteredStatusIDs: number[] = [];
   private _isFilteredByAssignee = false;
-  private _filteredAssigneeIDs: number[] = [];
   private _isFilteredByResource = false;
-  private _filteredResourceIDs: number[] = [];
   private _isFilteredByLabel = false;
+  // フィルターを通過する（表示する）IDを格納する
+  private _filteredStatusIDs: number[] = [];
+  private _filteredAssigneeIDs: number[] = [];
+  private _filteredResourceIDs: number[] = [];
   private _filteredLabelIDs: number[] = [];
 
   /**
