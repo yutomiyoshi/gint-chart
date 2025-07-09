@@ -1,8 +1,6 @@
-// main.js (TypeScriptで書く場合は、tscでJavaScriptにトランスパイルする必要があります)
-const { app, BrowserWindow, ipcMain, shell } = require("electron");
+const { app, BrowserWindow, ipcMain, shell, dialog, autoUpdater } = require("electron");
 const path = require("path");
-const url = require("url");
-const fs = require("fs"); // Node.jsのファイルシステムモジュール
+const fs = require("fs");
 
 let win;
 
@@ -60,3 +58,44 @@ ipcMain.handle('read-config', async () => {
 ipcMain.handle('open-external', async (event, url) => {
   await shell.openExternal(url);
 });
+
+const server = 'https://update.electronjs.org';
+const owner = 'yutomiyoshi'
+const repo = 'gint-chart'
+const feed = `${server}/${owner}/${repo}/${process.platform}-${process.arch}/${app.getVersion()}`;
+
+if (app.isPackaged) {
+  autoUpdater.setFeedURL({
+    url: feed,
+  });
+  autoUpdater.checkForUpdates();
+
+  /**
+   * アップデートのダウンロードが完了したとき
+   */
+  autoUpdater.on("update-downloaded", async () => {
+    const returnValue = await dialog.showMessageBox({
+      message: "アップデータあり",
+      detail: "再起動してインストールできます。",
+      buttons: ["再起動", "後で"],
+    });
+    if (returnValue.response === 0) {
+      autoUpdater.quitAndInstall();
+    }
+  });
+
+  autoUpdater.on('update-available', () => {
+    dialog.showMessageBox({
+      message: "アップデートが利用可能です。",
+      buttons: ["OK"],
+    });
+  });
+
+  autoUpdater.on('error', (error) => {
+    dialog.showMessageBox({
+      message: "アップデートの確認に失敗しました。",
+      detail: `エラー: ${error.message}`,
+      buttons: ["OK"],
+    });
+  });
+}
