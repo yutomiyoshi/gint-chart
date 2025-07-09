@@ -47,7 +47,7 @@
       </div>
       <div *ngIf="isAssigneeFilterEnabled" class="filter-items">
         <div *ngFor="let member of members$ | async" class="filter-item">
-          <input type="checkbox" class="filter-item-check-box"/>
+          <input type="checkbox" class="filter-item-check-box" [checked]="isFilteredAssignee(member.id)" (changed)="onAssigneeIsFilteredChange(member.id)"/>
           <span class="filter-item-name">{{ member.name }}</span>
         </div>
       </div>

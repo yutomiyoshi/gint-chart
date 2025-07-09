@@ -60,6 +60,28 @@ export class FilterSettingsDialogComponent {
   }
 
   /**
+   * そのメンバーを表示する/しないを返す
+   * @param id メンバーID
+   * @returns True: 表示するメンバーである, False: 表示しないメンバーである
+   */
+  isFilteredAssignee(id: number): boolean {
+    return this.viewService.filteredAssigneeIDs.includes(id);
+  }
+
+  /**
+   * メンバーの表示する/しないを更新する
+   * @param id メンバーID
+   */
+  onAssigneeIsFilteredChange(id: number): void {
+    if (this.viewService.filteredAssigneeIDs.includes(id)) {
+      this.viewService.filteredAssigneeIDs.filter(item => item === id);
+      return;
+    }
+
+    this.viewService.filteredAssigneeIDs.push(id);
+  }
+
+  /**
    * ラベルリストのObservableを取得
    */
   get labels$() {
