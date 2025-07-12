@@ -168,7 +168,7 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
             'error',
             TOAST_DURATION_LONG
           );
-          return of(null);
+          throw error;
         }),
         takeUntil(this.destroy$),
         switchMap((config) => {
@@ -189,7 +189,7 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
                 'error',
                 TOAST_DURATION_LONG
               );
-              return of(null);
+              throw error;
             }),
             switchMap(() => this.projectTreeStore.syncProjectMilestoneIssues())
           );

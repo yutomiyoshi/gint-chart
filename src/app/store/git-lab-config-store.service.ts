@@ -17,16 +17,10 @@ export class GitLabConfigStoreService {
    */
   loadConfig(): Observable<GitLabConfig | null> {
     return from(
-      window.electronAPI
-        .readConfig()
-        .then((config) => {
-          this.configSubject.next(config);
-          return config;
-        })
-        .catch(() => {
-          this.configSubject.next(null);
-          return null;
-        })
+      window.electronAPI.readConfig().then((config) => {
+        this.configSubject.next(config);
+        return config;
+      })
     );
   }
 
