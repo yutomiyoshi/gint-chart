@@ -3,19 +3,31 @@
   "productName": "Gint-Chart",
   "version": "1.0.0",
   "description": "GitLabプロジェクト連携のタスク管理支援アプリ",
-  "author": "systena-miyoshiyuu",
+  "author": "seanayuuto",
   "main": "main.js",
   "scripts": {
     "ng": "ng",
     "start": "electron .",
     "build": "ng build --base-href ./",
-    "package": "electron-packager . --icon=app.ico --overwrite",
-    "watch": "ng build --watch --configuration development",
-    "test": "ng test",
     "electron": "ng build --base-href ./ && electron .",
-    "electron-dev": "concurrently \"ng serve --port 4200 --host 127.0.0.1\" \"wait-on http://127.0.0.1:4200 && electron .\"",
     "lint": "ng lint",
-    "gen-assertion-no": "node gen-assertion-no.js"
+    "gen-assertion-no": "node gen-assertion-no.js",
+    "package": "electron-builder"
+  },
+  "build": {
+    "appId": "com.seanayuuto.gint-chart",
+    "productName": "Gint-Chart",
+    "win": {
+      "target": "nsis"
+    },
+    "directories": {
+      "output": "dist"
+    },
+    "publish": {
+      "provider": "github",
+      "owner": "yutomiyoshi",
+      "repo": "gint-chart"
+    }
   },
   "private": true,
   "dependencies": {
@@ -31,6 +43,7 @@
     "@angular/router": "^19.2.14",
     "@worktile/gantt": "^19.0.3",
     "electron-squirrel-startup": "^1.0.1",
+    "electron-updater": "^6.6.2",
     "html2canvas": "^1.4.1",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
@@ -46,6 +59,8 @@
     "angular-eslint": "19.7.1",
     "concurrently": "^9.1.2",
     "electron": "^36.3.2",
+    "electron-builder": "^26.0.12",
+    "electron-log": "^5.4.1",
     "eslint": "^9.28.0",
     "eslint-plugin-import": "^2.31.0",
     "jasmine-core": "~5.1.0",
