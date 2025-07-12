@@ -1,101 +1,211 @@
-const { app, BrowserWindow, ipcMain, shell, dialog, autoUpdater } = require("electron");
-const path = require("path");
-const fs = require("fs");
+const { app, BrowserWindow, ipcMain, shell, dialog } = require('electron');
+const { autoUpdater } = require('electron-updater');
+const path = require('path');
+const fs = require('fs');
 
-let win;
+let mainWindow;
+
+const args = process.argv.slice(1),
+  serve = args.some(val => val === '--serve');
 
 function createWindow() {
-  win = new BrowserWindow({
-    width: 1000,
-    height: 800,
-    minWidth: 400,
-    minHeight: 300,
+  mainWindow = new BrowserWindow({
+    width: 800,
+    height: 600,
     webPreferences: {
-      nodeIntegration: false, // セキュリティのためにfalseを推奨
-      contextIsolation: true, // セキュリティのためにtrueを推奨
-      preload: path.join(__dirname, "preload.js"), // プリロードスクリプトを指定
+      nodeIntegration: false,
+      contextIsolation: true,
+      preload: path.join(__dirname, 'preload.js'),
+      /**
+       * XXX
+       * セキュリティ上の問題について要検討
+       * - allowRunningInsecureContent
+       * - webSecurity
+       */
+      allowRunningInsecureContent: serve,
+      webSecurity: !serve,
     },
   });
 
-  // Angularアプリケーションをロード
-  // 開発時はng serveのURLを、ビルド後はAngularのdistディレクトリのindex.htmlをロードします
-  // 開発モード
-  if (process.env.NODE_ENV === "development") {
-    win.loadURL("http://localhost:4200"); // Angular開発サーバーのポート
-    win.webContents.openDevTools(); // 開発ツールを開く
+  if (serve) {
+    // 開発用モジュールを動的に読み込み
+    try {
+      const electronDebug = require('electron-debug');
+      const electronReloader = require('electron-reloader');
+
+      // electron-debugの正しい使用方法（複数のパターンに対応）
+      if (typeof electronDebug === 'function') {
+        electronDebug({
+          isEnabled: true,
+          showDevTools: true
+        });
+      } else if (electronDebug.default && typeof electronDebug.default === 'function') {
+        electronDebug.default({
+          isEnabled: true,
+          showDevTools: true
+        });
+      }
+
+      // electron-reloaderの設定
+      electronReloader(module, {
+        debug: true,
+        watchRenderer: true
+      });
+    } catch (error) {
+      console.warn('Development modules not available:', error.message);
+    }
+
+    mainWindow.loadURL('http://localhost:4200');
   } else {
-    // プロダクションビルド後
-    win.loadFile(
-      path.join(__dirname, "dist", "gint-chart", "browser", "index.html"),
-    );
+    // パッケージ化後のパス設定
+    let pathIndex = './index.html';
+
+    // 開発ビルド時のパス
+    if (fs.existsSync(path.join(__dirname, '../dist/gint-chart/browser/index.html'))) {
+      pathIndex = '../dist/gint-chart/browser/index.html';
+    }
+    // パッケージ化後のパス（app.asar内）
+    else if (fs.existsSync(path.join(__dirname, './dist/gint-chart/browser/index.html'))) {
+      pathIndex = './dist/gint-chart/browser/index.html';
+    }
+
+    const fullPath = path.join(__dirname, pathIndex);
+    mainWindow.loadFile(fullPath);
   }
 
-  win.on("closed", () => {
-    win = null;
+  mainWindow.on('closed', () => {
+    mainWindow = null;
   });
-}
 
-app.whenReady().then(createWindow);
-
-app.on("window-all-closed", () => {
-  if (process.platform !== "darwin") {
-    app.quit();
-  }
-});
-
-app.on("activate", () => {
-  if (BrowserWindow.getAllWindows().length === 0) {
-    createWindow();
-  }
-});
-
-ipcMain.handle('read-config', async () => {
-  const configPath = path.join(__dirname, 'gitlab.config.json');
-  const data = fs.readFileSync(configPath, 'utf-8');
-  return JSON.parse(data);
-});
-
-ipcMain.handle('open-external', async (event, url) => {
-  await shell.openExternal(url);
-});
-
-const server = 'https://update.electronjs.org';
-const owner = 'yutomiyoshi'
-const repo = 'gint-chart'
-const feed = `${server}/${owner}/${repo}/${process.platform}-${process.arch}/${app.getVersion()}`;
-
-if (app.isPackaged) {
-  autoUpdater.setFeedURL({
-    url: feed,
-  });
-  autoUpdater.checkForUpdates();
-
-  /**
-   * アップデートのダウンロードが完了したとき
-   */
-  autoUpdater.on("update-downloaded", async () => {
-    const returnValue = await dialog.showMessageBox({
-      message: "アップデータあり",
-      detail: "再起動してインストールできます。",
-      buttons: ["再起動", "後で"],
-    });
-    if (returnValue.response === 0) {
-      autoUpdater.quitAndInstall();
+  // アプリケーション起動時にアップデートをチェック
+  mainWindow.once('ready-to-show', () => {
+    // 開発環境では自動更新をスキップ
+    if (!serve) {
+      autoUpdater.checkForUpdates();
     }
   });
 
-  autoUpdater.on('update-available', () => {
-    dialog.showMessageBox({
-      message: "アップデートが利用可能です。",
-      buttons: ["OK"],
-    });
+  /**
+ * GitLab構成ファイルの取り込みを許可する
+ */
+  ipcMain.handle("read-config", async () => {
+    let configPath;
+
+    if (serve) {
+      // 開発環境では現在のディレクトリから読み込み
+      configPath = path.join(__dirname, 'gitlab.config.json');
+    } else {
+      // パッケージ化された環境では実行ファイルと同じディレクトリから読み込み
+      const exePath = process.execPath;
+      const exeDir = path.dirname(exePath);
+      configPath = path.join(exeDir, 'gitlab.config.json');
+    }
+
+    console.log('Attempting to read config from:', configPath);
+
+    try {
+      // ファイルの存在確認
+      if (!fs.existsSync(configPath)) {
+        throw new Error(`Configuration file not found at: ${configPath}`);
+      }
+
+      const data = fs.readFileSync(configPath, 'utf8');
+      return JSON.parse(data);
+    } catch (error) {
+      console.error('Error reading config file:', error.message);
+      throw error;
+    }
   });
 
-  autoUpdater.on('error', (error) => {
-    dialog.showMessageBox({
-      message: "アップデートの確認に失敗しました。",
-      detail: `エラー: ${error.message}`,
-      buttons: ["OK"],
-    });
+  /**
+   * 外部リンクを開く
+   */
+  ipcMain.handle("open-external", async (event, url) => {
+    shell.openExternal(url);
   });
+
+  return mainWindow;
 }
+
+try {
+  // This method will be called when Electron has finished
+  // initialization and is ready to create browser windows.
+  // Some APIs can only be used after this event occurs.
+  // Added 400 ms to fix the black background issue while using transparent window. More detais at https://github.com/electron/electron/issues/15947
+  app.on('ready', () => {
+    setTimeout(createWindow, 4000);
+  });
+
+  // Quit when all windows are closed.
+  app.on('window-all-closed', () => {
+    // On OS X it is common for applications and their menu bar
+    // to stay active until the user quits explicitly with Cmd + Q
+    if (process.platform !== 'darwin') {
+      app.quit();
+    }
+  });
+
+  app.on('activate', () => {
+    // On OS X it's common to re-create a window in the app when the
+    // dock icon is clicked and there are no other windows open.
+    if (mainWindow === null) {
+      createWindow();
+    }
+  });
+} catch (error) {
+  console.error(error);
+}
+
+// autoUpdaterの設定
+autoUpdater.autoDownload = false; // 自動ダウンロードを無効化
+autoUpdater.logger = require('electron-log');
+autoUpdater.logger.transports.file.level = 'info';
+
+// アップデートイベントのハンドリング
+autoUpdater.on('checking-for-update', () => {
+  console.log('アップデートをチェック中...');
+});
+
+autoUpdater.on('update-available', (info) => {
+  console.log('アップデートが利用可能:', info.version);
+  dialog.showMessageBox(mainWindow, {
+    type: 'info',
+    title: 'アップデートがあります',
+    message: `新しいバージョン ${info.version} が利用可能です。ダウンロードを開始しますか？`,
+    buttons: ['はい', 'いいえ'],
+  }).then(result => {
+    if (result.response === 0) { // はい
+      autoUpdater.downloadUpdate();
+    }
+  });
+});
+
+autoUpdater.on('update-not-available', (info) => {
+  console.log('アップデートはありません');
+});
+
+autoUpdater.on('download-progress', (progressObj) => {
+  let log_message = "ダウンロード速度: " + progressObj.bytesPerSecond;
+  log_message = log_message + ' - ダウンロード済み ' + progressObj.percent + '%';
+  log_message = log_message + ' (' + progressObj.transferred + "/" + progressObj.total + ')';
+  console.log(log_message);
+});
+
+autoUpdater.on('update-downloaded', (info) => {
+  console.log('アップデートダウンロード完了:', info.version);
+  dialog.showMessageBox(mainWindow, {
+    type: 'info',
+    title: 'アップデート完了',
+    message: `新しいバージョン ${info.version} がダウンロードされました。アプリケーションを再起動してアップデートを適用しますか？`,
+    buttons: ['再起動', '後で'],
+  }).then(result => {
+    if (result.response === 0) { // 再起動
+      autoUpdater.quitAndInstall();
+    }
+  });
+});
+
+autoUpdater.on('error', (err) => {
+  console.error('アップデートエラー:', err);
+  dialog.showErrorBox('アップデートエラー', 'アップデート中にエラーが発生しました: ' + err.message);
+});

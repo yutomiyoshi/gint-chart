@@ -13,14 +13,14 @@ import { GitLabConfigStoreService } from '@src/app/store/git-lab-config-store.se
  */
 // GitLab APIのエンドポイント
 /**             イシュー    マイルストーン  プロジェクト   ラベル      メンバー  */
-type EndPoint = 'issues' | 'milestones' | ''          | 'labels' | 'members';
+type EndPoint = 'issues' | 'milestones' | '' | 'labels' | 'members';
 
 /**
  * ページネーションのAPIでデータを取得した結果
  */
 export type PagenationResult<S> = {
-  hasNextPage: boolean,
-  data: S[]
+  hasNextPage: boolean;
+  data: S[];
 };
 
 const pagenationMax = 100;
@@ -74,8 +74,9 @@ export class GitLabApiService {
     page: number = firstPage
   ): Observable<PagenationResult<S>> {
     if (isNull(this.urlChainBuilder)) {
-      Assertion.assert('GitLab host is not configured', Assertion.no(13));
-      return new Observable<PagenationResult<S>>();
+      return new Observable<PagenationResult<S>>((subscriber) => {
+        subscriber.error(new Error('GitLab host is not configured'));
+      });
     }
 
     return this.urlChainBuilder
@@ -97,7 +98,7 @@ export class GitLabApiService {
         }
         return {
           hasNextPage,
-          data: arr.filter((item): item is S => !isNull(item))
+          data: arr.filter((item): item is S => !isNull(item)),
         };
       });
   }
@@ -121,8 +122,9 @@ export class GitLabApiService {
     page: number = firstPage
   ): Observable<PagenationResult<S>> {
     if (isNull(this.urlChainBuilder)) {
-      Assertion.assert('GitLab host is not configured', Assertion.no(37));
-      return new Observable<PagenationResult<S>>();
+      return new Observable<PagenationResult<S>>((subscriber) => {
+        subscriber.error(new Error('GitLab host is not configured'));
+      });
     }
 
     return this.urlChainBuilder
@@ -144,7 +146,7 @@ export class GitLabApiService {
         }
         return {
           hasNextPage,
-          data: arr.filter((item): item is S => !isNull(item))
+          data: arr.filter((item): item is S => !isNull(item)),
         };
       });
   }
@@ -168,8 +170,9 @@ export class GitLabApiService {
     mapFn: (data: T) => S | null
   ): Observable<S> {
     if (isNull(this.urlChainBuilder)) {
-      Assertion.assert('GitLab host is not configured', Assertion.no(14));
-      return new Observable<S>();
+      return new Observable<S>((subscriber) => {
+        subscriber.error(new Error('GitLab host is not configured'));
+      });
     }
 
     return this.urlChainBuilder

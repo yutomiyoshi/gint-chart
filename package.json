@@ -1,21 +1,57 @@
 {
   "name": "gint-chart",
+  "productName": "Gint-Chart",
   "version": "1.0.0",
-  "description": "GitLabイシューをガントチャート形式で表示するElectronアプリケーション",
-  "author": "systena-miyoshiyuu",
+  "description": "GitLabプロジェクト連携のタスク管理支援アプリ",
+  "author": "seanayuuto",
   "main": "main.js",
   "scripts": {
     "ng": "ng",
-    "start": "electron-forge start",
+    "start": "electron .",
+    "serve": "ng serve",
     "build": "ng build --base-href ./",
-    "watch": "ng build --watch --configuration development",
-    "test": "ng test",
     "electron": "ng build --base-href ./ && electron .",
-    "electron-dev": "concurrently \"ng serve --port 4200 --host 127.0.0.1\" \"wait-on http://127.0.0.1:4200 && electron .\"",
+    "electron:dev": "wait-on http://localhost:4200 && electron . --serve",
+    "dev": "concurrently \"npm run serve\" \"npm run electron:dev\"",
     "lint": "ng lint",
     "gen-assertion-no": "node gen-assertion-no.js",
-    "package": "electron-forge package",
-    "make": "electron-forge make"
+    "package": "npm run build && electron-builder",
+    "release": "npm run build && electron-builder --publish always"
+  },
+  "build": {
+    "appId": "com.seanayuuto.gint-chart",
+    "productName": "Gint-Chart",
+    "files": [
+      "main.js",
+      "preload.js",
+      "dist/gint-chart/**/*"
+    ],
+    "publish": {
+      "provider": "github",
+      "owner": "yutomiyoshi",
+      "repo": "gint-chart",
+      "releaseType": "draft"
+    },
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "zip",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    },
+    "directories": {
+      "buildResources": "assets",
+      "output": "releases"
+    }
   },
   "private": true,
   "dependencies": {
@@ -31,6 +67,7 @@
     "@angular/router": "^19.2.14",
     "@worktile/gantt": "^19.0.3",
     "electron-squirrel-startup": "^1.0.1",
+    "electron-updater": "^6.6.2",
     "html2canvas": "^1.4.1",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
@@ -40,19 +77,16 @@
     "@angular-devkit/build-angular": "^19.2.14",
     "@angular/cli": "^19.2.14",
     "@angular/compiler-cli": "^19.2.14",
-    "@electron-forge/cli": "^7.8.1",
-    "@electron-forge/maker-deb": "^7.8.1",
-    "@electron-forge/maker-rpm": "^7.8.1",
-    "@electron-forge/maker-squirrel": "^7.8.1",
-    "@electron-forge/maker-zip": "^7.8.1",
-    "@electron-forge/plugin-auto-unpack-natives": "^7.8.1",
-    "@electron-forge/plugin-fuses": "^7.8.1",
-    "@electron-forge/publisher-github": "^7.8.1",
     "@electron/fuses": "^1.8.0",
+    "@electron/packager": "^18.3.6",
     "@types/jasmine": "~5.1.0",
     "angular-eslint": "19.7.1",
     "concurrently": "^9.1.2",
     "electron": "^36.3.2",
+    "electron-builder": "^26.0.12",
+    "electron-debug": "^4.1.0",
+    "electron-log": "^5.4.1",
+    "electron-reloader": "^1.2.3",
     "eslint": "^9.28.0",
     "eslint-plugin-import": "^2.31.0",
     "jasmine-core": "~5.1.0",

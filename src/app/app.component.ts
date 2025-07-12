@@ -6,7 +6,7 @@ import {
   OnInit,
 } from '@angular/core';
 import { GitLabConfigStoreService } from '@src/app/store/git-lab-config-store.service';
-import { Subject, takeUntil, switchMap, forkJoin } from 'rxjs';
+import { Subject, takeUntil, switchMap, forkJoin, catchError, of } from 'rxjs';
 import { IssueDetailDialogExpansionService } from '@src/app/issue-detail-dialog/issue-detail-dialog-expansion.service';
 import { ToastHistoryDialogExpansionService } from '@src/app/toast-history-dialog/toast-history-dialog-expansion.service';
 import { StatusSelectorDialogExpansionService } from '@src/app/status-selector-dialog/status-selector-dialog-expansion.service';
@@ -161,6 +161,15 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
     this.gitLabConfigStore
       .loadConfig()
       .pipe(
+        catchError((error) => {
+          this.toastService.show(
+            Assertion.no(15),
+            `Failed to load config. Place gitlab.config.json in the same directory as the executable file. error: ${error}`,
+            'error',
+            TOAST_DURATION_LONG
+          );
+          throw error;
+        }),
         takeUntil(this.destroy$),
         switchMap((config) => {
           // GitLabApiServiceを使用してGitLab APIを初期化
@@ -173,6 +182,15 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
             labels: this.labelStore.syncLabels(),
             members: this.memberStore.syncMembers(),
           }).pipe(
+            catchError((error) => {
+              this.toastService.show(
+                Assertion.no(44),
+                `Failed to sync labels and members. error: ${error}`,
+                'error',
+                TOAST_DURATION_LONG
+              );
+              throw error;
+            }),
             switchMap(() => this.projectTreeStore.syncProjectMilestoneIssues())
           );
         })
@@ -181,7 +199,7 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
         error: (error) => {
           this.toastService.show(
             Assertion.no(31),
-            `Failed to sync project, milestone, issue, labels, and members. error: ${error}`,
+            `Failed to sync project, milestone, issue. error: ${error}`,
             'error',
             TOAST_DURATION_LONG
           );

@@ -42,6 +42,6 @@ testem.log
 Thumbs.db
 
 # Electron
-/out
+/releases
 
 gitlab.config.json
