@@ -15,7 +15,8 @@
     "dev": "concurrently \"npm run serve\" \"npm run electron:dev\"",
     "lint": "ng lint",
     "gen-assertion-no": "node gen-assertion-no.js",
-    "package": "npm run build && electron-builder"
+    "package": "npm run build && electron-builder",
+    "release:draft": "npm run build && electron-builder --publish onTagOrDraft"
   },
   "build": {
     "appId": "com.seanayuuto.gint-chart",
@@ -26,7 +27,20 @@
       "dist/gint-chart/**/*"
     ],
     "win": {
-      "target": "nsis"
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "zip",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
     },
     "directories": {
       "buildResources": "assets",
