@@ -8,8 +8,11 @@
   "scripts": {
     "ng": "ng",
     "start": "electron .",
+    "serve": "ng serve",
     "build": "ng build --base-href ./",
     "electron": "ng build --base-href ./ && electron .",
+    "electron:dev": "wait-on http://localhost:4200 && electron . --serve",
+    "dev": "concurrently \"npm run serve\" \"npm run electron:dev\"",
     "lint": "ng lint",
     "gen-assertion-no": "node gen-assertion-no.js",
     "package": "npm run build && electron-builder"

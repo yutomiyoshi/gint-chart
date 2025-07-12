@@ -29,11 +29,32 @@ function createWindow() {
 
   if (serve) {
     // 開発用モジュールを動的に読み込み
-    const electronDebug = require('electron-debug');
-    const electronReloader = require('electron-reloader');
+    try {
+      const electronDebug = require('electron-debug');
+      const electronReloader = require('electron-reloader');
 
-    electronDebug({ isEnabled: true, showDevTools: true });
-    electronReloader(module);
+      // electron-debugの正しい使用方法（複数のパターンに対応）
+      if (typeof electronDebug === 'function') {
+        electronDebug({
+          isEnabled: true,
+          showDevTools: true
+        });
+      } else if (electronDebug.default && typeof electronDebug.default === 'function') {
+        electronDebug.default({
+          isEnabled: true,
+          showDevTools: true
+        });
+      }
+
+      // electron-reloaderの設定
+      electronReloader(module, {
+        debug: true,
+        watchRenderer: true
+      });
+    } catch (error) {
+      console.warn('Development modules not available:', error.message);
+    }
+
     mainWindow.loadURL('http://localhost:4200');
   } else {
     // パッケージ化後のパス設定
