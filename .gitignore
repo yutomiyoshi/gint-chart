@@ -43,5 +43,6 @@ Thumbs.db
 
 # Electron
 /out
+/gint-chart-win32-x64
 
 gitlab.config.json
