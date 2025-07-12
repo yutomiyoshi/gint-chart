@@ -62,12 +62,35 @@ function createWindow() {
   // });
 
   /**
-   * GitLab構成ファイルの取り込みを許可する
-   */
+ * GitLab構成ファイルの取り込みを許可する
+ */
   ipcMain.handle("read-config", async () => {
-    const config = path.join(__dirname, 'gitlab.config.json');
-    const data = fs.readFileSync(config, 'utf8');
-    return JSON.parse(data);
+    let configPath;
+
+    if (serve) {
+      // 開発環境では現在のディレクトリから読み込み
+      configPath = path.join(__dirname, 'gitlab.config.json');
+    } else {
+      // パッケージ化された環境では実行ファイルと同じディレクトリから読み込み
+      const exePath = process.execPath;
+      const exeDir = path.dirname(exePath);
+      configPath = path.join(exeDir, 'gitlab.config.json');
+    }
+
+    console.log('Attempting to read config from:', configPath);
+
+    try {
+      // ファイルの存在確認
+      if (!fs.existsSync(configPath)) {
+        throw new Error(`Configuration file not found at: ${configPath}`);
+      }
+
+      const data = fs.readFileSync(configPath, 'utf8');
+      return JSON.parse(data);
+    } catch (error) {
+      console.error('Error reading config file:', error.message);
+      throw error;
+    }
   });
 
   /**
