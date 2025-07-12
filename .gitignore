@@ -42,6 +42,6 @@ testem.log
 Thumbs.db
 
 # Electron
-/gint-chart-win32-x64
+/releases
 
 gitlab.config.json

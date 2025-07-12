@@ -36,15 +36,20 @@ function createWindow() {
     electronReloader(module);
     mainWindow.loadURL('http://localhost:4200');
   } else {
+    // パッケージ化後のパス設定
     let pathIndex = './index.html';
 
+    // 開発ビルド時のパス
     if (fs.existsSync(path.join(__dirname, '../dist/gint-chart/browser/index.html'))) {
       pathIndex = '../dist/gint-chart/browser/index.html';
     }
+    // パッケージ化後のパス（app.asar内）
+    else if (fs.existsSync(path.join(__dirname, './dist/gint-chart/browser/index.html'))) {
+      pathIndex = './dist/gint-chart/browser/index.html';
+    }
 
     const fullPath = path.join(__dirname, pathIndex);
-    const url = `file://${path.resolve(fullPath).replace(/\\/g, '/')}`;
-    mainWindow.loadURL(url);
+    mainWindow.loadFile(fullPath);
   }
 
   mainWindow.on('closed', () => {

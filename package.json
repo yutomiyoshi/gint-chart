@@ -12,16 +12,22 @@
     "electron": "ng build --base-href ./ && electron .",
     "lint": "ng lint",
     "gen-assertion-no": "node gen-assertion-no.js",
-    "package": "electron-builder"
+    "package": "npm run build && electron-builder"
   },
   "build": {
     "appId": "com.seanayuuto.gint-chart",
     "productName": "Gint-Chart",
+    "files": [
+      "main.js",
+      "preload.js",
+      "dist/gint-chart/**/*"
+    ],
     "win": {
       "target": "nsis"
     },
     "directories": {
-      "output": "dist"
+      "buildResources": "assets",
+      "output": "releases"
     },
     "publish": {
       "provider": "github",
