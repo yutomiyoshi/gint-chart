@@ -1,5 +1,5 @@
-const { app, BrowserWindow, ipcMain, shell } = require('electron');
-// const { autoUpdater } = require('electron-updater');
+const { app, BrowserWindow, ipcMain, shell, dialog } = require('electron');
+const { autoUpdater } = require('electron-updater');
 const path = require('path');
 const fs = require('fs');
 
@@ -77,10 +77,13 @@ function createWindow() {
     mainWindow = null;
   });
 
-  // // アプリケーション起動時にアップデートをチェック
-  // mainWindow.once('ready-to-show', () => {
-  //   autoUpdater.checkForUpdatesAndNotify();
-  // });
+  // アプリケーション起動時にアップデートをチェック
+  mainWindow.once('ready-to-show', () => {
+    // 開発環境では自動更新をスキップ
+    if (!serve) {
+      autoUpdater.checkForUpdates();
+    }
+  });
 
   /**
  * GitLab構成ファイルの取り込みを許可する
@@ -153,33 +156,56 @@ try {
   console.error(error);
 }
 
+// autoUpdaterの設定
+autoUpdater.autoDownload = false; // 自動ダウンロードを無効化
+autoUpdater.logger = require('electron-log');
+autoUpdater.logger.transports.file.level = 'info';
+
 // アップデートイベントのハンドリング
-// autoUpdater.on('update-available', (info) => {
-//   dialog.showMessageBox({
-//     type: 'info',
-//     title: 'アップデートがあります',
-//     message: '新しいバージョンが利用可能です。ダウンロードを開始しますか？',
-//     buttons: ['はい', 'いいえ'],
-//   }).then(result => {
-//     if (result.response === 0) { // はい
-//       autoUpdater.downloadUpdate();
-//     }
-//   });
-// });
+autoUpdater.on('checking-for-update', () => {
+  console.log('アップデートをチェック中...');
+});
 
-// autoUpdater.on('update-downloaded', (info) => {
-//   dialog.showMessageBox({
-//     type: 'info',
-//     title: 'アップデート完了',
-//     message: '新しいバージョンがダウンロードされました。アプリケーションを再起動してアップデートを適用しますか？',
-//     buttons: ['再起動', '後で'],
-//   }).then(result => {
-//     if (result.response === 0) { // 再起動
-//       autoUpdater.quitAndInstall();
-//     }
-//   });
-// });
+autoUpdater.on('update-available', (info) => {
+  console.log('アップデートが利用可能:', info.version);
+  dialog.showMessageBox(mainWindow, {
+    type: 'info',
+    title: 'アップデートがあります',
+    message: `新しいバージョン ${info.version} が利用可能です。ダウンロードを開始しますか？`,
+    buttons: ['はい', 'いいえ'],
+  }).then(result => {
+    if (result.response === 0) { // はい
+      autoUpdater.downloadUpdate();
+    }
+  });
+});
 
-// autoUpdater.on('error', (err) => {
-//   dialog.showErrorBox('アップデートエラー', 'アップデート中にエラーが発生しました: ' + err.message);
-// });
+autoUpdater.on('update-not-available', (info) => {
+  console.log('アップデートはありません');
+});
+
+autoUpdater.on('download-progress', (progressObj) => {
+  let log_message = "ダウンロード速度: " + progressObj.bytesPerSecond;
+  log_message = log_message + ' - ダウンロード済み ' + progressObj.percent + '%';
+  log_message = log_message + ' (' + progressObj.transferred + "/" + progressObj.total + ')';
+  console.log(log_message);
+});
+
+autoUpdater.on('update-downloaded', (info) => {
+  console.log('アップデートダウンロード完了:', info.version);
+  dialog.showMessageBox(mainWindow, {
+    type: 'info',
+    title: 'アップデート完了',
+    message: `新しいバージョン ${info.version} がダウンロードされました。アプリケーションを再起動してアップデートを適用しますか？`,
+    buttons: ['再起動', '後で'],
+  }).then(result => {
+    if (result.response === 0) { // 再起動
+      autoUpdater.quitAndInstall();
+    }
+  });
+});
+
+autoUpdater.on('error', (err) => {
+  console.error('アップデートエラー:', err);
+  dialog.showErrorBox('アップデートエラー', 'アップデート中にエラーが発生しました: ' + err.message);
+});
