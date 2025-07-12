@@ -3,8 +3,7 @@ import { GitLabProject } from '@src/app/git-lab-api/git-lab-project.model';
 export const SAMPLE_PROJECTS: GitLabProject[] = [
   {
     id: 144,
-    description:
-      'エスエンジニアリング株式会社_空調システム室外ユニットの開発業務支援',
+    description: 'GINTチャートのUI改善活動プロジェクト',
     name: 'gint-chart-test-project',
     name_with_namespace: 'miyoshiyuu / gint-chart-test-project',
     path: 'gint-chart-test-project',

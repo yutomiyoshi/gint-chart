@@ -1,44 +1,100 @@
-# なんだかんだ手軽に使えるタスク管理ツールがない
+# GINT-CHART プロジェクト
 
-Redmineはなんだか使いにくいし、BackLogはお金かかる。
+> このプロジェクトは現在進行形です！
+>
+> 機能的に中途半端なところもありますので、ご容赦ください。
+>
+> 皆様からのフィードバックを受けてさらに進化します 🤗🤗
 
-GitLabはPremiumにしないとガントチャートが使えない。
+GitLab の Gantt チャート機能は Premium 版限定ですが、このアプリを使えば、GitLab で管理しているプロジェクト、マイルストーン、イシューをローカル PC にダウンロードし、Gantt チャートとして表示・編集できます。
 
-Githubのプロジェクトは便利だけど、会社から使っちゃダメって言われた。
+これにより、GitLab の優れた UI と情報共有機能を活かしつつ、オフラインでの詳細なスケジュール調整が可能になり、業務の生産性向上を支援します。
 
-# サーバーレスなタスク管理：Gint-Chart
+### アプリ名
 
-特別なサーバーなし、GitLabに情報を集約してタスク管理する。
+GitLab のサーバー機能を利用した、Gantt チャートなので・・・
 
-GitLabのリポジトリにチケットのデータをpushして、更新してcommitする。
+![アプリ名](./asset/theme.png)
 
-![1](./asset/system-configuration1.png)
+### いいカンジな UI
 
-GitLabのグループがあれば、メンバー間でタスク管理できる。
+GitLab の issue のリスト化、右側がチャート。
 
-![2](./asset/system-configuration2.png)
+![UI](./asset/image1.png)
 
-必要なのは、GitLabのリポジトリ1つと各メンバーのPCにgint-chartのネイティブアプリ。
+### 感覚的な操作
 
-![3](./asset/system-configuration3.png)
+ドラッグアンドドロップで開始日と終了日を決定します。
 
-将来的には、Google Chatみたいなコミュニケーションツールに、チケットの更新を通知する。
+![ハンドル](./asset/image2.png)
 
-![4](./asset/system-configuration4.png)
+### システム
 
-## うみだしたい
+GitLab と連携します。
 
-- シンプル
+![データの交換](./asset/system.png)
 
-- 指先の感覚になじむ
+GitLab はクラウドサーバーで、Gint-Chart はネイティブアプリです。
 
-- アジャイル
+![クラウド](./asset/system2.png)
 
-- 特別なサーバーは不要
+GitLab のサーバーと開発メンバーの PC に Gint-Chart をインストールすること。
 
-- 無料
+![必要なもの](./asset/system3.png)
 
-## 技術要素
+## ダウンロード
+
+mada
+
+## GitLab 連携方法
+
+アプリをダウンロードしたら、.exe ファイルと同じ階層に「gitlab.config.json」を作成してください。
+
+json 中身の例
+
+```
+{
+  "url": "https://gitlab.com",
+  "projectId": [1, 2, 3],
+  "accessToken": "****************",
+  "groupId": 1
+}
+```
+
+| No. | キー        | 値                    |
+| --- | ----------- | --------------------- |
+| 1.  | url         | GitLab サーバーの URL |
+| 2.  | projectId   | プロジェクト ID (A)   |
+| 3.  | accessToken | アクセストークン (B)  |
+| 4.  | groupId     | グループ ID (C)       |
+
+### A. プロジェクト ID の確かめ方
+
+mada
+
+### B. アクセストークンの確かめ方
+
+mada
+
+### C. グループ ID の確かめ方
+
+mada
+
+## ラベルの作成
+
+mada
+
+## 今後の展望
+
+mada
+
+---
+
+## セキュリティについて
+
+mada
+
+## 開発技術要素
 
 - TypeScript
 
@@ -46,20 +102,4 @@ GitLabのグループがあれば、メンバー間でタスク管理できる�
 
 - Electron
 
-## 個人的な野望
-
-- 最速（MVP）
-
-- 横着（AI駆動）
-
-- UIにはこだわる
-
-- CI/CD
-
-## 開発立ち上げ
-
-コンソールにて以下を実行する。
-
-```
-npm run electron-dev
-```
+- GitLab API
