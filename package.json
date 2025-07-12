@@ -6,7 +6,7 @@
   "main": "main.js",
   "scripts": {
     "ng": "ng",
-    "start": "electron-forge start",
+    "start": "electron .",
     "build": "ng build --base-href ./",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
@@ -14,9 +14,7 @@
     "electron-dev": "concurrently \"ng serve --port 4200 --host 127.0.0.1\" \"wait-on http://127.0.0.1:4200 && electron .\"",
     "lint": "ng lint",
     "gen-assertion-no": "node gen-assertion-no.js",
-    "package": "electron-forge package",
-    "make": "electron-forge make",
-    "package-win": "electron-packager . --overwrite"
+    "package": "electron-packager . --overwrite"
   },
   "private": true,
   "dependencies": {
@@ -41,14 +39,6 @@
     "@angular-devkit/build-angular": "^19.2.14",
     "@angular/cli": "^19.2.14",
     "@angular/compiler-cli": "^19.2.14",
-    "@electron-forge/cli": "^7.8.1",
-    "@electron-forge/maker-deb": "^7.8.1",
-    "@electron-forge/maker-rpm": "^7.8.1",
-    "@electron-forge/maker-squirrel": "^7.8.1",
-    "@electron-forge/maker-zip": "^7.8.1",
-    "@electron-forge/plugin-auto-unpack-natives": "^7.8.1",
-    "@electron-forge/plugin-fuses": "^7.8.1",
-    "@electron-forge/publisher-github": "^7.8.1",
     "@electron/fuses": "^1.8.0",
     "@electron/packager": "^18.3.6",
     "@types/jasmine": "~5.1.0",
