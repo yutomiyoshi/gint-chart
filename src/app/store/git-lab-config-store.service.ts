@@ -25,10 +25,6 @@ export class GitLabConfigStoreService {
         })
         .catch(() => {
           this.configSubject.next(null);
-          Assertion.assert(
-            'Failed to load config.json. Please check the application prerequisites.',
-            Assertion.no(15)
-          );
           return null;
         })
     );
