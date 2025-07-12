@@ -16,7 +16,7 @@
     "lint": "ng lint",
     "gen-assertion-no": "node gen-assertion-no.js",
     "package": "npm run build && electron-builder",
-    "release:draft": "npm run build && electron-builder --publish onTagOrDraft"
+    "release": "npm run build && electron-builder --publish always"
   },
   "build": {
     "appId": "com.seanayuuto.gint-chart",
@@ -26,6 +26,12 @@
       "preload.js",
       "dist/gint-chart/**/*"
     ],
+    "publish": {
+      "provider": "github",
+      "owner": "yutomiyoshi",
+      "repo": "gint-chart",
+      "releaseType": "draft"
+    },
     "win": {
       "target": [
         {
@@ -45,11 +51,6 @@
     "directories": {
       "buildResources": "assets",
       "output": "releases"
-    },
-    "publish": {
-      "provider": "github",
-      "owner": "yutomiyoshi",
-      "repo": "gint-chart"
     }
   },
   "private": true,
