@@ -62,9 +62,9 @@ export interface Issue {
 
   /**
    * ラベルから抽出するステータスのID
-   * @type {number | undefined}
+   * @type {number}
    */
-  status: number | undefined;
+  status: number;
 
   /**
    * ラベルから抽出するカテゴリのID
@@ -92,9 +92,9 @@ export interface Issue {
 
   /**
    * assignee_id
-   * @type {number | undefined}
+   * @type {number}
    */
-  assignee_id: number | undefined;
+  assignee_id: number;
 }
 
 // GitLab APIのissueレスポンス型からIssue型へ変換する関数
@@ -152,7 +152,7 @@ export function convertJsonToIssue(apiIssue: GitLabApiIssue): Issue | null {
     end_date = undefined;
   }
 
-  const assignee_id = apiIssue.assignee ? apiIssue.assignee.id : undefined;
+  const assignee_id = apiIssue.assignee ? apiIssue.assignee.id : -1;
 
   return {
     id: apiIssue.id,
@@ -166,7 +166,7 @@ export function convertJsonToIssue(apiIssue: GitLabApiIssue): Issue | null {
     end_date,
     labels: apiIssue.labels,
     assignee_id,
-    status: undefined,
+    status: -1,
     category: [],
     priority: [],
     resource: [],

@@ -24,7 +24,7 @@ export class IssueLabelProcessorService {
     const categoryIds: number[] = [];
     const priorityIds: number[] = [];
     const resourceIds: number[] = [];
-    let statusId: number | undefined = undefined;
+    let statusId: number = -1;
 
     // 各ラベルを解析
     for (const labelName of issue.labels) {

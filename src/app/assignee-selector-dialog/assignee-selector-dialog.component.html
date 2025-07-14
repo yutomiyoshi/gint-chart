@@ -7,9 +7,9 @@
   </div>
 
   <div class="dialog-content">
-    <div class="assignee-option" (click)="onAssigneeSelect(undefined)">
+    <div class="assignee-option" (click)="onAssigneeSelect(-1)">
       <span class="assignee-name">未設定</span>
-      <span class="assignee-indicator" *ngIf="isSelected(undefined)">✓</span>
+      <span class="assignee-indicator" *ngIf="isSelected(-1)">✓</span>
     </div>
 
     <div

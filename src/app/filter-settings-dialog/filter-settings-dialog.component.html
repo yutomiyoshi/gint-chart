@@ -46,6 +46,8 @@
         </div>
       </div>
       <div *ngIf="isAssigneeFilterEnabled" class="filter-items">
+        <input type="checkbox" class="filter-item-check-box" [checked]="isFilteredAssignee(-1)" (change)="onAssigneeIsFilteredChange(-1)"/>
+        <span class="filter-item-name">未設定</span>
         <div *ngFor="let member of members$ | async" class="filter-item">
           <input type="checkbox" class="filter-item-check-box" [checked]="isFilteredAssignee(member.id)" (change)="onAssigneeIsFilteredChange(member.id)"/>
           <span class="filter-item-name">{{ member.name }}</span>
@@ -69,6 +71,8 @@
         </div>
       </div>
       <div *ngIf="isStatusFilterEnabled" class="filter-items">
+        <input type="checkbox" class="filter-item-check-box" [checked]="isFilteredStatus(-1)" (change)="onStatusIsFilteredChange(-1)"/>
+        <span class="filter-item-name">未設定</span>
         <div *ngFor="let label of statusLabels" class="filter-item">
           <input type="checkbox" class="filter-item-check-box" [checked]="isFilteredStatus(label.id)" (change)="onStatusIsFilteredChange(label.id)"/>
           <span class="filter-item-name">{{ label.name }}</span>

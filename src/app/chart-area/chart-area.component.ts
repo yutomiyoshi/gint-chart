@@ -392,7 +392,7 @@ export class ChartAreaComponent implements OnInit, AfterViewInit {
   /**
    * issueのステータスの変更の処理
    */
-  onIssueStatusChange(issue: Issue, status: number | undefined): void {
+  onIssueStatusChange(issue: Issue, status: number): void {
     if (issue.status === status) {
       return;
     }
@@ -427,7 +427,7 @@ export class ChartAreaComponent implements OnInit, AfterViewInit {
   /**
    * issueの担当者の変更の処理
    */
-  onIssueAssigneeChange(issue: Issue, assigneeId: number | undefined): void {
+  onIssueAssigneeChange(issue: Issue, assigneeId: number): void {
     if (issue.assignee_id === assigneeId) {
       return;
     }

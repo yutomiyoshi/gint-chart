@@ -20,6 +20,7 @@ export class ViewService {
     this.memberStore.members$.subscribe(members => {
       // メンバーの数が変わったときはとりあえず、全部表示する状態にする
       this._filteredAssigneeIDs = members.map(member => member.id);
+      this._filteredAssigneeIDs.push(-1); // 未設定を表す
     });
 
     this.labelStore.labels$.subscribe(labels => {
@@ -30,6 +31,8 @@ export class ViewService {
     this.labelStore.classifiedLabels$.subscribe(() => {
       // ラベルの数が変わったときはとりあえず、全部表示する状態にする
       this._filteredStatusIDs = this.labelStore.statusLabels.map(label => label.id);
+      this._filteredStatusIDs.push(-1); // 未設定を表す
+
       this._filteredResourceIDs = this.labelStore.resourceLabels.map(label => label.id);
     });
   }

@@ -88,7 +88,7 @@ export class AssigneeSelectorDialogComponent implements OnInit, OnDestroy {
    * 担当者を選択する
    * @param assigneeId 選択された担当者ID
    */
-  onAssigneeSelect(assigneeId: number | undefined): void {
+  onAssigneeSelect(assigneeId: number): void {
     this.assigneeSelectorDialogExpansionService.updateAssignee(
       this.assigneeSelectorDialogExpansionService.issueId,
       assigneeId

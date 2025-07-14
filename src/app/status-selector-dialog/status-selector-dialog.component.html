@@ -7,9 +7,9 @@
   </div>
 
   <div class="dialog-content">
-    <div class="status-option" (click)="onStatusSelect(undefined)">
+    <div class="status-option" (click)="onStatusSelect(-1)">
       <span class="status-name">未設定</span>
-      <span class="status-indicator" *ngIf="isSelected(undefined)">✓</span>
+      <span class="status-indicator" *ngIf="isSelected(-1)">✓</span>
     </div>
 
     <div
