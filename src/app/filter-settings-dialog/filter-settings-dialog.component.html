@@ -87,6 +87,7 @@
             [checked]="isFilteredStatus(-1)"
             (change)="onStatusIsFilteredChange(-1)"
           ></mat-checkbox>
+          <span class="status-circle" [style.background-color]="getStatusColor(-1)"></span>
           <span class="filter-item-name">未設定</span>
         </div>
         <div *ngFor="let label of statusLabels" class="filter-item">
@@ -95,6 +96,7 @@
             [checked]="isFilteredStatus(label.id)"
             (change)="onStatusIsFilteredChange(label.id)"
           ></mat-checkbox>
+          <span class="status-circle" [style.background-color]="getStatusColor(label.id)"></span>
           <span class="filter-item-name">{{ label.name }}</span>
         </div>
       </div>

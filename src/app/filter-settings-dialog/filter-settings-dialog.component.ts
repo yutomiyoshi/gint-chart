@@ -4,6 +4,7 @@ import { LabelStoreService } from '@src/app/store/label-store.service';
 import { MemberStoreService } from '@src/app/store/member-store.service';
 import { Label } from '../model/label.model';
 import { Subject, takeUntil } from 'rxjs';
+import { isUndefined } from '../utils/utils';
 
 @Component({
   selector: 'app-filter-settings-dialog',
@@ -114,6 +115,22 @@ export class FilterSettingsDialogComponent implements OnInit {
       return;
     }
     this.viewService.filteredStatusIDs = [...this.viewService.filteredStatusIDs, id];
+  }
+
+  /**
+   * ステータスカラーを返す
+   * @param id ラベルID
+   * @returns 色調
+   */
+  getStatusColor(id: number): string {
+    if (id === -1) {
+      return "#202020";
+    }
+    const label = this.labelStoreService.findStatusLabel(id);
+    if (isUndefined(label)) {
+      return "#202020";
+    }
+    return label.color;
   }
 
   /**
