@@ -22,6 +22,7 @@ import { IssueAssigneeNamePipe } from '@src/app/chart-area/issue-row/issue-assig
 import { SideActionPanelComponent } from '@src/app/side-action-panel/side-action-panel.component';
 import { ViewSettingsDialogComponent } from '@src/app/view-settings-dialog/view-settings-dialog.component';
 import { FilterSettingsDialogComponent } from '@src/app/filter-settings-dialog/filter-settings-dialog.component';
+import { ButtonComponent } from './design/button/button.component';
 
 @NgModule({
   declarations: [
@@ -47,6 +48,7 @@ import { FilterSettingsDialogComponent } from '@src/app/filter-settings-dialog/f
     MatIconModule,
     MatCheckboxModule,
     SwitchToggleComponent,
+    ButtonComponent,
     IssueIidPipe,
     IssueStatusNamePipe,
     IssueAssigneeNamePipe,

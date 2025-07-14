@@ -146,4 +146,43 @@ export class FilterSettingsDialogComponent implements OnInit {
   get members$() {
     return this.memberStoreService.members$;
   }
+
+  wholeSelectAssigneeAction = (bool: boolean) => {
+    if (bool) {
+      // 全選択されている場合は、クリックすることで全部選択解除する
+      this.viewService.filteredAssigneeIDs = [];
+    } else {
+      // 一つでも選択外がある場合は、クリックすることで全部選択する
+      this.viewService.filteredAssigneeIDs = [...this.memberStoreService.membersId, -1];
+    }
+  };
+
+  get wholeSelectAssignee(): boolean {
+    /**
+     * すべての担当者が選択されているかどうか、選択の数から判断する
+     * 総メンバー数＋1(未定義状態)ならば、すべて選択されていると判断する
+     */
+    return this.viewService.filteredAssigneeIDs.length === (this.memberStoreService.membersId.length + 1);
+  }
+
+  wholeSelectStatusAction = (bool: boolean) => {
+    if (bool) {
+      // 全選択されている場合は、クリックすることで全部選択解除する
+      this.viewService.filteredStatusIDs = [];
+    } else {
+      // 一つでも選択外がある場合は、クリックすることで全部選択する
+      this.viewService.filteredStatusIDs = [
+        ...this.labelStoreService.statusLabels.map(item => item.id),
+        -1
+      ];
+    }
+  };
+
+  get wholeSelectStatus(): boolean {
+    /**
+     * すべてのステータスが選択されているかどうか、選択の数から判断する
+     * 総ステータス数＋1(未定義状態)ならば、すべて選択されていると判断する
+     */
+    return this.viewService.filteredStatusIDs.length === (this.labelStoreService.statusLabels.length + 1);
+  }
 }

@@ -111,4 +111,8 @@ export class MemberStoreService {
     const member = current.find((member) => member.id === assignee_id);
     return member ? member.name : undefined;
   }
+
+  get membersId(): number[] {
+    return this.membersSubject.getValue().map(item => item.id);
+  }
 }

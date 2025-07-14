@@ -46,6 +46,14 @@
         </div>
       </div>
       <div *ngIf="isAssigneeFilterEnabled" class="filter-items">
+        <div class="whole-select">
+          <app-button
+            [message]="'全部選択'"
+            [bool]="wholeSelectAssignee"
+            [action]="wholeSelectAssigneeAction"
+            [backgroundColor]="'#990099'"
+          ></app-button>
+        </div>
         <div class="filter-item">
           <mat-checkbox
             class="filter-item-check-box"
@@ -81,6 +89,14 @@
         </div>
       </div>
       <div *ngIf="isStatusFilterEnabled" class="filter-items">
+        <div class="whole-select">
+          <app-button
+            [message]="'全部選択'"
+            [bool]="wholeSelectStatus"
+            [action]="wholeSelectStatusAction"
+            [backgroundColor]="'#990099'"
+          ></app-button>
+        </div>
         <div class="filter-item">
           <mat-checkbox
             class="filter-item-check-box"
