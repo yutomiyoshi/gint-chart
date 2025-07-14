@@ -56,18 +56,24 @@
             [height]="32"
           ></app-button>
         </div>
-        <div class="filter-item">
+        <div class="filter-item" (click)="onAssigneeIsFilteredChange(-1)">
           <mat-checkbox
             class="filter-item-check-box"
             [checked]="isFilteredAssignee(-1)"
+            (click)="$event.stopPropagation()"
             (change)="onAssigneeIsFilteredChange(-1)"
           ></mat-checkbox>
           <span class="filter-item-name">未設定</span>
         </div>
-        <div *ngFor="let member of members$ | async" class="filter-item">
+        <div
+          *ngFor="let member of members$ | async"
+          class="filter-item"
+          (click)="onAssigneeIsFilteredChange(member.id)"
+        >
           <mat-checkbox
             class="filter-item-check-box"
             [checked]="isFilteredAssignee(member.id)"
+            (click)="$event.stopPropagation()"
             (change)="onAssigneeIsFilteredChange(member.id)"
           ></mat-checkbox>
           <span class="filter-item-name">{{ member.name }}</span>
@@ -101,10 +107,11 @@
             [height]="32"
           ></app-button>
         </div>
-        <div class="filter-item">
+        <div class="filter-item" (click)="onStatusIsFilteredChange(-1)">
           <mat-checkbox
             class="filter-item-check-box"
             [checked]="isFilteredStatus(-1)"
+            (click)="$event.stopPropagation()"
             (change)="onStatusIsFilteredChange(-1)"
           ></mat-checkbox>
           <span
@@ -113,10 +120,15 @@
           ></span>
           <span class="filter-item-name">未設定</span>
         </div>
-        <div *ngFor="let label of statusLabels" class="filter-item">
+        <div
+          *ngFor="let label of statusLabels"
+          class="filter-item"
+          (click)="onStatusIsFilteredChange(label.id)"
+        >
           <mat-checkbox
             class="filter-item-check-box"
             [checked]="isFilteredStatus(label.id)"
+            (click)="$event.stopPropagation()"
             (change)="onStatusIsFilteredChange(label.id)"
           ></mat-checkbox>
           <span
