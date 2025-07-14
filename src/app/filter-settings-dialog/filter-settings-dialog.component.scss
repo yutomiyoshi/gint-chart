@@ -86,7 +86,6 @@
   padding: 6px 0;
   cursor: pointer;
   transition: background-color 0.2s ease;
-
 }
 
 .filter-item-name {
@@ -126,4 +125,11 @@
   height: 10px;
   border-radius: 50%;
   margin-right: 5px;
+}
+
+.whole-select {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 8px;
+  margin-top: 2px;
 }
