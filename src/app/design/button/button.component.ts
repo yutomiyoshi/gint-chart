@@ -52,12 +52,41 @@ export class ButtonComponent {
 
   get backgroundColorStr(): string {
     if (isUndefined(this.backGroundColorOff)) {
-      const r = this.backgroundColor.substring(1, 3);
-      const g = this.backgroundColor.substring(3, 5);
-      const b = this.backgroundColor.substring(5, 7);
-      return this.bool
-        ? `rgba(${r}, ${g}, ${b}, 1)`
-        : `rgba(${r}, ${g}, ${b}, 0.2)`;
+      // 16進数カラーコード（#RRGGBB or #RGB）
+      if (/^#([0-9a-fA-F]{6})$/.test(this.backgroundColor)) {
+        const r = parseInt(this.backgroundColor.substring(1, 3), 16);
+        const g = parseInt(this.backgroundColor.substring(3, 5), 16);
+        const b = parseInt(this.backgroundColor.substring(5, 7), 16);
+        return this.bool
+          ? `rgba(${r}, ${g}, ${b}, 1)`
+          : `rgba(${r}, ${g}, ${b}, 0.2)`;
+      } else if (/^#([0-9a-fA-F]{3})$/.test(this.backgroundColor)) {
+        // #RGB形式
+        const r = parseInt(
+          this.backgroundColor[1] + this.backgroundColor[1],
+          16
+        );
+        const g = parseInt(
+          this.backgroundColor[2] + this.backgroundColor[2],
+          16
+        );
+        const b = parseInt(
+          this.backgroundColor[3] + this.backgroundColor[3],
+          16
+        );
+        return this.bool
+          ? `rgba(${r}, ${g}, ${b}, 1)`
+          : `rgba(${r}, ${g}, ${b}, 0.2)`;
+      } else if (
+        /^(rgb|rgba)\(/.test(this.backgroundColor) ||
+        /^[a-zA-Z]+$/.test(this.backgroundColor)
+      ) {
+        // rgb(), rgba(), 色名
+        return this.backgroundColor;
+      } else {
+        // 不明な形式はそのまま返す
+        return this.backgroundColor;
+      }
     }
     return this.bool ? this.backgroundColor : this.backGroundColorOff;
   }
