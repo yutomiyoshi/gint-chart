@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { MatIconModule } from '@angular/material/icon';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppComponent } from '@src/app/app.component';
 import { ChartAreaComponent } from '@src/app/chart-area/chart-area.component';
@@ -44,6 +45,7 @@ import { FilterSettingsDialogComponent } from '@src/app/filter-settings-dialog/f
     CommonModule,
     DragDropModule,
     MatIconModule,
+    MatCheckboxModule,
     SwitchToggleComponent,
     IssueIidPipe,
     IssueStatusNamePipe,
