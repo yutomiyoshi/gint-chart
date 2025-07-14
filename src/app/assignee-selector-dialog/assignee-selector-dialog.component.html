@@ -8,7 +8,13 @@
 
   <div class="dialog-content">
     <div class="assignee-option" (click)="onAssigneeSelect(-1)">
-      <span class="assignee-name">未設定</span>
+      <div class="assignee-circle-name-container">
+        <span
+          class="assignee-circle"
+          [style.background-color]="getAssigneeColor(-1)"
+        ></span>
+        <span class="assignee-name">未設定</span>
+      </div>
       <span class="assignee-indicator" *ngIf="isSelected(-1)">✓</span>
     </div>
 
@@ -17,7 +23,13 @@
       *ngFor="let member of members"
       (click)="onAssigneeSelect(member.id)"
     >
-      <span class="assignee-name">{{ member.name }}</span>
+      <div class="assignee-circle-name-container">
+        <span
+          class="assignee-circle"
+          [style.background-color]="getAssigneeColor(member.id)"
+        ></span>
+        <span class="assignee-name">{{ member.name }}</span>
+      </div>
       <span class="assignee-indicator" *ngIf="isSelected(member.id)">✓</span>
     </div>
   </div>

@@ -8,7 +8,10 @@
 
   <div class="dialog-content">
     <div class="status-option" (click)="onStatusSelect(-1)">
-      <span class="status-name">未設定</span>
+      <div class="status-circle-name-container">
+        <span class="status-circle" [style.background-color]="'#202020'"></span>
+        <span class="status-name">未設定</span>
+      </div>
       <span class="status-indicator" *ngIf="isSelected(-1)">✓</span>
     </div>
 
@@ -17,7 +20,13 @@
       *ngFor="let label of statusLabels"
       (click)="onStatusSelect(label.id)"
     >
-      <span class="status-name">{{ label.name }}</span>
+      <div class="status-circle-name-container">
+        <span
+          class="status-circle"
+          [style.background-color]="label.color"
+        ></span>
+        <span class="status-name">{{ label.name }}</span>
+      </div>
       <span class="status-indicator" *ngIf="isSelected(label.id)">✓</span>
     </div>
   </div>

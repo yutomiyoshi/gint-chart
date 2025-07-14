@@ -5,6 +5,7 @@ import { MemberStoreService } from '@src/app/store/member-store.service';
 import { Label } from '../model/label.model';
 import { Subject, takeUntil } from 'rxjs';
 import { isUndefined } from '../utils/utils';
+import { generateRGBColorFromString } from '../utils/color-utils';
 
 @Component({
   selector: 'app-filter-settings-dialog',
@@ -20,9 +21,11 @@ export class FilterSettingsDialogComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.labelStoreService.classifiedLabels$.pipe(takeUntil(this.destroy$)).subscribe(labelBox => {
-      this.statusLabels = labelBox.status;
-    })
+    this.labelStoreService.classifiedLabels$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((labelBox) => {
+        this.statusLabels = labelBox.status;
+      });
   }
 
   /**
@@ -82,13 +85,16 @@ export class FilterSettingsDialogComponent implements OnInit {
    */
   onAssigneeIsFilteredChange(id: number): void {
     if (this.viewService.filteredAssigneeIDs.includes(id)) {
-      this.viewService.filteredAssigneeIDs = this.viewService.filteredAssigneeIDs.filter(item => item !== id);
+      this.viewService.filteredAssigneeIDs =
+        this.viewService.filteredAssigneeIDs.filter((item) => item !== id);
       return;
     }
-    this.viewService.filteredAssigneeIDs = [...this.viewService.filteredAssigneeIDs, id]
+    this.viewService.filteredAssigneeIDs = [
+      ...this.viewService.filteredAssigneeIDs,
+      id,
+    ];
   }
 
-  
   /**
    * ステータスフィルターの切り替え
    */
@@ -101,7 +107,7 @@ export class FilterSettingsDialogComponent implements OnInit {
    * @param id ラベルID
    * @returns True: 表示するステータスである, False: 表示しないステータスである
    */
-  isFilteredStatus(id: number):boolean {
+  isFilteredStatus(id: number): boolean {
     return this.viewService.filteredStatusIDs.includes(id);
   }
 
@@ -111,10 +117,14 @@ export class FilterSettingsDialogComponent implements OnInit {
    */
   onStatusIsFilteredChange(id: number): void {
     if (this.viewService.filteredStatusIDs.includes(id)) {
-      this.viewService.filteredStatusIDs = this.viewService.filteredStatusIDs.filter(item => item !== id);
+      this.viewService.filteredStatusIDs =
+        this.viewService.filteredStatusIDs.filter((item) => item !== id);
       return;
     }
-    this.viewService.filteredStatusIDs = [...this.viewService.filteredStatusIDs, id];
+    this.viewService.filteredStatusIDs = [
+      ...this.viewService.filteredStatusIDs,
+      id,
+    ];
   }
 
   /**
@@ -124,13 +134,24 @@ export class FilterSettingsDialogComponent implements OnInit {
    */
   getStatusColor(id: number): string {
     if (id === -1) {
-      return "#202020";
+      return '#202020';
     }
     const label = this.labelStoreService.findStatusLabel(id);
     if (isUndefined(label)) {
-      return "#202020";
+      return '#202020';
     }
     return label.color;
+  }
+
+  getAssigneeColor(id: number): string {
+    if (id === -1) {
+      return '#202020';
+    }
+    const member = this.memberStoreService.findMemberById(id);
+    if (isUndefined(member)) {
+      return '#202020';
+    }
+    return generateRGBColorFromString(member.name);
   }
 
   /**
@@ -153,7 +174,10 @@ export class FilterSettingsDialogComponent implements OnInit {
       this.viewService.filteredAssigneeIDs = [];
     } else {
       // 一つでも選択外がある場合は、クリックすることで全部選択する
-      this.viewService.filteredAssigneeIDs = [...this.memberStoreService.membersId, -1];
+      this.viewService.filteredAssigneeIDs = [
+        ...this.memberStoreService.membersId,
+        -1,
+      ];
     }
   };
 
@@ -162,7 +186,10 @@ export class FilterSettingsDialogComponent implements OnInit {
      * すべての担当者が選択されているかどうか、選択の数から判断する
      * 総メンバー数＋1(未定義状態)ならば、すべて選択されていると判断する
      */
-    return this.viewService.filteredAssigneeIDs.length === (this.memberStoreService.membersId.length + 1);
+    return (
+      this.viewService.filteredAssigneeIDs.length ===
+      this.memberStoreService.membersId.length + 1
+    );
   }
 
   wholeSelectStatusAction = (bool: boolean) => {
@@ -172,8 +199,8 @@ export class FilterSettingsDialogComponent implements OnInit {
     } else {
       // 一つでも選択外がある場合は、クリックすることで全部選択する
       this.viewService.filteredStatusIDs = [
-        ...this.labelStoreService.statusLabels.map(item => item.id),
-        -1
+        ...this.labelStoreService.statusLabels.map((item) => item.id),
+        -1,
       ];
     }
   };
@@ -183,6 +210,9 @@ export class FilterSettingsDialogComponent implements OnInit {
      * すべてのステータスが選択されているかどうか、選択の数から判断する
      * 総ステータス数＋1(未定義状態)ならば、すべて選択されていると判断する
      */
-    return this.viewService.filteredStatusIDs.length === (this.labelStoreService.statusLabels.length + 1);
+    return (
+      this.viewService.filteredStatusIDs.length ===
+      this.labelStoreService.statusLabels.length + 1
+    );
   }
 }

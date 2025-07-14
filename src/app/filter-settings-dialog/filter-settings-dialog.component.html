@@ -63,6 +63,10 @@
             (click)="$event.stopPropagation()"
             (change)="onAssigneeIsFilteredChange(-1)"
           ></mat-checkbox>
+          <span
+            class="status-circle"
+            [style.background-color]="getAssigneeColor(-1)"
+          ></span>
           <span class="filter-item-name">未設定</span>
         </div>
         <div
@@ -76,6 +80,10 @@
             (click)="$event.stopPropagation()"
             (change)="onAssigneeIsFilteredChange(member.id)"
           ></mat-checkbox>
+          <span
+            class="status-circle"
+            [style.background-color]="getAssigneeColor(member.id)"
+          ></span>
           <span class="filter-item-name">{{ member.name }}</span>
         </div>
       </div>
