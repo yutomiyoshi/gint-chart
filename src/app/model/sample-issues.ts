@@ -100,7 +100,7 @@ export const SAMPLE_ISSUES: Issue[] = [
       '$$resource: D3チェッカー1',
       '$$status: 進行中',
     ],
-    assignee_id: 5,
+    assignee_id: -1,
   },
   {
     id: 6,
@@ -244,7 +244,7 @@ export const SAMPLE_ISSUES: Issue[] = [
         idx % 23 === 0 ? '$$resource: ITM' : undefined,
         idx % 29 === 0 ? '$$resource: ブレーカー1' : undefined,
       ].filter(Boolean) as string[],
-      assignee_id: idx,
+      assignee_id: idx % 10 + 1,
     };
   }),
 ];
