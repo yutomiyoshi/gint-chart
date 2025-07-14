@@ -14,9 +14,9 @@ export class IssueAssigneeNamePipe implements PipeTransform {
    * @param assigneeId - 担当者ID
    * @returns 担当者名
    */
-  transform(assigneeId: number | undefined): string {
-    if (isUndefined(assigneeId)) {
-      return 'undefined';
+  transform(assigneeId: number): string {
+    if (assigneeId === -1) {
+      return '未設定';
     }
 
     const assignee = this.memberStore.findMemberById(assigneeId);
