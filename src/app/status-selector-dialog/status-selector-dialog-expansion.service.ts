@@ -10,12 +10,12 @@ export class StatusSelectorDialogExpansionService {
   private readonly statusSubject = new BehaviorSubject<
     | {
         issueId: number;
-        statusId: number | undefined;
+        statusId: number;
       }
     | undefined
   >(undefined);
   status$: Observable<
-    { issueId: number; statusId: number | undefined } | undefined
+    { issueId: number; statusId: number } | undefined
   > = this.statusSubject.asObservable();
 
   private isExpandedSubject = new BehaviorSubject<boolean>(false);
@@ -28,7 +28,7 @@ export class StatusSelectorDialogExpansionService {
    * @param issueId イシューID
    * @param currentStatus 現在のステータス
    */
-  expand(issueId: number, currentStatus: number | undefined): void {
+  expand(issueId: number, currentStatus: number): void {
     this.statusSubject.next({
       issueId,
       statusId: currentStatus,
@@ -84,7 +84,7 @@ export class StatusSelectorDialogExpansionService {
    * @param issueId イシューID
    * @param statusId ステータスID
    */
-  updateStatus(issueId: number, statusId: number | undefined): void {
+  updateStatus(issueId: number, statusId: number): void {
     this.statusSubject.next({ issueId, statusId });
   }
 
@@ -93,6 +93,6 @@ export class StatusSelectorDialogExpansionService {
    * @param issueId イシューID
    */
   clearStatus(issueId: number): void {
-    this.statusSubject.next({ issueId, statusId: undefined });
+    this.statusSubject.next({ issueId, statusId: -1 });
   }
 }

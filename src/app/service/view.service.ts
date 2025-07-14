@@ -6,11 +6,36 @@ import {
   titleWidthDefault,
 } from '../chart-area/issue-column/issue-column-view.const';
 // XXX ↑　ここら辺のマネジメントもサービスの管轄としたい
+import { MemberStoreService } from '../store/member-store.service';
+import { LabelStoreService } from '../store/label-store.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ViewService {
+  constructor(
+    private readonly memberStore: MemberStoreService,
+    private readonly labelStore: LabelStoreService
+  ) {
+    this.memberStore.members$.subscribe(members => {
+      // メンバーの数が変わったときはとりあえず、全部表示する状態にする
+      this._filteredAssigneeIDs = members.map(member => member.id);
+      this._filteredAssigneeIDs.push(-1); // 未設定を表す
+    });
+
+    this.labelStore.labels$.subscribe(labels => {
+      // ラベルの数が変わったときはとりあえず、全部表示する状態にする
+      this._filteredLabelIDs = labels.map(label => label.id);
+    });
+
+    this.labelStore.classifiedLabels$.subscribe(() => {
+      // ラベルの数が変わったときはとりあえず、全部表示する状態にする
+      this._filteredStatusIDs = this.labelStore.statusLabels.map(label => label.id);
+      this._filteredStatusIDs.push(-1); // 未設定を表す
+
+      this._filteredResourceIDs = this.labelStore.resourceLabels.map(label => label.id);
+    });
+  }
   /**
    * 設定変更を通知するSubject
    */
@@ -35,12 +60,13 @@ export class ViewService {
    * フィルターの選択
    */
   private _isFilteredByStatus = false;
-  private _filteredStatusIDs: number[] = [];
   private _isFilteredByAssignee = false;
-  private _filteredAssigneeIDs: number[] = [];
   private _isFilteredByResource = false;
-  private _filteredResourceIDs: number[] = [];
   private _isFilteredByLabel = false;
+  // フィルターを通過する（表示する）IDを格納する
+  private _filteredStatusIDs: number[] = [];
+  private _filteredAssigneeIDs: number[] = [];
+  private _filteredResourceIDs: number[] = [];
   private _filteredLabelIDs: number[] = [];
 
   /**
@@ -138,6 +164,7 @@ export class ViewService {
   }
   set filteredStatusIDs(value: number[]) {
     this._filteredStatusIDs = value;
+    this.notifyViewConfigChange();
   }
 
   get isFilteredByAssignee(): boolean {
@@ -155,6 +182,7 @@ export class ViewService {
   }
   set filteredAssigneeIDs(value: number[]) {
     this._filteredAssigneeIDs = value;
+    this.notifyViewConfigChange();
   }
 
   get isFilteredByResource(): boolean {

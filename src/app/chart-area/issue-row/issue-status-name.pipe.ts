@@ -14,9 +14,9 @@ export class IssueStatusNamePipe implements PipeTransform {
    * @param statusId - ステータスID
    * @returns ステータス名
    */
-  transform(statusId: number | undefined): string {
-    if (isUndefined(statusId)) {
-      return 'undefined';
+  transform(statusId: number): string {
+    if (statusId === -1) {
+      return "未設定";
     }
 
     const matchedLabel = this.labelStore.findStatusLabel(statusId);

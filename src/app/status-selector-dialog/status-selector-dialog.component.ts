@@ -51,7 +51,7 @@ export class StatusSelectorDialogComponent implements OnInit {
   /**
    * ステータスを選択した時の処理
    */
-  onStatusSelect(statusId: number | undefined): void {
+  onStatusSelect(statusId: number): void {
     this.statusSelectorDialogExpansionService.updateStatus(
       this.statusSelectorDialogExpansionService.issueId,
       statusId

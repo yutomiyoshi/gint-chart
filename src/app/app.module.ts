@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { MatIconModule } from '@angular/material/icon';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppComponent } from '@src/app/app.component';
 import { ChartAreaComponent } from '@src/app/chart-area/chart-area.component';
@@ -21,6 +22,7 @@ import { IssueAssigneeNamePipe } from '@src/app/chart-area/issue-row/issue-assig
 import { SideActionPanelComponent } from '@src/app/side-action-panel/side-action-panel.component';
 import { ViewSettingsDialogComponent } from '@src/app/view-settings-dialog/view-settings-dialog.component';
 import { FilterSettingsDialogComponent } from '@src/app/filter-settings-dialog/filter-settings-dialog.component';
+import { ButtonComponent } from './design/button/button.component';
 
 @NgModule({
   declarations: [
@@ -44,7 +46,9 @@ import { FilterSettingsDialogComponent } from '@src/app/filter-settings-dialog/f
     CommonModule,
     DragDropModule,
     MatIconModule,
+    MatCheckboxModule,
     SwitchToggleComponent,
+    ButtonComponent,
     IssueIidPipe,
     IssueStatusNamePipe,
     IssueAssigneeNamePipe,

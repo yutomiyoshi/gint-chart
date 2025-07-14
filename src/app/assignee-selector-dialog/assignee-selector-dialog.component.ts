@@ -6,6 +6,7 @@ import { MemberStoreService } from '@src/app/store/member-store.service';
 import { IssuesStoreService } from '@src/app/store/issues-store.service';
 import { Member } from '@src/app/model/member.model';
 import { Issue } from '@src/app/model/issue.model';
+import { generateRGBColorFromString } from '../utils/color-utils';
 
 @Component({
   selector: 'app-assignee-selector-dialog',
@@ -74,7 +75,7 @@ export class AssigneeSelectorDialogComponent implements OnInit, OnDestroy {
     }
     return this.currentIssue.title;
   }
-  
+
   /**
    * 担当者が選択されているかどうかを判定
    * @param assigneeId 担当者ID
@@ -88,11 +89,21 @@ export class AssigneeSelectorDialogComponent implements OnInit, OnDestroy {
    * 担当者を選択する
    * @param assigneeId 選択された担当者ID
    */
-  onAssigneeSelect(assigneeId: number | undefined): void {
+  onAssigneeSelect(assigneeId: number): void {
     this.assigneeSelectorDialogExpansionService.updateAssignee(
       this.assigneeSelectorDialogExpansionService.issueId,
       assigneeId
     );
   }
 
+  getAssigneeColor(id: number): string {
+    if (id === -1) {
+      return '#202020';
+    }
+    const member = this.memberStore.findMemberById(id);
+    if (isUndefined(member)) {
+      return '#202020';
+    }
+    return generateRGBColorFromString(member.name);
+  }
 }

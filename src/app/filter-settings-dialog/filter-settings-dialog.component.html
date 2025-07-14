@@ -46,10 +46,43 @@
         </div>
       </div>
       <div *ngIf="isAssigneeFilterEnabled" class="filter-items">
-        <div *ngFor="let member of members$ | async" class="filter-item">
+        <div class="whole-select">
+          <app-button
+            [message]="'全部選択'"
+            [bool]="wholeSelectAssignee"
+            [action]="wholeSelectAssigneeAction"
+            [backgroundColor]="'#1199FF'"
+            [width]="120"
+            [height]="32"
+          ></app-button>
+        </div>
+        <div class="filter-item" (click)="onAssigneeIsFilteredChange(-1)">
+          <mat-checkbox
+            class="filter-item-check-box"
+            [checked]="isFilteredAssignee(-1)"
+            (click)="$event.stopPropagation()"
+            (change)="onAssigneeIsFilteredChange(-1)"
+          ></mat-checkbox>
           <span
-            class="filter-item-color"
-            [style.background-color]="getMemberColor(member)"
+            class="status-circle"
+            [style.background-color]="getAssigneeColor(-1)"
+          ></span>
+          <span class="filter-item-name">未設定</span>
+        </div>
+        <div
+          *ngFor="let member of members$ | async"
+          class="filter-item"
+          (click)="onAssigneeIsFilteredChange(member.id)"
+        >
+          <mat-checkbox
+            class="filter-item-check-box"
+            [checked]="isFilteredAssignee(member.id)"
+            (click)="$event.stopPropagation()"
+            (change)="onAssigneeIsFilteredChange(member.id)"
+          ></mat-checkbox>
+          <span
+            class="status-circle"
+            [style.background-color]="getAssigneeColor(member.id)"
           ></span>
           <span class="filter-item-name">{{ member.name }}</span>
         </div>
@@ -72,10 +105,43 @@
         </div>
       </div>
       <div *ngIf="isStatusFilterEnabled" class="filter-items">
-        <div *ngFor="let label of statusLabels" class="filter-item">
+        <div class="whole-select">
+          <app-button
+            [message]="'全部選択'"
+            [bool]="wholeSelectStatus"
+            [action]="wholeSelectStatusAction"
+            [backgroundColor]="'#1199FF'"
+            [width]="120"
+            [height]="32"
+          ></app-button>
+        </div>
+        <div class="filter-item" (click)="onStatusIsFilteredChange(-1)">
+          <mat-checkbox
+            class="filter-item-check-box"
+            [checked]="isFilteredStatus(-1)"
+            (click)="$event.stopPropagation()"
+            (change)="onStatusIsFilteredChange(-1)"
+          ></mat-checkbox>
           <span
-            class="filter-item-color"
-            [style.background-color]="'#' + label.color"
+            class="status-circle"
+            [style.background-color]="getStatusColor(-1)"
+          ></span>
+          <span class="filter-item-name">未設定</span>
+        </div>
+        <div
+          *ngFor="let label of statusLabels"
+          class="filter-item"
+          (click)="onStatusIsFilteredChange(label.id)"
+        >
+          <mat-checkbox
+            class="filter-item-check-box"
+            [checked]="isFilteredStatus(label.id)"
+            (click)="$event.stopPropagation()"
+            (change)="onStatusIsFilteredChange(label.id)"
+          ></mat-checkbox>
+          <span
+            class="status-circle"
+            [style.background-color]="getStatusColor(label.id)"
           ></span>
           <span class="filter-item-name">{{ label.name }}</span>
         </div>

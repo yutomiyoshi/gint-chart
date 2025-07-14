@@ -51,12 +51,12 @@ export class IssueRowComponent implements OnInit, OnDestroy {
   /**
    * イシューステータス
    */
-  @Input() status: number | undefined;
+  @Input() status = -1;
 
   /**
    * 担当者ID
    */
-  @Input() assigneeId: number | undefined;
+  @Input() assigneeId = -1;
 
   /**
    * 開始日
@@ -79,12 +79,12 @@ export class IssueRowComponent implements OnInit, OnDestroy {
   /**
    * ステータス変更イベント
    */
-  @Output() statusChange = new EventEmitter<number | undefined>();
+  @Output() statusChange = new EventEmitter<number>();
 
   /**
    * 担当者変更イベント
    */
-  @Output() assigneeChange = new EventEmitter<number | undefined>();
+  @Output() assigneeChange = new EventEmitter<number>();
 
   /**
    * タイトル幅
@@ -463,19 +463,18 @@ export class IssueRowComponent implements OnInit, OnDestroy {
     return isUndefined(this.endDate);
   }
 
-  // XXX 仮
   /**
    * ステータスカラーを返す
    * @param status ラベルID
    * @returns 色調
    */
-  getIssueStatusColor(status: number | undefined): string {
-    if (isUndefined(status)) {
-      return "#808080";
+  getIssueStatusColor(status: number): string {
+    if (status === -1) {
+      return "#202020";
     }
     const label = this.labelStore.findStatusLabel(status);
     if (isUndefined(label)) {
-      return "#808080";
+      return "#202020";
     }
     return label.color;
   }

@@ -5,7 +5,7 @@ import { Assertion } from '../utils/assertion';
 
 export interface AssigneeData {
   issueId: number;
-  assigneeId: number | undefined;
+  assigneeId: number;
 }
 
 @Injectable({
@@ -25,7 +25,7 @@ export class AssigneeSelectorDialogExpansionService {
    * @param issueId イシューID
    * @param assigneeId 現在の担当者ID
    */
-  expand(issueId: number, assigneeId: number | undefined): void {
+  expand(issueId: number, assigneeId: number): void {
     this.assigneeSubject.next({ issueId, assigneeId });
     this.isExpandedSubject.next(true);
   }
@@ -89,7 +89,7 @@ export class AssigneeSelectorDialogExpansionService {
    * @param issueId イシューID
    * @param assigneeId 担当者ID
    */
-  updateAssignee(issueId: number, assigneeId: number | undefined): void {
+  updateAssignee(issueId: number, assigneeId: number): void {
     this.assigneeSubject.next({issueId, assigneeId});
   }
 
@@ -98,6 +98,6 @@ export class AssigneeSelectorDialogExpansionService {
    * @param issueId イシューID
    */
   clearAssignee(issueId: number): void {
-    this.assigneeSubject.next({issueId, assigneeId: undefined});
+    this.assigneeSubject.next({issueId, assigneeId: -1});
   }
 }
