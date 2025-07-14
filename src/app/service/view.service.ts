@@ -5,17 +5,32 @@ import {
   statusWidthDefault,
   titleWidthDefault,
 } from '../chart-area/issue-column/issue-column-view.const';
-import { MemberStoreService } from '../store/member-store.service';
 // XXX ↑　ここら辺のマネジメントもサービスの管轄としたい
+import { MemberStoreService } from '../store/member-store.service';
+import { LabelStoreService } from '../store/label-store.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ViewService {
-  constructor(private readonly memberStore: MemberStoreService) {
+  constructor(
+    private readonly memberStore: MemberStoreService,
+    private readonly labelStore: LabelStoreService
+  ) {
     this.memberStore.members$.subscribe(members => {
       // メンバーの数が変わったときはとりあえず、全部表示する状態にする
       this._filteredAssigneeIDs = members.map(member => member.id);
+    });
+
+    this.labelStore.labels$.subscribe(labels => {
+      // ラベルの数が変わったときはとりあえず、全部表示する状態にする
+      this._filteredLabelIDs = labels.map(label => label.id);
+    });
+
+    this.labelStore.classifiedLabels$.subscribe(() => {
+      // ラベルの数が変わったときはとりあえず、全部表示する状態にする
+      this._filteredStatusIDs = this.labelStore.statusLabels.map(label => label.id);
+      this._filteredResourceIDs = this.labelStore.resourceLabels.map(label => label.id);
     });
   }
   /**
@@ -146,6 +161,7 @@ export class ViewService {
   }
   set filteredStatusIDs(value: number[]) {
     this._filteredStatusIDs = value;
+    this.notifyViewConfigChange();
   }
 
   get isFilteredByAssignee(): boolean {
@@ -163,6 +179,7 @@ export class ViewService {
   }
   set filteredAssigneeIDs(value: number[]) {
     this._filteredAssigneeIDs = value;
+    this.notifyViewConfigChange();
   }
 
   get isFilteredByResource(): boolean {

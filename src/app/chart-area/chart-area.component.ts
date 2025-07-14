@@ -117,13 +117,7 @@ export class ChartAreaComponent implements OnInit, AfterViewInit {
   ) {}
 
   ngOnInit(): void {
-    // ViewServiceの設定変更を監視
-    this.subscription.add(
-      this.viewService.viewConfigChanged$.subscribe(() => {
-        this.cdr.detectChanges();
-      })
-    );
-
+    // プロジェクトツリーの更新を監視
     this.subscription.add(
       this.projectTreeStore.projectTree$.subscribe((projectTrees) => {
         this.projectTrees = projectTrees;

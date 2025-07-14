@@ -14,6 +14,8 @@ import { Issue } from '@src/app/model/issue.model';
 import { ProjectStoreService } from '@src/app/store/project-store.service';
 import { MilestoneStoreService } from '@src/app/store/milestone-store.service';
 import { IssuesStoreService } from '@src/app/store/issues-store.service';
+import { ViewService } from '../service/view.service';
+import { isUndefined } from '../utils/utils';
 
 @Injectable({
   providedIn: 'root',
@@ -26,10 +28,75 @@ export class ProjectTreeStoreService {
   constructor(
     private readonly projectStore: ProjectStoreService,
     private readonly milestoneStore: MilestoneStoreService,
-    private readonly issuesStore: IssuesStoreService
+    private readonly issuesStore: IssuesStoreService,
+    private readonly viewService: ViewService
   ) {
     // 各ストアのデータが更新されたときにツリー構造を再構築
     this.setupTreeRebuild();
+
+    // フィルターなど、表示設定が変わったときもツリー構造を再構築
+    this.viewService.viewConfigChanged$.subscribe(() => {
+      /**
+       * ISSUEのフィルター
+       */
+      const issues = this.issuesStore.issues.filter((issue) => {
+        /**
+         * 担当者フィルター
+         */
+        if (this.viewService.isFilteredByAssignee) {
+          // XXX: 暫定措置 undefinedは表示しない
+          // id = undefinedを処理する
+          if (isUndefined(issue.assignee_id)) {
+            return false;
+          }
+
+          if (this.viewService.filteredAssigneeIDs.includes(issue.assignee_id) === false) {
+            return false;
+          }
+        }
+
+        /**
+         * ステータスフィルター
+         */
+        if (this.viewService.isFilteredByStatus) {
+          // XXX: 暫定措置 undefined
+          // id = undefinedを処理する
+          if (isUndefined(issue.status)) {
+            return false;
+          }
+          
+          if (this.viewService.filteredStatusIDs.includes(issue.status) === false) {
+            return false;
+          }
+        }
+
+        /**
+         * リソースフィルター
+         */
+        if (this.viewService.isFilteredByResource) {
+          if (issue.resource.some((id) => this.viewService.filteredResourceIDs.includes(id)) == false) {
+            return false;
+          }
+        }
+
+        /**
+         * ラベルフィルター
+         */
+        if (this.viewService.isFilteredByLabel) {
+          // XXX: mada
+        }
+
+        return true;
+      });
+
+      let tree = buildProjectTree(
+        this.projectStore.projects,
+        this.milestoneStore.milestones,
+        issues
+      )
+      tree = sortProjectTree(tree);
+      this.projectTreeSubject.next(tree);
+    });
   }
 
   /**

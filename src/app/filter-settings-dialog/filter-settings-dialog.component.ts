@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ViewService } from '@src/app/service/view.service';
 import { LabelStoreService } from '@src/app/store/label-store.service';
 import { MemberStoreService } from '@src/app/store/member-store.service';
-import { Label } from '@src/app/model/label.model';
+import { Label } from '../model/label.model';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-filter-settings-dialog',
@@ -10,12 +11,18 @@ import { Label } from '@src/app/model/label.model';
   templateUrl: './filter-settings-dialog.component.html',
   styleUrl: './filter-settings-dialog.component.scss',
 })
-export class FilterSettingsDialogComponent {
+export class FilterSettingsDialogComponent implements OnInit {
   constructor(
     private readonly viewService: ViewService,
     private readonly labelStoreService: LabelStoreService,
     private readonly memberStoreService: MemberStoreService
   ) {}
+
+  ngOnInit(): void {
+    this.labelStoreService.classifiedLabels$.pipe(takeUntil(this.destroy$)).subscribe(labelBox => {
+      this.statusLabels = labelBox.status;
+    })
+  }
 
   /**
    * ラベルフィルターの有効状態を取得
@@ -39,6 +46,13 @@ export class FilterSettingsDialogComponent {
   }
 
   /**
+   * ステータスラベル群
+   */
+  statusLabels: Label[] = [];
+
+  private destroy$ = new Subject<void>();
+
+  /**
    * ラベルフィルターの切り替え
    */
   onLabelFilterChange(checked: boolean): void {
@@ -50,13 +64,6 @@ export class FilterSettingsDialogComponent {
    */
   onAssigneeFilterChange(checked: boolean): void {
     this.viewService.isFilteredByAssignee = checked;
-  }
-
-  /**
-   * ステータスフィルターの切り替え
-   */
-  onStatusFilterChange(checked: boolean): void {
-    this.viewService.isFilteredByStatus = checked;
   }
 
   /**
@@ -74,11 +81,39 @@ export class FilterSettingsDialogComponent {
    */
   onAssigneeIsFilteredChange(id: number): void {
     if (this.viewService.filteredAssigneeIDs.includes(id)) {
-      this.viewService.filteredAssigneeIDs.filter(item => item === id);
+      this.viewService.filteredAssigneeIDs = this.viewService.filteredAssigneeIDs.filter(item => item !== id);
       return;
     }
+    this.viewService.filteredAssigneeIDs = [...this.viewService.filteredAssigneeIDs, id]
+  }
 
-    this.viewService.filteredAssigneeIDs.push(id);
+  
+  /**
+   * ステータスフィルターの切り替え
+   */
+  onStatusFilterChange(checked: boolean): void {
+    this.viewService.isFilteredByStatus = checked;
+  }
+
+  /**
+   * そのステータスを表示する/しないを返す
+   * @param id ラベルID
+   * @returns True: 表示するステータスである, False: 表示しないステータスである
+   */
+  isFilteredStatus(id: number):boolean {
+    return this.viewService.filteredStatusIDs.includes(id);
+  }
+
+  /**
+   * ステータスの表示する/しないを更新する
+   * @param id ラベルID
+   */
+  onStatusIsFilteredChange(id: number): void {
+    if (this.viewService.filteredStatusIDs.includes(id)) {
+      this.viewService.filteredStatusIDs = this.viewService.filteredStatusIDs.filter(item => item !== id);
+      return;
+    }
+    this.viewService.filteredStatusIDs = [...this.viewService.filteredStatusIDs, id];
   }
 
   /**
@@ -93,12 +128,5 @@ export class FilterSettingsDialogComponent {
    */
   get members$() {
     return this.memberStoreService.members$;
-  }
-
-  /**
-   * ステータスラベルリストを取得
-   */
-  get statusLabels(): Label[] {
-    return this.labelStoreService.statusLabels;
   }
 }
