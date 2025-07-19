@@ -11,11 +11,6 @@ import {
 } from '@angular/core';
 import { CdkDragMove } from '@angular/cdk/drag-drop';
 import { Subscription } from 'rxjs';
-import {
-  assigneeWidthDefault,
-  statusWidthDefault,
-  titleWidthDefault,
-} from '@src/app/chart-area/issue-column/issue-column-view.const';
 import { isUndefined } from '@src/app/utils/utils';
 import { getBarStyle } from '@src/app/chart-area/issue-row/issue-bar-style-handler';
 import { IssueDetailDialogExpansionService } from '@src/app/issue-detail-dialog/issue-detail-dialog-expansion.service';
@@ -89,17 +84,17 @@ export class IssueRowComponent implements OnInit, OnDestroy {
   /**
    * タイトル幅
    */
-  @Input() titleWidth: number = titleWidthDefault;
+  @Input() titleWidth: number = 0;
 
   /**
    * ステータス幅
    */
-  @Input() statusWidth: number = statusWidthDefault;
+  @Input() statusWidth: number = 0;
 
   /**
    * 担当者幅
    */
-  @Input() assigneeWidth: number = assigneeWidthDefault;
+  @Input() assigneeWidth: number = 0;
 
   /**
    * カレンダーエリアの参照
