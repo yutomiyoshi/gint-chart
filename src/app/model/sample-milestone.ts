@@ -20,9 +20,9 @@ export const SAMPLE_MILESTONES: Milestone[] = [
   {
     id: 43,
     project_id: 145,
-    title: 'テストマイルストーン',
+    title: 'これはClosedなマイルストーンです',
     description: 'テストマイルストーンです。',
-    state: 'active',
+    state: 'closed',
     due_date: new Date('2025-06-25'),
   },
   {
