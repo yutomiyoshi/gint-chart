@@ -104,6 +104,17 @@ export class ProjectTreeStoreService {
       this.milestoneStore.milestones,
       showIssues
     );
+    
+    // isMilestoneShowOnlyWithIssueフラグがtrueの時は、issueのないマイルストーンを除外
+    if (this.viewService.isMilestoneShowOnlyWithIssue) {
+      tree = tree.map(projectTree => ({
+        ...projectTree,
+        milestones: projectTree.milestones.filter(milestoneTree => 
+          milestoneTree.issues.length > 0
+        )
+      }));
+    }
+    
     tree = sortProjectTree(tree);
     return tree;
   }
