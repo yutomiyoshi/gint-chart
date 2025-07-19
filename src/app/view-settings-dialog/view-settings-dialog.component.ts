@@ -105,12 +105,6 @@ export class ViewSettingsDialogComponent {
    */
   onMilestoneShowOnlyWithIssueChange(checked: boolean) {
     this.viewService.isMilestoneShowOnlyWithIssue = checked;
-    this.toastService.show(
-      Assertion.no(27),
-      `issueのあるマイルストーンだけを表示する機能は開発中です。🤗`,
-      'info',
-      TOAST_DURATION_MEDIUM
-    );
   }
 
   /**
