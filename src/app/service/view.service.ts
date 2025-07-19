@@ -50,6 +50,15 @@ export class ViewService {
 
       this._filteredResourceIDs = this.labelStore.resourceLabels.map(label => label.id);
     });
+
+    // 設定変更時に自動的にviewConfigを書き込む
+    this.viewConfigChanged$.subscribe(() => {
+      this.writeViewConfig().subscribe({
+        error: (error) => {
+          console.error('Failed to write view config:', error);
+        }
+      });
+    });
   }
   /**
    * 設定変更を通知するSubject
