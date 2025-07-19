@@ -32,107 +32,95 @@ export class ProjectTreeStoreService {
     private readonly viewService: ViewService
   ) {
     // 各ストアのデータが更新されたときにツリー構造を再構築
-    this.setupTreeRebuild();
-
-    // フィルターなど、表示設定が変わったときもツリー構造を再構築
-    this.viewService.viewConfigChanged$.subscribe(() => {
-      /**
-       * ISSUEのフィルター
-       */
-      const issues = this.issuesStore.issues.filter((issue) => {
-        /**
-         * 担当者フィルター
-         */
-        if (this.viewService.isFilteredByAssignee) {
-          // XXX: 暫定措置 undefinedは表示しない
-          // id = undefinedを処理する
-          if (isUndefined(issue.assignee_id)) {
-            return false;
-          }
-
-          if (this.viewService.filteredAssigneeIDs.includes(issue.assignee_id) === false) {
-            return false;
-          }
-        }
-
-        /**
-         * ステータスフィルター
-         */
-        if (this.viewService.isFilteredByStatus) {
-          // XXX: 暫定措置 undefined
-          // id = undefinedを処理する
-          if (isUndefined(issue.status)) {
-            return false;
-          }
-          
-          if (this.viewService.filteredStatusIDs.includes(issue.status) === false) {
-            return false;
-          }
-        }
-
-        /**
-         * リソースフィルター
-         */
-        if (this.viewService.isFilteredByResource) {
-          if (issue.resource.some((id) => this.viewService.filteredResourceIDs.includes(id)) == false) {
-            return false;
-          }
-        }
-
-        /**
-         * ラベルフィルター
-         */
-        if (this.viewService.isFilteredByLabel) {
-          // XXX: mada
-        }
-
-        return true;
-      });
-
-      let tree = buildProjectTree(
-        this.projectStore.projects,
-        this.milestoneStore.milestones,
-        issues
-      )
-      tree = sortProjectTree(tree);
-      this.projectTreeSubject.next(tree);
-    });
-  }
-
-  /**
-   * 各ストアのデータ変更を監視してツリー構造を自動更新
-   */
-  private setupTreeRebuild(): void {
     combineLatest([
       this.projectStore.projects$,
       this.milestoneStore.milestones$,
       this.issuesStore.issues$,
+      this.viewService.viewConfigChanged$
     ])
-      .pipe(
-        map(([projects, milestones, issues]) => {
-          const tree = buildProjectTree(projects, milestones, issues);
-          return sortProjectTree(tree);
-        })
-      )
-      .subscribe((tree) => {
+      .pipe(map(() => {
+        const tree = this.constructLatestTree();
         this.projectTreeSubject.next(tree);
-      });
+      }))
+      .subscribe();
   }
 
   /**
-   * プロジェクト、マイルストーン、イシューの全データを同期してツリー構造を更新
+   * 各サービスからデータおよびデータの表示設定を参照して、ツリー構造を構築する
    */
-  syncProjectMilestoneIssues(): Observable<ProjectTree[]> {
+  private constructLatestTree(): ProjectTree[] {
+    const showIssues = this.issuesStore.issues.filter((issue) => {
+      /**
+       * 担当者のフィルター
+       * - フィルターが有効である
+       * - フィルターに引っかかっている
+       */
+      if (
+         (this.viewService.isFilteredByAssignee) &&
+         (this.viewService.filteredAssigneeIDs.includes(issue.assignee_id) === false)
+      ) {
+        return false;
+      }
+
+      /**
+       * ステータスのフィルター
+       * - フィルターが有効である
+       * - フィルターに引っかかっている
+       */
+      if (
+        (this.viewService.isFilteredByStatus) &&
+        (this.viewService.filteredStatusIDs.includes(issue.status) === false)
+      ) {
+        return false;
+      }
+
+      /**
+       * リソースのフィルター
+       * - フィルターが有効である
+       * - フィルターに引っかかっている
+       */
+      if (
+        (this.viewService.isFilteredByResource) &&
+        (issue.resource.some((id) => this.viewService.filteredResourceIDs.includes(id)) === false)
+      ) {
+        return false;
+      }
+
+      /**
+       * ラベルのフィルター
+       */
+      if (this.viewService.isFilteredByLabel) {
+        // XXX: mada
+      }
+
+      /**
+       * フィルターに引っ掛からなかったものは全て表示する
+       */
+      return true;
+    });
+
+    let tree = buildProjectTree(
+      this.projectStore.projects,
+      this.milestoneStore.milestones,
+      showIssues
+    );
+    tree = sortProjectTree(tree);
+    return tree;
+  }
+
+  /**
+   * プロジェクト、マイルストーン、イシューの全データをサーバから取り寄せて、ツリー構造を更新
+   */
+  syncProjectMilestoneIssues(): Observable<void> {
     return combineLatest([
       this.projectStore.syncProjects(),
       this.milestoneStore.syncMilestones(),
       this.issuesStore.syncIssues(),
     ]).pipe(
-      map(([projects, milestones, issues]) => {
-        const tree = buildProjectTree(projects, milestones, issues);
-        return sortProjectTree(tree);
-      }),
-      tap((tree) => this.projectTreeSubject.next(tree))
+      map(() => {
+        const tree = this.constructLatestTree();
+        this.projectTreeSubject.next(tree);
+      })
     );
   }
 
