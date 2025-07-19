@@ -24,6 +24,7 @@ import { isDebug } from '@src/app/debug';
 import { ViewSettingsDialogExpansionService } from './view-settings-dialog/view-settings-dialog-expansion.service';
 import { FilterSettingsDialogExpansionService } from './filter-settings-dialog/filter-settings-dialog-expansion.service';
 import { ViewService } from './service/view.service';
+import { PollingService } from './utils/polling.service';
 
 const POLLING_INTERVAL = 5 * 60 * 1000; // 5分間隔
 
@@ -73,7 +74,8 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
     private readonly cdr: ChangeDetectorRef,
     private readonly viewSettingsDialogExpansionService: ViewSettingsDialogExpansionService,
     private readonly filterSettingsDialogExpansionService: FilterSettingsDialogExpansionService,
-    private readonly viewService: ViewService
+    private readonly viewService: ViewService,
+    private readonly pollingService: PollingService
   ) {}
 
   ngOnInit() {
@@ -239,6 +241,21 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
       },
     });
 
+    // ポーリング設定の変更を監視
+    this.pollingService.isPollingEnabled$.pipe(takeUntil(this.destroy$)).subscribe({
+      next: (isEnabled: boolean) => {
+        if (isEnabled) {
+          // ポーリングが有効になった場合、まだポーリングが開始されていない場合は開始
+          if (isNull(this.pollingIntervalId)) {
+            this.startPolling();
+          }
+        } else {
+          // ポーリングが無効になった場合、ポーリングを停止
+          this.stopPolling();
+        }
+      },
+    });
+
     if (isDebug) {
       this.toastService.show(
         Assertion.no(2),
@@ -301,7 +318,17 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
       return; // 既にポーリング中
     }
 
+    // ポーリングが無効の場合は開始しない
+    if (!this.pollingService.isPollingEnabled) {
+      return;
+    }
+
     this.pollingIntervalId = window.setInterval(() => {
+      // ポーリングが無効になった場合は実行しない
+      if (!this.pollingService.isPollingEnabled) {
+        return;
+      }
+
       this.loadingOverlay = true;
       this.projectTreeStore.syncProjectMilestoneIssues()
         .pipe(
