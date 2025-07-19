@@ -83,9 +83,11 @@ export class ViewService {
   /**
    * 特殊な表示
    * - issueのあるマイルストーンだけ表示する
+   * - 開いているマイルストーンだけ表示する
    * - マイルストーンの縦線をカレンダーの縦線として表示する
    */
   private _isMilestoneShowOnlyWithIssue = false;
+  private _isMilestoneShowOnlyOpened = false;
   private _isMilestoneInlineMode = false;
 
   // ゲッターとセッター
@@ -252,6 +254,16 @@ export class ViewService {
   set isMilestoneShowOnlyWithIssue(value: boolean) {
     if (this._isMilestoneShowOnlyWithIssue !== value) {
       this._isMilestoneShowOnlyWithIssue = value;
+      this.notifyViewConfigChange();
+    }
+  }
+
+  get isMilestoneShowOnlyOpened(): boolean {
+    return this._isMilestoneShowOnlyOpened;
+  }
+  set isMilestoneShowOnlyOpened(value: boolean) {
+    if (this._isMilestoneShowOnlyOpened !== value) {
+      this._isMilestoneShowOnlyOpened = value;
       this.notifyViewConfigChange();
     }
   }
