@@ -19,11 +19,13 @@ import { ToastService } from '@src/app/utils/toast.service';
 import { GitLabApiService } from '@src/app/git-lab-api/git-lab-api.service';
 import { LabelStoreService } from '@src/app/store/label-store.service';
 import { MemberStoreService } from '@src/app/store/member-store.service';
-import { TOAST_DURATION_LONG, TOAST_DURATION_SHORT } from '@src/app/toast/toast.const';
+import { TOAST_DURATION_LONG, TOAST_DURATION_MEDIUM } from '@src/app/toast/toast.const';
 import { isDebug } from '@src/app/debug';
 import { ViewSettingsDialogExpansionService } from './view-settings-dialog/view-settings-dialog-expansion.service';
 import { FilterSettingsDialogExpansionService } from './filter-settings-dialog/filter-settings-dialog-expansion.service';
 import { ViewService } from './service/view.service';
+
+const POLLING_INTERVAL = 5 * 60 * 1000; // 5分間隔
 
 @Component({
   selector: 'app-root',
@@ -48,9 +50,8 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
   private destroy$ = new Subject<void>();
 
   /**
-   * ポーリング設定
+   * ポーリングタイマーのID
    */
-  private readonly POLLING_INTERVAL = 30000; // 30秒間隔
   private pollingIntervalId: number | null = null;
 
   /**
@@ -313,7 +314,7 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
               Assertion.no(13),
               'Polling: Data updated successfully',
               'success',
-              TOAST_DURATION_SHORT
+              TOAST_DURATION_MEDIUM
             );
           },
           error: (error) => {
@@ -326,7 +327,7 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
             );
           }
         });
-    }, this.POLLING_INTERVAL);
+    }, POLLING_INTERVAL);
   }
 
   /**
