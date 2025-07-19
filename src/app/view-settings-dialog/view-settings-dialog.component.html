@@ -97,6 +97,19 @@
       </div>
 
       <div class="compact-setting">
+        <label class="compact-label">Openedなマイルストーンのみ表示</label>
+        <div class="setting-controls">
+          <app-switch-toggle
+            [checked]="isMilestoneShowOnlyOpened"
+            (checkedChange)="onMilestoneShowOnlyOpenedChange($event)"
+            [width]="36"
+            [height]="20"
+          >
+          </app-switch-toggle>
+        </div>
+      </div>
+
+      <div class="compact-setting">
         <label class="compact-label">インラインモード</label>
         <div class="setting-controls">
           <app-switch-toggle
