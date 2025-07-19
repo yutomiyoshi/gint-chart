@@ -115,6 +115,16 @@ export class ProjectTreeStoreService {
       }));
     }
     
+    // isMilestoneShowOnlyOpenedフラグがtrueの時は、Closed状態のマイルストーンを除外
+    if (this.viewService.isMilestoneShowOnlyOpened) {
+      tree = tree.map(projectTree => ({
+        ...projectTree,
+        milestones: projectTree.milestones.filter(milestoneTree => 
+          milestoneTree.milestone.state !== 'closed'
+        )
+      }));
+    }
+    
     tree = sortProjectTree(tree);
     return tree;
   }
