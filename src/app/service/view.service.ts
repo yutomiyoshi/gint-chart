@@ -344,7 +344,7 @@ export class ViewService {
           const validStatusIDs = this.labelStore.statusLabels.map(label => label.id);
           validStatusIDs.push(-1); // 未設定を表す
           const hasInvalidStatusID = config.filteredStatusIDs.some(id => !validStatusIDs.includes(id));
-          this._filteredStatusIDs = hasInvalidStatusID ? [] : config.filteredStatusIDs;
+          this._filteredStatusIDs = hasInvalidStatusID ? validStatusIDs : config.filteredStatusIDs;
         }
         if (isUndefined(config.filteredAssigneeIDs)) {
           this._filteredAssigneeIDs = [];
@@ -353,7 +353,7 @@ export class ViewService {
           const memberIds = this.memberStore.membersId;
           const validAssigneeIDs = [...memberIds, -1]; // 未設定を表す
           const hasInvalidAssigneeID = config.filteredAssigneeIDs.some(id => !validAssigneeIDs.includes(id));
-          this._filteredAssigneeIDs = hasInvalidAssigneeID ? [] : config.filteredAssigneeIDs;
+          this._filteredAssigneeIDs = hasInvalidAssigneeID ? validAssigneeIDs : config.filteredAssigneeIDs;
         }
         
         this._issueRowHeight = config.issueRowHeight ?? ISSUE_ROW_HEIGHT_DEFAULT;
