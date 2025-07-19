@@ -19,7 +19,7 @@ import { ToastService } from '@src/app/utils/toast.service';
 import { GitLabApiService } from '@src/app/git-lab-api/git-lab-api.service';
 import { LabelStoreService } from '@src/app/store/label-store.service';
 import { MemberStoreService } from '@src/app/store/member-store.service';
-import { TOAST_DURATION_LONG } from '@src/app/toast/toast.const';
+import { TOAST_DURATION_LONG, TOAST_DURATION_SHORT } from '@src/app/toast/toast.const';
 import { isDebug } from '@src/app/debug';
 import { ViewSettingsDialogExpansionService } from './view-settings-dialog/view-settings-dialog-expansion.service';
 import { FilterSettingsDialogExpansionService } from './filter-settings-dialog/filter-settings-dialog-expansion.service';
@@ -46,6 +46,12 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
   isViewSettingsDialogClosing = false;
   isFilterSettingsDialogClosing = false;
   private destroy$ = new Subject<void>();
+
+  /**
+   * ポーリング設定
+   */
+  private readonly POLLING_INTERVAL = 30000; // 30秒間隔
+  private pollingIntervalId: number | null = null;
 
   /**
    * トーストの表示情報
@@ -220,6 +226,9 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
             'success',
             TOAST_DURATION_LONG
           );
+          
+          // 初期データ取得完了後、ポーリングを開始
+          this.startPolling();
         },
       });
 
@@ -278,8 +287,57 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnDestroy() {
+    this.stopPolling();
     this.destroy$.next();
     this.destroy$.complete();
+  }
+
+  /**
+   * ポーリングを開始
+   */
+  private startPolling(): void {
+    if (!isNull(this.pollingIntervalId)) {
+      return; // 既にポーリング中
+    }
+
+    this.pollingIntervalId = window.setInterval(() => {
+      this.loadingOverlay = true;
+      this.projectTreeStore.syncProjectMilestoneIssues()
+        .pipe(
+          takeUntil(this.destroy$)
+        )
+        .subscribe({
+          next: () => {
+            this.loadingOverlay = false;
+            this.toastService.show(
+              Assertion.no(13),
+              'Polling: Data updated successfully',
+              'success',
+              TOAST_DURATION_SHORT
+            );
+          },
+          error: (error) => {
+            this.loadingOverlay = false;
+            this.toastService.show( 
+              Assertion.no(14),
+              `Polling failed. error: ${error}`,
+              'error',
+              TOAST_DURATION_LONG
+            );
+          }
+        });
+    }, this.POLLING_INTERVAL);
+  }
+
+  /**
+   * ポーリングを停止
+   */
+  private stopPolling(): void {
+    if (isNull(this.pollingIntervalId)) {
+      return;
+    }
+    window.clearInterval(this.pollingIntervalId);
+    this.pollingIntervalId = null;
   }
 
   ngAfterViewInit(): void {
