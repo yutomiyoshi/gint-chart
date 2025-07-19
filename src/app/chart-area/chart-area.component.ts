@@ -41,6 +41,7 @@ import {
   TOAST_DURATION_LONG,
 } from '@src/app/toast/toast.const';
 import { ViewService } from '@src/app/service/view.service';
+import { IssueCreateDialogExpansionService } from '@src/app/issue-create-dialog/issue-create-dialog-expansion.service';
 
 /**
  * チャート行のアイテムを表現するインターフェース
@@ -113,7 +114,8 @@ export class ChartAreaComponent implements OnInit, AfterViewInit {
     private readonly issuesUpdateService: IssuesUpdateService,
     private readonly toastService: ToastService,
     private readonly cdr: ChangeDetectorRef,
-    private readonly viewService: ViewService
+    private readonly viewService: ViewService,
+    private readonly issueCreateDialogExpansionService: IssueCreateDialogExpansionService
   ) {}
 
   ngOnInit(): void {
@@ -457,5 +459,12 @@ export class ChartAreaComponent implements OnInit, AfterViewInit {
         );
       },
     });
+  }
+
+  /**
+   * マイルストーン行のクリックイベントハンドラー
+   */
+  onMilestoneClick(milestone: Milestone): void {
+    this.issueCreateDialogExpansionService.setExpandedMilestoneId(milestone.id);
   }
 }
