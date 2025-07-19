@@ -151,6 +151,35 @@ function createWindow() {
   });
 
   /**
+   * View設定ファイルの書き込みを許可する
+   */
+  ipcMain.handle("write-view-config", async (event, config) => {
+    let configPath;
+
+    if (serve) {
+      // 開発環境では現在のディレクトリに書き込み
+      configPath = path.join(__dirname, 'view.config.json');
+    } else {
+      // パッケージ化された環境では実行ファイルと同じディレクトリに書き込み
+      const exePath = process.execPath;
+      const exeDir = path.dirname(exePath);
+      configPath = path.join(exeDir, 'view.config.json');
+    }
+
+    console.log('Attempting to write view config to:', configPath);
+
+    try {
+      const data = JSON.stringify(config, null, 2);
+      fs.writeFileSync(configPath, data, 'utf8');
+      console.log('View config written successfully');
+      return true;
+    } catch (error) {
+      console.error('Error writing view config file:', error.message);
+      throw error;
+    }
+  });
+
+  /**
    * 外部リンクを開く
    */
   ipcMain.handle("open-external", async (event, url) => {

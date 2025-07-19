@@ -22,6 +22,7 @@ import {
 import { MemberStoreService } from '../store/member-store.service';
 import { LabelStoreService } from '../store/label-store.service';
 import { isNull } from '../utils/utils';
+import { ViewConfig } from '../model/view-config.model';
 
 @Injectable({
   providedIn: 'root',
@@ -336,8 +337,40 @@ export class ViewService {
   /**
    * 見た目にかかわる設定をjsonに反映する
    */
-  writeViewConfig() {
-    // TODO: ここにjsonの上書きを書く
+  writeViewConfig(): Observable<boolean> {
+    const config: ViewConfig = {
+      // カラムの選択
+      isTitleShow: this._isTitleShow,
+      titleWidth: this._titleWidth,
+      isStatusShow: this._isStatusShow,
+      statusWidth: this._statusWidth,
+      isAssigneeShow: this._isAssigneeShow,
+      assigneeWidth: this._assigneeWidth,
+
+      // フィルターの選択
+      isFilteredByStatus: this._isFilteredByStatus,
+      isFilteredByAssignee: this._isFilteredByAssignee,
+      isFilteredByResource: this._isFilteredByResource,
+      isFilteredByLabel: this._isFilteredByLabel,
+      filteredStatusIDs: this._filteredStatusIDs,
+      filteredAssigneeIDs: this._filteredAssigneeIDs,
+      filteredResourceIDs: this._filteredResourceIDs,
+      filteredLabelIDs: this._filteredLabelIDs,
+
+      // 行の高さ
+      issueRowHeight: this._issueRowHeight,
+
+      // 強調表示
+      isHighlightedToday: this._isHighlightedToday,
+      isHighlightedHoliday: this._isHighlightedHoliday,
+
+      // 特殊な表示
+      isMilestoneShowOnlyWithIssue: this._isMilestoneShowOnlyWithIssue,
+      isMilestoneShowOnlyOpened: this._isMilestoneShowOnlyOpened,
+      isMilestoneInlineMode: this._isMilestoneInlineMode,
+    };
+
+    return from(window.electronAPI.writeViewConfig(config));
   }
 
   /**

@@ -6,6 +6,7 @@ declare global {
     electronAPI: {
       readConfig: () => Promise<GitLabConfig>;
       readViewConfig: () => Promise<ViewConfig | null>;
+      writeViewConfig: (config: ViewConfig) => Promise<boolean>;
       shell: {
         openExternal: (url: string) => Promise<void>;
       };
