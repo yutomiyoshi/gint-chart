@@ -59,6 +59,13 @@ export class ViewSettingsDialogComponent {
   }
 
   /**
+   * Openedなマイルストーンのみ表示状態を取得
+   */
+  get isMilestoneShowOnlyOpened(): boolean {
+    return this.viewService.isMilestoneShowOnlyOpened;
+  }
+
+  /**
    * マイルストーンインラインモード状態を取得
    */
   get isMilestoneInlineMode(): boolean {
@@ -105,6 +112,13 @@ export class ViewSettingsDialogComponent {
    */
   onMilestoneShowOnlyWithIssueChange(checked: boolean) {
     this.viewService.isMilestoneShowOnlyWithIssue = checked;
+  }
+
+  /**
+   * Openedなマイルストーンのみ表示の切り替え
+   */
+  onMilestoneShowOnlyOpenedChange(checked: boolean) {
+    this.viewService.isMilestoneShowOnlyOpened = checked;
   }
 
   /**
