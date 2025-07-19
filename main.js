@@ -49,7 +49,11 @@ function createWindow() {
       // electron-reloaderの設定
       electronReloader(module, {
         debug: true,
-        watchRenderer: true
+        watchRenderer: true,
+        ignore: [
+          'view.config.json',
+          'gitlab.config.json'
+        ]
       });
     } catch (error) {
       console.warn('Development modules not available:', error.message);
