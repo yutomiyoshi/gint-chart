@@ -56,31 +56,31 @@ export function buildProjectTree(
   const orphanedMilestones = milestones.filter(
     (m) => !projectIds.has(m.project_id)
   );
-  if (orphanedMilestones.length > 0) {
-    console.warn(
-      `孤立したマイルストーンが${orphanedMilestones.length}件見つかりました:`,
-      orphanedMilestones.map((m) => ({
-        id: m.id,
-        project_id: m.project_id,
-        title: m.title,
-      }))
-    );
-  }
+  // if (orphanedMilestones.length > 0) {
+  //   console.warn(
+  //     `孤立したマイルストーンが${orphanedMilestones.length}件見つかりました:`,
+  //     orphanedMilestones.map((m) => ({
+  //       id: m.id,
+  //       project_id: m.project_id,
+  //       title: m.title,
+  //     }))
+  //   );
+  // }
 
   // 孤立したイシュー（マイルストーンが存在しない）を検出してログ出力
   const orphanedIssues = issues.filter(
     (i) => i.milestone_id !== null && !milestoneIds.has(i.milestone_id)
   );
-  if (orphanedIssues.length > 0) {
-    console.warn(
-      `孤立したイシューが${orphanedIssues.length}件見つかりました:`,
-      orphanedIssues.map((i) => ({
-        id: i.id,
-        milestone_id: i.milestone_id,
-        title: i.title,
-      }))
-    );
-  }
+  // if (orphanedIssues.length > 0) {
+  //   console.warn(
+  //     `孤立したイシューが${orphanedIssues.length}件見つかりました:`,
+  //     orphanedIssues.map((i) => ({
+  //       id: i.id,
+  //       milestone_id: i.milestone_id,
+  //       title: i.title,
+  //     }))
+  //   );
+  // }
 
   // 各プロジェクトのツリーを構築（孤立したデータは除外）
   return projects.map((project) => {
