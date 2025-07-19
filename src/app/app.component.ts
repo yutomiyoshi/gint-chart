@@ -23,6 +23,7 @@ import { TOAST_DURATION_LONG } from '@src/app/toast/toast.const';
 import { isDebug } from '@src/app/debug';
 import { ViewSettingsDialogExpansionService } from './view-settings-dialog/view-settings-dialog-expansion.service';
 import { FilterSettingsDialogExpansionService } from './filter-settings-dialog/filter-settings-dialog-expansion.service';
+import { ViewService } from './service/view.service';
 
 @Component({
   selector: 'app-root',
@@ -64,7 +65,8 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
     private readonly memberStore: MemberStoreService,
     private readonly cdr: ChangeDetectorRef,
     private readonly viewSettingsDialogExpansionService: ViewSettingsDialogExpansionService,
-    private readonly filterSettingsDialogExpansionService: FilterSettingsDialogExpansionService
+    private readonly filterSettingsDialogExpansionService: FilterSettingsDialogExpansionService,
+    private readonly viewService: ViewService
   ) {}
 
   ngOnInit() {
@@ -191,7 +193,12 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
               );
               throw error;
             }),
-            switchMap(() => this.projectTreeStore.syncProjectMilestoneIssues())
+            switchMap(() => {
+              // ラベルとメンバーの同期が完了したら、viewConfigを読み込む
+              return this.viewService.readViewConfig().pipe(
+                switchMap(() => this.projectTreeStore.syncProjectMilestoneIssues())
+              );
+            })
           );
         })
       )

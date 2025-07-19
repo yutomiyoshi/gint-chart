@@ -12,12 +12,9 @@ import {
   ChangeDetectorRef,
 } from '@angular/core';
 import {
-  statusWidthDefault,
-  titleWidthDefault,
   MAX_TITLE_WIDTH,
   MIN_TITLE_WIDTH,
   MIN_CALENDAR_WIDTH,
-  assigneeWidthDefault,
   MAX_CALENDAR_WIDTH,
 } from '@src/app/chart-area/issue-column/issue-column-view.const';
 import { isUndefined } from '@src/app/utils/utils';
@@ -31,6 +28,11 @@ import { CalendarRangeService } from '@src/app/chart-area/calendar-range.service
 import { CalendarWidthService } from '@src/app/chart-area/calendar-width.service';
 import { CalendarPositionService } from '@src/app/chart-area/calendar-position.service';
 import { ViewService } from '@src/app/service/view.service';
+import {
+  ASSIGNEE_WIDTH_DEFAULT,
+  STATUS_WIDTH_DEFAULT,
+  TITLE_WIDTH_DEFAULT,
+} from '@src/app/service/view.const';
 
 @Component({
   selector: 'app-issue-column',
@@ -47,17 +49,17 @@ export class IssueColumnComponent implements OnInit, OnDestroy, AfterViewInit {
   /**
    * タイトル幅
    */
-  @Input() titleWidth: number = titleWidthDefault;
+  @Input() titleWidth: number = TITLE_WIDTH_DEFAULT;
 
   /**
    * ステータス幅
    */
-  @Input() statusWidth: number = statusWidthDefault;
+  @Input() statusWidth: number = STATUS_WIDTH_DEFAULT;
 
   /**
    * 担当者幅
    */
-  @Input() assigneeWidth: number = assigneeWidthDefault;
+  @Input() assigneeWidth: number = ASSIGNEE_WIDTH_DEFAULT;
 
   /**
    * タイトル幅変更イベント

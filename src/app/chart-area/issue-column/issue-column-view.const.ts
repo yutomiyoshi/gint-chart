@@ -1,11 +1,4 @@
 /**
- * カラムの幅
- */
-export const titleWidthDefault = 200;
-export const statusWidthDefault = 100;
-export const assigneeWidthDefault = 100;
-
-/**
  * タイトルの最小幅
  */
 export const MIN_TITLE_WIDTH = 100;

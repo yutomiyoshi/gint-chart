@@ -15,11 +15,6 @@ import {
   calendarEndDateOffset,
   calendarStartDateOffset,
 } from '@src/app/chart-area/chat-area-view.const';
-import {
-  assigneeWidthDefault,
-  statusWidthDefault,
-  titleWidthDefault,
-} from '@src/app/chart-area/issue-column/issue-column-view.const';
 import { DateHandler } from '@src/app/utils/time';
 import {
   CalendarDisplayService,
