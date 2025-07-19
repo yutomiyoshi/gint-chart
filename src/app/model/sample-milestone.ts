@@ -41,4 +41,20 @@ export const SAMPLE_MILESTONES: Milestone[] = [
     state: 'active',
     due_date: new Date('2025-07-15'),
   },
+  {
+    id: 47,
+    project_id: 145,
+    title: 'このマイルストーンは配下にissueを持たない',
+    description: 'テストマイルストーンです。',
+    state: 'active',
+    due_date: new Date('2025-07-30'),
+  },
+  {
+    id: 100,
+    project_id: 144,
+    title: 'このマイルストーンは配下にissueを持たない',
+    description: 'テストマイルストーンです。',
+    state: 'active',
+    due_date: new Date('2025-07-30'),
+  },
 ];
