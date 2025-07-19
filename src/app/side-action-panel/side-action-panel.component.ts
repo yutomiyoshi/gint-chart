@@ -7,6 +7,7 @@ import { ToastService } from '@src/app/utils/toast.service';
 import { ThemeService } from '@src/app/utils/theme.service';
 import { ViewSettingsDialogExpansionService } from '../view-settings-dialog/view-settings-dialog-expansion.service';
 import { FilterSettingsDialogExpansionService } from '../filter-settings-dialog/filter-settings-dialog-expansion.service';
+import { PollingService } from '../utils/polling.service';
 
 @Component({
   selector: 'app-side-action-panel',
@@ -21,7 +22,8 @@ export class SideActionPanelComponent {
     private readonly toastService: ToastService,
     private readonly themeService: ThemeService,
     private readonly viewSettingsDialogExpansionService: ViewSettingsDialogExpansionService,
-    private readonly filterSettingsDialogExpansionService: FilterSettingsDialogExpansionService
+    private readonly filterSettingsDialogExpansionService: FilterSettingsDialogExpansionService,
+    private readonly pollingService: PollingService
   ) {}
 
   /**
@@ -34,6 +36,13 @@ export class SideActionPanelComponent {
    */
   get currentTheme() {
     return this.themeService.getCurrentTheme();
+  }
+
+  /**
+   * ポーリングが有効かどうかを取得
+   */
+  get isPollingEnabled() {
+    return this.pollingService.isPollingEnabled;
   }
 
   /**
@@ -115,6 +124,14 @@ export class SideActionPanelComponent {
    */
   onThemeToggleClick(): void {
     this.themeService.toggleTheme();
+    this.isExpanded = false;
+  }
+
+  /**
+   * ポーリング切り替えボタンクリック
+   */
+  onPollingToggleClick(): void {
+    this.pollingService.togglePolling();
     this.isExpanded = false;
   }
 }

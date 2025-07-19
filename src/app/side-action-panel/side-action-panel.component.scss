@@ -135,6 +135,25 @@ $pull-button-height: 100px;
   &:hover .icon {
     color: white;
   }
+
+  /* ポーリングボタンの特別なスタイル */
+  &.polling-toggle {
+    &.polling-disabled {
+      opacity: 0.5;
+      
+      .icon {
+        color: rgba(255, 255, 255, 0.5);
+      }
+      
+      &:hover {
+        opacity: 0.7;
+        
+        .icon {
+          color: rgba(255, 255, 255, 0.7);
+        }
+      }
+    }
+  }
 }
 
 /* ダークモード対応 */

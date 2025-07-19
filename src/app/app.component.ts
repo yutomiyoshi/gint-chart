@@ -19,10 +19,13 @@ import { ToastService } from '@src/app/utils/toast.service';
 import { GitLabApiService } from '@src/app/git-lab-api/git-lab-api.service';
 import { LabelStoreService } from '@src/app/store/label-store.service';
 import { MemberStoreService } from '@src/app/store/member-store.service';
-import { TOAST_DURATION_LONG } from '@src/app/toast/toast.const';
+import { TOAST_DURATION_LONG, TOAST_DURATION_MEDIUM } from '@src/app/toast/toast.const';
 import { isDebug } from '@src/app/debug';
 import { ViewSettingsDialogExpansionService } from './view-settings-dialog/view-settings-dialog-expansion.service';
 import { FilterSettingsDialogExpansionService } from './filter-settings-dialog/filter-settings-dialog-expansion.service';
+import { PollingService } from './utils/polling.service';
+
+const POLLING_INTERVAL = 5 * 60 * 1000; // 5分間隔
 
 @Component({
   selector: 'app-root',
@@ -47,6 +50,11 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
   private destroy$ = new Subject<void>();
 
   /**
+   * ポーリングタイマーのID
+   */
+  private pollingIntervalId: number | null = null;
+
+  /**
    * トーストの表示情報
    */
   isShowToast = false;
@@ -64,7 +72,8 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
     private readonly memberStore: MemberStoreService,
     private readonly cdr: ChangeDetectorRef,
     private readonly viewSettingsDialogExpansionService: ViewSettingsDialogExpansionService,
-    private readonly filterSettingsDialogExpansionService: FilterSettingsDialogExpansionService
+    private readonly filterSettingsDialogExpansionService: FilterSettingsDialogExpansionService,
+    private readonly pollingService: PollingService
   ) {}
 
   ngOnInit() {
@@ -213,12 +222,30 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
             'success',
             TOAST_DURATION_LONG
           );
+          
+          // 初期データ取得完了後、ポーリングを開始
+          this.startPolling();
         },
       });
 
     this.toastService.isShow$.pipe(takeUntil(this.destroy$)).subscribe({
       next: (isShow: boolean) => {
         this.isShowToast = isShow;
+      },
+    });
+
+    // ポーリング設定の変更を監視
+    this.pollingService.isPollingEnabled$.pipe(takeUntil(this.destroy$)).subscribe({
+      next: (isEnabled: boolean) => {
+        if (isEnabled) {
+          // ポーリングが有効になった場合、まだポーリングが開始されていない場合は開始
+          if (isNull(this.pollingIntervalId)) {
+            this.startPolling();
+          }
+        } else {
+          // ポーリングが無効になった場合、ポーリングを停止
+          this.stopPolling();
+        }
       },
     });
 
@@ -271,8 +298,67 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnDestroy() {
+    this.stopPolling();
     this.destroy$.next();
     this.destroy$.complete();
+  }
+
+  /**
+   * ポーリングを開始
+   */
+  private startPolling(): void {
+    if (!isNull(this.pollingIntervalId)) {
+      return; // 既にポーリング中
+    }
+
+    // ポーリングが無効の場合は開始しない
+    if (!this.pollingService.isPollingEnabled) {
+      return;
+    }
+
+    this.pollingIntervalId = window.setInterval(() => {
+      // ポーリングが無効になった場合は実行しない
+      if (!this.pollingService.isPollingEnabled) {
+        return;
+      }
+
+      this.loadingOverlay = true;
+      this.projectTreeStore.syncProjectMilestoneIssues()
+        .pipe(
+          takeUntil(this.destroy$)
+        )
+        .subscribe({
+          next: () => {
+            this.loadingOverlay = false;
+            this.toastService.show(
+              Assertion.no(13),
+              'Polling: Data updated successfully',
+              'success',
+              TOAST_DURATION_MEDIUM
+            );
+          },
+          error: (error) => {
+            this.loadingOverlay = false;
+            this.toastService.show( 
+              Assertion.no(14),
+              `Polling failed. error: ${error}`,
+              'error',
+              TOAST_DURATION_LONG
+            );
+          }
+        });
+    }, POLLING_INTERVAL);
+  }
+
+  /**
+   * ポーリングを停止
+   */
+  private stopPolling(): void {
+    if (isNull(this.pollingIntervalId)) {
+      return;
+    }
+    window.clearInterval(this.pollingIntervalId);
+    this.pollingIntervalId = null;
   }
 
   ngAfterViewInit(): void {
