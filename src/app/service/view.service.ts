@@ -50,15 +50,6 @@ export class ViewService {
 
       this._filteredResourceIDs = this.labelStore.resourceLabels.map(label => label.id);
     });
-
-    // 設定変更時に自動的にviewConfigを書き込む
-    this.viewConfigChanged$.subscribe(() => {
-      this.writeViewConfig().subscribe({
-        error: (error) => {
-          console.error('Failed to write view config:', error);
-        }
-      });
-    });
   }
   /**
    * 設定変更を通知するSubject
@@ -122,6 +113,7 @@ export class ViewService {
     if (this._isTitleShow !== value) {
       this._isTitleShow = value;
       this.notifyViewConfigChange();
+      this.writeViewConfigToFile();
     }
   }
 
@@ -132,6 +124,7 @@ export class ViewService {
     if (this._titleWidth !== value) {
       this._titleWidth = value;
       this.notifyViewConfigChange();
+      this.writeViewConfigToFile();
     }
   }
 
@@ -142,6 +135,7 @@ export class ViewService {
     if (this._isStatusShow !== value) {
       this._isStatusShow = value;
       this.notifyViewConfigChange();
+      this.writeViewConfigToFile();
     }
   }
 
@@ -152,6 +146,7 @@ export class ViewService {
     if (this._statusWidth !== value) {
       this._statusWidth = value;
       this.notifyViewConfigChange();
+      this.writeViewConfigToFile();
     }
   }
 
@@ -162,6 +157,7 @@ export class ViewService {
     if (this._isAssigneeShow !== value) {
       this._isAssigneeShow = value;
       this.notifyViewConfigChange();
+      this.writeViewConfigToFile();
     }
   }
 
@@ -172,6 +168,7 @@ export class ViewService {
     if (this._assigneeWidth !== value) {
       this._assigneeWidth = value;
       this.notifyViewConfigChange();
+      this.writeViewConfigToFile();
     }
   }
 
@@ -182,6 +179,7 @@ export class ViewService {
     if (this._isFilteredByStatus !== value) {
       this._isFilteredByStatus = value;
       this.notifyViewConfigChange();
+      this.writeViewConfigToFile();
     }
   }
 
@@ -191,6 +189,7 @@ export class ViewService {
   set filteredStatusIDs(value: number[]) {
     this._filteredStatusIDs = value;
     this.notifyViewConfigChange();
+    this.writeViewConfigToFile();
   }
 
   get isFilteredByAssignee(): boolean {
@@ -200,6 +199,7 @@ export class ViewService {
     if (this._isFilteredByAssignee !== value) {
       this._isFilteredByAssignee = value;
       this.notifyViewConfigChange();
+      this.writeViewConfigToFile();
     }
   }
 
@@ -209,6 +209,7 @@ export class ViewService {
   set filteredAssigneeIDs(value: number[]) {
     this._filteredAssigneeIDs = value;
     this.notifyViewConfigChange();
+    this.writeViewConfigToFile();
   }
 
   get isFilteredByResource(): boolean {
@@ -216,6 +217,8 @@ export class ViewService {
   }
   set isFilteredByResource(value: boolean) {
     this._isFilteredByResource = value;
+    this.notifyViewConfigChange();
+    this.writeViewConfigToFile();
   }
 
   get filteredResourceIDs(): number[] {
@@ -223,6 +226,8 @@ export class ViewService {
   }
   set filteredResourceIDs(value: number[]) {
     this._filteredResourceIDs = value;
+    this.notifyViewConfigChange();
+    this.writeViewConfigToFile();
   }
 
   get isFilteredByLabel(): boolean {
@@ -232,6 +237,7 @@ export class ViewService {
     if (this._isFilteredByLabel !== value) {
       this._isFilteredByLabel = value;
       this.notifyViewConfigChange();
+      this.writeViewConfigToFile();
     }
   }
 
@@ -240,6 +246,8 @@ export class ViewService {
   }
   set filteredLabelIDs(value: number[]) {
     this._filteredLabelIDs = value;
+    this.notifyViewConfigChange();
+    this.writeViewConfigToFile();
   }
 
   get issueRowHeight(): number {
@@ -249,6 +257,7 @@ export class ViewService {
     if (this._issueRowHeight !== value) {
       this._issueRowHeight = value;
       this.notifyViewConfigChange();
+      this.writeViewConfigToFile();
     }
   }
 
@@ -259,6 +268,7 @@ export class ViewService {
     if (this._isHighlightedToday !== value) {
       this._isHighlightedToday = value;
       this.notifyViewConfigChange();
+      this.writeViewConfigToFile();
     }
   }
 
@@ -269,6 +279,7 @@ export class ViewService {
     if (this._isHighlightedHoliday !== value) {
       this._isHighlightedHoliday = value;
       this.notifyViewConfigChange();
+      this.writeViewConfigToFile();
     }
   }
 
@@ -279,6 +290,7 @@ export class ViewService {
     if (this._isMilestoneShowOnlyWithIssue !== value) {
       this._isMilestoneShowOnlyWithIssue = value;
       this.notifyViewConfigChange();
+      this.writeViewConfigToFile();
     }
   }
 
@@ -289,6 +301,7 @@ export class ViewService {
     if (this._isMilestoneShowOnlyOpened !== value) {
       this._isMilestoneShowOnlyOpened = value;
       this.notifyViewConfigChange();
+      this.writeViewConfigToFile();
     }
   }
 
@@ -299,6 +312,7 @@ export class ViewService {
     if (this._isMilestoneInlineMode !== value) {
       this._isMilestoneInlineMode = value;
       this.notifyViewConfigChange();
+      this.writeViewConfigToFile();
     }
   }
 
@@ -401,5 +415,16 @@ export class ViewService {
    */
   private notifyViewConfigChange(): void {
     this.viewConfigChange$.next();
+  }
+
+  /**
+   * 設定変更時に自動的にviewConfigを書き込む
+   */
+  private writeViewConfigToFile(): void {
+    this.writeViewConfig().subscribe({
+      error: (error) => {
+        console.error('Failed to write view config:', error);
+      }
+    });
   }
 }
