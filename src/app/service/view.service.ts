@@ -21,7 +21,7 @@ import {
 // XXX ↑　ここら辺のマネジメントもサービスの管轄としたい
 import { MemberStoreService } from '../store/member-store.service';
 import { LabelStoreService } from '../store/label-store.service';
-import { isNull } from '../utils/utils';
+import { isNull, isUndefined } from '../utils/utils';
 import { ViewConfig } from '../model/view-config.model';
 
 @Injectable({
@@ -314,10 +314,24 @@ export class ViewService {
         this._isFilteredByAssignee = config.isFilteredByAssignee ?? IS_FILTERED_BY_ASSIGNEE_DEFAULT;
         this._isFilteredByResource = config.isFilteredByResource ?? IS_FILTERED_BY_RESOURCE_DEFAULT;
         this._isFilteredByLabel = config.isFilteredByLabel ?? IS_FILTERED_BY_LABEL_DEFAULT;
-        this._filteredStatusIDs = config.filteredStatusIDs ?? [];
-        this._filteredAssigneeIDs = config.filteredAssigneeIDs ?? [];
-        this._filteredResourceIDs = config.filteredResourceIDs ?? [];
-        this._filteredLabelIDs = config.filteredLabelIDs ?? [];
+        if (isUndefined(config.filteredStatusIDs)) {
+          this._filteredStatusIDs = [];
+        } else {
+          // 設定にないIDがあったら配列を空にする
+          const validStatusIDs = this.labelStore.statusLabels.map(label => label.id);
+          validStatusIDs.push(-1); // 未設定を表す
+          const hasInvalidStatusID = config.filteredStatusIDs.some(id => !validStatusIDs.includes(id));
+          this._filteredStatusIDs = hasInvalidStatusID ? [] : config.filteredStatusIDs;
+        }
+        if (isUndefined(config.filteredAssigneeIDs)) {
+          this._filteredAssigneeIDs = [];
+        } else {
+          // 設定にないIDがあったら配列を空にする
+          const memberIds = this.memberStore.membersId;
+          const validAssigneeIDs = [...memberIds, -1]; // 未設定を表す
+          const hasInvalidAssigneeID = config.filteredAssigneeIDs.some(id => !validAssigneeIDs.includes(id));
+          this._filteredAssigneeIDs = hasInvalidAssigneeID ? [] : config.filteredAssigneeIDs;
+        }
         
         this._issueRowHeight = config.issueRowHeight ?? ISSUE_ROW_HEIGHT_DEFAULT;
         
