@@ -1,13 +1,27 @@
 import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs';
+import { Observable, Subject, from } from 'rxjs';
 import {
-  assigneeWidthDefault,
-  statusWidthDefault,
-  titleWidthDefault,
-} from '../chart-area/issue-column/issue-column-view.const';
+  ASSIGNEE_WIDTH_DEFAULT,
+  IS_ASSIGNEE_SHOW_DEFAULT,
+  IS_FILTERED_BY_ASSIGNEE_DEFAULT,
+  IS_FILTERED_BY_LABEL_DEFAULT,
+  IS_FILTERED_BY_RESOURCE_DEFAULT,
+  IS_FILTERED_BY_STATUS_DEFAULT,
+  IS_HIGHLIGHTED_HOLIDAY_DEFAULT,
+  IS_HIGHLIGHTED_TODAY_DEFAULT,
+  IS_MILESTONE_INLINE_MODE_DEFAULT,
+  IS_MILESTONE_SHOW_ONLY_OPENED_DEFAULT,
+  IS_MILESTONE_SHOW_ONLY_WITH_ISSUE_DEFAULT,
+  IS_STATUS_SHOW_DEFAULT,
+  IS_TITLE_SHOW_DEFAULT,
+  ISSUE_ROW_HEIGHT_DEFAULT,
+  STATUS_WIDTH_DEFAULT,
+  TITLE_WIDTH_DEFAULT,
+} from './view.const';
 // XXX ↑　ここら辺のマネジメントもサービスの管轄としたい
 import { MemberStoreService } from '../store/member-store.service';
 import { LabelStoreService } from '../store/label-store.service';
+import { isNull } from '../utils/utils';
 
 @Injectable({
   providedIn: 'root',
@@ -49,20 +63,20 @@ export class ViewService {
   /**
    * カラムの選択
    */
-  private _isTitleShow = true;
-  private _titleWidth = titleWidthDefault; //px
-  private _isStatusShow = true;
-  private _statusWidth = statusWidthDefault; //px
-  private _isAssigneeShow = true;
-  private _assigneeWidth = assigneeWidthDefault; //px
+  private _isTitleShow = IS_TITLE_SHOW_DEFAULT;
+  private _titleWidth = TITLE_WIDTH_DEFAULT; //px
+  private _isStatusShow = IS_STATUS_SHOW_DEFAULT;
+  private _statusWidth = STATUS_WIDTH_DEFAULT; //px
+  private _isAssigneeShow = IS_ASSIGNEE_SHOW_DEFAULT;
+  private _assigneeWidth = ASSIGNEE_WIDTH_DEFAULT; //px
 
   /**
    * フィルターの選択
    */
-  private _isFilteredByStatus = false;
-  private _isFilteredByAssignee = false;
-  private _isFilteredByResource = false;
-  private _isFilteredByLabel = false;
+  private _isFilteredByStatus = IS_FILTERED_BY_STATUS_DEFAULT;
+  private _isFilteredByAssignee = IS_FILTERED_BY_ASSIGNEE_DEFAULT;
+  private _isFilteredByResource = IS_FILTERED_BY_RESOURCE_DEFAULT;
+  private _isFilteredByLabel = IS_FILTERED_BY_LABEL_DEFAULT;
   // フィルターを通過する（表示する）IDを格納する
   private _filteredStatusIDs: number[] = [];
   private _filteredAssigneeIDs: number[] = [];
@@ -72,13 +86,13 @@ export class ViewService {
   /**
    * 行の高さ
    */
-  private _issueRowHeight = 30; //px
+  private _issueRowHeight = ISSUE_ROW_HEIGHT_DEFAULT; //px
 
   /**
    * 強調表示
    */
-  private _isHighlightedToday = true;
-  private _isHighlightedHoliday = true;
+  private _isHighlightedToday = IS_HIGHLIGHTED_TODAY_DEFAULT;
+  private _isHighlightedHoliday = IS_HIGHLIGHTED_HOLIDAY_DEFAULT;
 
   /**
    * 特殊な表示
@@ -86,9 +100,9 @@ export class ViewService {
    * - 開いているマイルストーンだけ表示する
    * - マイルストーンの縦線をカレンダーの縦線として表示する
    */
-  private _isMilestoneShowOnlyWithIssue = false;
-  private _isMilestoneShowOnlyOpened = false;
-  private _isMilestoneInlineMode = false;
+  private _isMilestoneShowOnlyWithIssue = IS_MILESTONE_SHOW_ONLY_WITH_ISSUE_DEFAULT;
+  private _isMilestoneShowOnlyOpened = IS_MILESTONE_SHOW_ONLY_OPENED_DEFAULT;
+  private _isMilestoneInlineMode = IS_MILESTONE_INLINE_MODE_DEFAULT;
 
   // ゲッターとセッター
   get isTitleShow(): boolean {
@@ -281,8 +295,42 @@ export class ViewService {
   /**
    * 見た目にかかわる設定をjsonから読み込む
    */
-  readViewConfig() {
-    // TODO: ここにjsonの読み込みを書く
+  readViewConfig(): Observable<void> {
+    return from(
+      window.electronAPI.readViewConfig().then((config) => {
+        if (isNull(config)) {
+          return;
+        }
+        // 設定を適用
+        this._isTitleShow = config.isTitleShow ?? IS_TITLE_SHOW_DEFAULT;
+        this._titleWidth = config.titleWidth ?? TITLE_WIDTH_DEFAULT;
+        this._isStatusShow = config.isStatusShow ?? IS_STATUS_SHOW_DEFAULT;
+        this._statusWidth = config.statusWidth ?? STATUS_WIDTH_DEFAULT;
+        this._isAssigneeShow = config.isAssigneeShow ?? IS_ASSIGNEE_SHOW_DEFAULT;
+        this._assigneeWidth = config.assigneeWidth ?? ASSIGNEE_WIDTH_DEFAULT;
+        
+        this._isFilteredByStatus = config.isFilteredByStatus ?? IS_FILTERED_BY_STATUS_DEFAULT;
+        this._isFilteredByAssignee = config.isFilteredByAssignee ?? IS_FILTERED_BY_ASSIGNEE_DEFAULT;
+        this._isFilteredByResource = config.isFilteredByResource ?? IS_FILTERED_BY_RESOURCE_DEFAULT;
+        this._isFilteredByLabel = config.isFilteredByLabel ?? IS_FILTERED_BY_LABEL_DEFAULT;
+        this._filteredStatusIDs = config.filteredStatusIDs ?? [];
+        this._filteredAssigneeIDs = config.filteredAssigneeIDs ?? [];
+        this._filteredResourceIDs = config.filteredResourceIDs ?? [];
+        this._filteredLabelIDs = config.filteredLabelIDs ?? [];
+        
+        this._issueRowHeight = config.issueRowHeight ?? ISSUE_ROW_HEIGHT_DEFAULT;
+        
+        this._isHighlightedToday = config.isHighlightedToday ?? IS_HIGHLIGHTED_TODAY_DEFAULT;
+        this._isHighlightedHoliday = config.isHighlightedHoliday ?? IS_HIGHLIGHTED_HOLIDAY_DEFAULT;
+        
+        this._isMilestoneShowOnlyWithIssue = config.isMilestoneShowOnlyWithIssue ?? IS_MILESTONE_SHOW_ONLY_WITH_ISSUE_DEFAULT;
+        this._isMilestoneShowOnlyOpened = config.isMilestoneShowOnlyOpened ?? IS_MILESTONE_SHOW_ONLY_OPENED_DEFAULT;
+        this._isMilestoneInlineMode = config.isMilestoneInlineMode ?? IS_MILESTONE_INLINE_MODE_DEFAULT;
+        
+        // 設定変更を通知
+        this.notifyViewConfigChange();
+      })
+    );
   }
 
   /**

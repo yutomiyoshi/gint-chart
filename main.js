@@ -118,6 +118,39 @@ function createWindow() {
   });
 
   /**
+   * View設定ファイルの読み取りを許可する
+   */
+  ipcMain.handle("read-view-config", async () => {
+    let configPath;
+
+    if (serve) {
+      // 開発環境では現在のディレクトリから読み込み
+      configPath = path.join(__dirname, 'view.config.json');
+    } else {
+      // パッケージ化された環境では実行ファイルと同じディレクトリから読み込み
+      const exePath = process.execPath;
+      const exeDir = path.dirname(exePath);
+      configPath = path.join(exeDir, 'view.config.json');
+    }
+
+    console.log('Attempting to read view config from:', configPath);
+
+    try {
+      // ファイルの存在確認
+      if (!fs.existsSync(configPath)) {
+        console.log('View config file not found, returning null');
+        return null;
+      }
+
+      const data = fs.readFileSync(configPath, 'utf8');
+      return JSON.parse(data);
+    } catch (error) {
+      console.error('Error reading view config file:', error.message);
+      return null;
+    }
+  });
+
+  /**
    * 外部リンクを開く
    */
   ipcMain.handle("open-external", async (event, url) => {
