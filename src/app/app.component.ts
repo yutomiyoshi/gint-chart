@@ -26,7 +26,7 @@ import { FilterSettingsDialogExpansionService } from './filter-settings-dialog/f
 import { ViewService } from './service/view.service';
 import { PollingService } from './utils/polling.service';
 
-const POLLING_INTERVAL = 5 * 60 * 1000; // 5分間隔
+const POLLING_INTERVAL = 10 * 60 * 1000; // 10分間隔
 
 @Component({
   selector: 'app-root',
