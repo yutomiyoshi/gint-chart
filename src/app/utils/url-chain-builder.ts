@@ -4,13 +4,6 @@ import { isNull } from '@src/app/utils/utils';
 
 export type Method = 'GET' | 'POST' | 'PUT' | 'DELETE';
 
-const defaultOptions: RequestInit = {
-  method: 'GET',
-  headers: {
-    'Content-Type': 'application/json',
-  },
-};
-
 /**
  * URL chainを構築するクラス
  * メソッドチェーンでURL chainを構築する
@@ -20,7 +13,12 @@ export class UrlChainBuilder {
 
   private url = '';
 
-  private options: RequestInit = defaultOptions;
+  private options: RequestInit = {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  };
 
   constructor(private readonly base: string) {}
 
@@ -31,7 +29,12 @@ export class UrlChainBuilder {
   start(): UrlChainBuilder {
     this.isBuilding = true;
     this.url = this.base;
-    this.options = defaultOptions;
+    this.options = {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
     return this;
   }
 
