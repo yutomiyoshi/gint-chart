@@ -58,6 +58,22 @@
         }}</mat-icon>
       </button>
 
+      <!-- ポーリング切り替え -->
+      <button
+        class="action-button polling-toggle"
+        [class.polling-disabled]="!isPollingEnabled"
+        (click)="onPollingToggleClick()"
+        [title]="
+          isPollingEnabled
+            ? '定期的な更新をしない'
+            : '10分に1回リフレッシュする'
+        "
+      >
+        <mat-icon class="icon">{{
+          isPollingEnabled ? "sync" : "sync_disabled"
+        }}</mat-icon>
+      </button>
+
       <!-- ヘルプガイドページ -->
       <button
         class="action-button help-guide"
