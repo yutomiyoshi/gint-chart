@@ -79,6 +79,8 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
   ) {}
 
   ngOnInit() {
+    this.THIS_IS_TEST();
+
     this.issueDetailDialogExpansionService.expandedIssueId$
       .pipe(takeUntil(this.destroy$))
       .subscribe({
@@ -469,5 +471,16 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
    */
   onLogHistoryClick(): void {
     this.toastHistoryDialogExpansionService.setExpanded(true);
+  }
+
+  private async THIS_IS_TEST(): Promise<void> {
+    const url = "https://chat.googleapis.com/v1/spaces/SPACE_ID/messages" /** ここにWebhookのURLを入れる */
+    const res = await fetch(url, {
+        method: "POST",
+        headers: {"Content-Type": "application/json; charset=UTF-8"},
+        body: JSON.stringify({text: "Hello from a Node script!"})
+      });
+    const resJson = await res.json();
+    console.log(resJson);
   }
 }
