@@ -99,10 +99,10 @@ function createWindow() {
       // 開発環境では現在のディレクトリから読み込み
       configPath = path.join(__dirname, 'gitlab.config.json');
     } else {
-      // パッケージ化された環境では実行ファイルと同じディレクトリから読み込み
+      // パッケージ化された環境では実行ファイルの一つ上の階層から読み込み
       const exePath = process.execPath;
       const exeDir = path.dirname(exePath);
-      configPath = path.join(exeDir, 'gitlab.config.json');
+      configPath = path.join(exeDir, '..', 'gint-chart-config', 'gitlab.config.json');
     }
 
     console.log('Attempting to read config from:', configPath);
@@ -131,10 +131,10 @@ function createWindow() {
       // 開発環境では現在のディレクトリから読み込み
       configPath = path.join(__dirname, 'view.config.json');
     } else {
-      // パッケージ化された環境では実行ファイルと同じディレクトリから読み込み
+      // パッケージ化された環境では実行ファイルの一つ上の階層から読み込み
       const exePath = process.execPath;
       const exeDir = path.dirname(exePath);
-      configPath = path.join(exeDir, 'view.config.json');
+      configPath = path.join(exeDir, '..', 'gint-chart-config', 'view.config.json');
     }
 
     console.log('Attempting to read view config from:', configPath);
@@ -164,10 +164,10 @@ function createWindow() {
       // 開発環境では現在のディレクトリに書き込み
       configPath = path.join(__dirname, 'view.config.json');
     } else {
-      // パッケージ化された環境では実行ファイルと同じディレクトリに書き込み
+      // パッケージ化された環境では実行ファイルの一つ上の階層に書き込み
       const exePath = process.execPath;
       const exeDir = path.dirname(exePath);
-      configPath = path.join(exeDir, 'view.config.json');
+      configPath = path.join(exeDir, '..', 'gint-chart-config', 'view.config.json');
     }
 
     console.log('Attempting to write view config to:', configPath);
